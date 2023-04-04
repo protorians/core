@@ -1,4 +1,4 @@
-declare module '@protorians/core/compound.climbing' {
+declare module '@protorians/core/climbing' {
   import type { IClimbing, IClimbingAsyncTask, IClimbingNext, IClimbingTask, IClimbingYield } from "@protorians/core/types";
   export default class Climbing<R> implements IClimbing<R> {
       /**
@@ -35,7 +35,7 @@ declare module '@protorians/core/compound.climbing' {
   }
 
 }
-declare module '@protorians/core/compound.composite' {
+declare module '@protorians/core/composite' {
   import type { ICompositeModel, IProps } from "@protorians/core/types";
   export class CompositeModel<P extends IProps> implements ICompositeModel {
       #private;
@@ -45,9 +45,9 @@ declare module '@protorians/core/compound.composite' {
   }
 
 }
-declare module '@protorians/core/element.animate' {
+declare module '@protorians/core/element-animate' {
   import type { IElementAnimation, IElementAnimationFeatures, IElementAnimationOptions, IElementTarget, IElementTransition, IElementTransitionProps } from '@protorians/core/types';
-  import { CompositeModel } from '@protorians/core/compound.composite';
+  import { CompositeModel } from '@protorians/core/composite';
   export class ElementAnimation implements IElementAnimation {
       #private;
       get features(): IElementAnimationFeatures;
@@ -67,7 +67,218 @@ declare module '@protorians/core/element.animate' {
   }
 
 }
-declare module '@protorians/core/event.dispatcher' {
+declare module '@protorians/core/element-appearance' {
+  import EventDispatcher from "@protorians/core/event-dispatcher";
+  import type { IAppearance, IAppearanceEmitterScheme, IAppearanceObject, IAppearanceObjectDestroyed, IAppearanceStyleSheet, IAppearanceValues } from "@protorians/core/types";
+  /**
+   * ElementAppearanceProps
+   * @description Analyse la propriété de l'apparence et la réecrit
+   * @param name Nom de la propriété
+   * @param value Valeur de la propriété
+   * @example
+   * ElementAppearanceProps<IAppearanceObject>( { color : '#777' } )
+   */
+  export function ElementAppearanceProps<T extends IAppearanceObject | IAppearanceObjectDestroyed>(name: keyof IAppearanceObject, value: IAppearanceValues): T;
+  /**
+   * ElementAppearanceValues
+   * @description Analyse la valeur d'une propriété de l'apparence
+   * @param value Valeur de la propriété
+   * @example
+   * ElementAppearanceValues( ... )
+   */
+  export function ElementAppearanceValues(value: IAppearanceValues): string | undefined;
+  /**
+   * AUN Appearance
+   * @description Gestionnaire d'apparence des éléments AUN
+   */
+  export class ElementAppearance implements IAppearance {
+      /**
+       * Instance du DOM
+       */
+      instance: HTMLStyleElement;
+      /**
+       * Signature de l'apparence
+       */
+      uid: string;
+      /**
+       * Instance de l'emetteur
+       */
+      emitter: EventDispatcher<IAppearanceEmitterScheme>;
+      /**
+       * Propriétés de l'apparence
+       */
+      properties: IAppearanceObject;
+      constructor();
+      /**
+       * sheet
+       * C@description onstruire une feuille de style liée à l'apparence
+       * @param stylesheet Definit la feuille de style
+       * @example
+       * appearance.sheet( {
+       *    'selector' : {
+       *       'property' : 'value',
+       *        ...
+       *    }
+       * } )
+       */
+      sheet(stylesheet: IAppearanceStyleSheet): this;
+      /**
+       * insertProperties
+       * @description Insert des propriétés d'apparence dans un objet support. Analyse les propriétés et les valeurs avant de les insérer
+       * @param properties Propriétés d'apparence support
+       * @param data Données des propriétés à insérer
+       * @example
+       * appearance.insertProperties( objectPropertiesSupport, objectDataToInsert )
+       */
+      insertProperties(properties: IAppearanceObject, data: IAppearanceObject): IAppearanceObject;
+      /**
+       * removeProperties
+       * @description Supprime des propriétés d'apparence dans un object support.
+       * @param properties Propriétés d'apparence support
+       * @param payload Données des propriétés à supprimer
+       * @example
+       * appearance.removeProperties( objectPropertiesSupport, objectDataToRemove )
+       */
+      removeProperties(properties: IAppearanceObject, payload: IAppearanceObjectDestroyed): IAppearanceObject;
+      /**
+       * set
+       * @description Insert des propriétés d'apparence. Analyse les propriétés et les valeurs avant de les insérer
+       * @param properties Propriétés à insérer
+       * @example
+       * appearance.set( {
+       *    'property' : 'value',
+       *    ...
+       * } )
+       */
+      set(properties: IAppearanceObject): this;
+      /**
+       * unset
+       * @description Supprime des propriétés d'apparence. Analyse les propriétés et les valeurs avant.
+       * @param properties Propriétés à supprimer
+       * @example
+       * appearance.unset( {
+       *    'property' : 'value',
+       *    ...
+       * } )
+       */
+      unset(properties: IAppearanceObjectDestroyed): this;
+      /**
+       * mount
+       * @description Monter l'apparence si ce n'est pas fait
+       * @example
+       * appearance.mount()
+       */
+      mount(): this;
+      /**
+       * mountImmediat
+       * @description Monter l'apparence
+       * @example
+       * appearance.mountImmediat()
+       */
+      mountImmediat(): this;
+      /**
+       * destroy
+       * @description Détruit l'apparence
+       * @example
+       * appearance.destroy()
+       */
+      destroy(): this;
+      /**
+       * sync
+       * @description Synchronise l'apparence
+       * @example
+       * appearance.sync()
+       */
+      sync(): this;
+  }
+
+}
+declare module '@protorians/core/element-attribute' {
+  import type { IElementAttribute, IElementAttributesEmitterScheme } from "@protorians/core/types";
+  import EventDispatcher from "@protorians/core/event-dispatcher";
+  /**
+   * AUN Attribute
+   * @description Gestionnaire d'attribute dynamique
+   */
+  export class ElementAttribute implements IElementAttribute {
+      #private;
+      /**
+       * Nom de lattribut
+       */
+      attributeName: string;
+      /**
+       * Emetteur
+       */
+      emitter: EventDispatcher<IElementAttributesEmitterScheme>;
+      /**
+       * Les entrées
+       */
+      get entries(): string[];
+      /**
+       * La valeur de l'attribut
+       */
+      get value(): string;
+      constructor(element: HTMLElement | null, attributeName?: string);
+      /**
+       * sync
+       * @description Synchronise les attributs
+       * @param attributeName Nom de l'attribut
+       * @description
+       * attribut.sync()
+       */
+      sync(attributeName?: string): this;
+      /**
+       * add
+       * @description Ajout une entrée à l'attribut
+       * @param value Valeur de l'attribut
+       * @example
+       * attribut.add( ... )
+       */
+      add(value: string): this;
+      /**
+       * remove
+       * @description Supprimer une entrée de l'attribut
+       * @param value Valeur de l'attribut
+       * @example
+       * attribut.remove( ... )
+       */
+      remove(value: string): this;
+      /**
+       * replace
+       * @description Remplace le valeur dans un attribut
+       * @param older Ancienne valeur de l'attribut
+       * @param value Nouvelle valeur de l'attribut
+       * @example
+       * attribut.replace( 'oldValue', 'newValue' )
+       */
+      replace(older: string, value: string): this;
+      /**
+       * contains
+       * @description Recherche l'existence d'une valeur dans l'instance de l'attribut
+       * @param value Valeur dans l'attribut recherché
+       * @example
+       * attribut.contains( 'searchValue' )
+       */
+      contains(value: string): boolean;
+      /**
+       * link
+       * @description Lie un attribut à une instance du DOM
+       * @example
+       * attribut.link()
+       */
+      link(): this;
+      /**
+       * unlink
+       * @description Supprime la liaison d'un attribut dans  l'instance
+       * @param attributes Nom de l'attribut
+       * @example
+       * attribut.unlink( 'attributName' )
+       */
+      unlink(attributes?: string | string[]): this;
+  }
+
+}
+declare module '@protorians/core/event-dispatcher' {
   import type { IEventDispatcher, IEventDispatcherCallback, IEventDispatcherEntries, IEventDispatcherProgations, IEventDispatcherScheme } from "@protorians/core/types";
   /**
    * Protorian EventDispatcher — Emetteur d'émission
@@ -103,8 +314,8 @@ declare module '@protorians/core/event.dispatcher' {
   }
 
 }
-declare module '@protorians/core/framerate.easings' {
-  import EventDispatcher from "@protorians/core/event.dispatcher";
+declare module '@protorians/core/framerate-easings' {
+  import EventDispatcher from "@protorians/core/event-dispatcher";
   import { IEasingEmitterScheme, IEasingFormula } from "@protorians/core/types";
   export class FrameRateEasing {
       #private;
@@ -259,11 +470,11 @@ declare module '@protorians/core/framerate.easings' {
   }
 
 }
-declare module '@protorians/core/framerate.engine' {
+declare module '@protorians/core/framerate-engine' {
   import type { IFrameRate, IFrameRateEmitterScheme, IFrameRateOptions, IFrameRatePlayload, IFrameRateProps, IFrameRates } from "@protorians/core/types";
-  import { CompositeModel } from "@protorians/core/compound.composite";
-  import Climbing from "@protorians/core/compound.climbing";
-  import EventDispatcher from "@protorians/core/event.dispatcher";
+  import { CompositeModel } from "@protorians/core/composite";
+  import Climbing from "@protorians/core/climbing";
+  import EventDispatcher from "@protorians/core/event-dispatcher";
   export class FrameRate implements IFrameRate {
       #private;
       emitter: EventDispatcher<IFrameRateEmitterScheme>;
@@ -299,23 +510,33 @@ declare module '@protorians/core/framerate.engine' {
 
 }
 declare module '@protorians/core/index' {
-  import * as CoumpoundClimbing from '@protorians/core/compound.climbing';
-  import * as CoumpoundComposite from '@protorians/core/compound.composite';
-  import * as ElementAnimate from '@protorians/core/element.animate';
-  import * as FrameRatesEngine from '@protorians/core/framerate.engine';
-  import * as EventDispatchers from '@protorians/core/event.dispatcher';
-  import * as FrameRateEasing from '@protorians/core/framerate.easings';
+  import * as CoumpoundClimbing from '@protorians/core/climbing';
+  import * as CoumpoundComposite from '@protorians/core/composite';
+  import * as CompoundMetricRandom from '@protorians/core/metric';
+  import * as CompoundNavigation from '@protorians/core/navigation';
+  import * as FrameRatesEngine from '@protorians/core/framerate-engine';
+  import * as FrameRateEasing from '@protorians/core/framerate-easings';
+  import * as EventDispatchers from '@protorians/core/event-dispatcher';
+  import * as ElementAnimate from '@protorians/core/element-animate';
+  import * as ElementAttribute from '@protorians/core/element-attribute';
+  import * as ElementAppearance from '@protorians/core/element-appearance';
+  import * as Utilities from '@protorians/core/utilities';
   const _default: {
       FrameRates: {
           Engine: typeof FrameRatesEngine;
           Easing: typeof FrameRateEasing;
       };
+      Utilities: typeof Utilities;
       Compound: {
           Climbing: typeof CoumpoundClimbing;
           Composite: typeof CoumpoundComposite;
+          MetricRandom: typeof CompoundMetricRandom;
+          Navigation: typeof CompoundNavigation;
       };
       Element: {
           Animate: typeof ElementAnimate;
+          Attribute: typeof ElementAttribute;
+          Appearance: typeof ElementAppearance;
       };
       Events: {
           Dispatcher: typeof EventDispatchers;
@@ -324,8 +545,59 @@ declare module '@protorians/core/index' {
   export default _default;
 
 }
+declare module '@protorians/core/metric' {
+  export class MetricRandom {
+      static ALPHA_NUMERIC: string;
+      static ALPHA_NUMERIC_LOWER: string;
+      static ALPHA_NUMERIC_UPPER: string;
+      static ALPHA_UPPER: string;
+      static ALPHA_LOWER: string;
+      static HEX_UPPER: string;
+      static HEX_LOWER: string;
+      static NUMERIC: string;
+      static CreateRandom(min: number, max: number): number;
+      static CreateBlock(base: string, length: number): string[];
+      static CreateAplpha(length: number): string[];
+      static CreateHEX(length: number): string[];
+      static CreateNumeric(length: number): string[];
+      static Create(length: number): string[];
+  }
+
+}
+declare module '@protorians/core/navigation' {
+  import type { IEventDispatcher, INavigation, INavigationEmitterScheme, INavigationMiddlewareCallback, INavigationOptions } from "@protorians/core/types";
+  /**
+   * Système de navigation
+   */
+  export class Navigation<Scheme> implements INavigation<Scheme> {
+      #private;
+      options: INavigationOptions<Scheme>;
+      emitter: IEventDispatcher<INavigationEmitterScheme<Scheme>>;
+      constructor();
+      currentRouteName(): keyof Scheme;
+      oldRouteName(): keyof Scheme | undefined;
+      currentQuery<T>(): T | undefined;
+      setOption(optionName: keyof INavigationOptions<Scheme>, value: (INavigationMiddlewareCallback<Scheme>[] & boolean) | undefined): this;
+      setOptions(options: INavigationOptions<Scheme>): this;
+      middleware(middleware: INavigationMiddlewareCallback<Scheme>): this;
+      observe(): this;
+      capturesActions(): this;
+      parseRouteName(routeName: string): string;
+      isExternalURL(url: string): boolean;
+      parseElementCaptured(ev: Event): HTMLElement | undefined;
+      dispatchNavigate(ev?: Event | undefined): this;
+      navigate(route: keyof Scheme, props?: (Scheme[keyof Scheme]), ev?: Event): this;
+  }
+
+}
 declare module '@protorians/core/types' {
   export type IElementTarget = HTMLElement | null;
+  export type IObjectToString = {
+      eq?: string | undefined;
+      start?: string | undefined;
+      end?: string | undefined;
+      joiner?: string | undefined;
+  };
   export interface IElementTransition {
       currentMoment?: boolean;
       startIn(target: IElementTarget): this;
@@ -472,6 +744,201 @@ declare module '@protorians/core/types' {
       value(x: number): number;
       property(): string;
   }
+  export type IElementAttributesMapValues = IElementAttributesMap | Array<any> | string | number | boolean | null | (() => void);
+  export type IElementAttributesMap = {
+      [A: string]: IElementAttributesMapValues;
+  };
+  export type IElementAttributesAunrsed = {
+      [A: string]: string;
+  };
+  export type IElementAttributesToggleMap = {
+      [A: string]: boolean;
+  };
+  export type IElementAttributeSyncAunyload = {
+      entries: string[];
+  };
+  export type IElementAttributeAddAunyload = {
+      added: string;
+  };
+  export type IElementAttributeRemoveAunyload = {
+      removed: string;
+  };
+  export type IElementAttributeReplaceAunyload = {
+      older: string;
+      newer: string;
+  };
+  export type IElementAttributeUnlinkAunyload = {
+      value: string[] | string;
+  };
+  export type IElementAttributesEmitterScheme = {
+      sync: IElementAttributeSyncAunyload;
+      add: IElementAttributeAddAunyload;
+      remove: IElementAttributeRemoveAunyload;
+      replace: IElementAttributeReplaceAunyload;
+      link: IElementAttribute;
+      unlink: IElementAttributeUnlinkAunyload;
+      unlinks: IElementAttribute;
+  };
+  export interface IElementAttribute {
+      attributeName: string;
+      get entries(): string[];
+      get value(): string;
+      sync(attribute?: string): this;
+      add(value: string): this;
+      remove(value: string): this;
+      replace(older: string, value: string): this;
+      contains(value: string): boolean;
+      link(): this;
+      unlink(property?: string | string[]): this;
+  }
+  export interface IAppearanceEmitterScheme {
+      ready: IAppearance;
+      insertProperties: IAppearanceObject;
+      removeProperties: IAppearanceObjectDestroyed;
+      set: IAppearanceObject;
+      unset: IAppearanceObjectDestroyed;
+      mount: IAppearance;
+      sync: IAppearance;
+      destroy: undefined;
+  }
+  export type IAppearanceValues = string | number | undefined;
+  export interface IAppearanceCSSDeclaration extends Partial<CSSStyleDeclaration> {
+      paddingVertical?: IAppearanceValues;
+      paddingHorizontal?: IAppearanceValues;
+      marginVertical?: IAppearanceValues;
+      marginHorizontal?: IAppearanceValues;
+  }
+  export type IAppearanceObject = {
+      [K in keyof Partial<IAppearanceCSSDeclaration>]: IAppearanceValues;
+  };
+  export interface IAppearanceStyleSheet {
+      [Selector: string]: IAppearanceObject;
+  }
+  export type IAppearanceObjectDestroyed = Array<keyof IAppearanceObject>;
+  export interface IAppearance {
+      instance: HTMLStyleElement;
+      uid: string;
+      properties: IAppearanceObject;
+      emitter: IEventDispatcher<IAppearanceEmitterScheme>;
+      insertProperties(properties: IAppearanceObject, data: IAppearanceObject): IAppearanceObject;
+      removeProperties(properties: IAppearanceObject, payload: IAppearanceObjectDestroyed): IAppearanceObject;
+      sheet(stylesheet: IAppearanceStyleSheet): this;
+      set(payload: IAppearanceObject): this;
+      unset(payload: IAppearanceObjectDestroyed): this;
+      mount(): this;
+      mountImmediat(): this;
+      sync(): this;
+      destroy(): this;
+  }
+  export type INavigationNavigateParser = 'hashtag' | 'directory';
+  export type INavigationNavigateProps<Scheme> = {
+      navigation: INavigation<Scheme>;
+      routeName: keyof Scheme;
+      parser: INavigationNavigateParser;
+  };
+  export type INavigationMiddlewareProps<Scheme> = {
+      navigation: INavigation<Scheme>;
+      event: Event | undefined;
+      parser: INavigationNavigateParser;
+      routeName: keyof Scheme;
+      props: Scheme[keyof Scheme] | IProps | undefined;
+  };
+  export type INavigationMiddlewareCallback<Scheme> = (payload: INavigationMiddlewareProps<Scheme>) => void;
+  export type INavigationOptions<Scheme> = {
+      useHashtagParser?: boolean;
+      capture?: boolean;
+      middlewares?: INavigationMiddlewareCallback<Scheme>[];
+  };
+  export interface INavigationEmitterScheme<Scheme> {
+      options: INavigation<Scheme>;
+      navigate: INavigationNavigateProps<Scheme>;
+  }
+  export interface INavigation<Scheme> {
+      emitter: IEventDispatcher<INavigationEmitterScheme<Scheme>>;
+      options: INavigationOptions<Scheme>;
+      setOptions(options: INavigationOptions<Scheme>): this;
+      setOption(optionName: keyof INavigationOptions<Scheme>, value: (INavigationMiddlewareCallback<Scheme>[] & boolean) | undefined): this;
+      middleware(middleware: INavigationMiddlewareCallback<Scheme>): this;
+      dispatchNavigate(ev?: PopStateEvent | undefined): this;
+      capturesActions(): this;
+      isExternalURL(url: string): boolean;
+      parseElementCaptured(event: Event): HTMLElement | undefined;
+      currentRouteName(): keyof Scheme;
+      oldRouteName(): keyof Scheme | undefined;
+      currentQuery<T>(): T | undefined;
+      observe(): this;
+      navigate(route: keyof Scheme, props?: Scheme[keyof Scheme], ev?: PopStateEvent): this;
+  }
+
+}
+declare module '@protorians/core/utilities' {
+  import type { IElementAttributesMap, IElementAttributesMapValues, IObjectToString } from "@protorians/core/types";
+  /**
+   * URLParamsObject
+   * @param searchParams Chaine de caractère des paramètres
+   */
+  export function URLParamsObject<T>(searchParams: string): T | undefined;
+  export function ObjectURLParams<T extends object>(params: T): string;
+  /**
+   * BrowseDOMPath
+   * @description Parcour l'arbre de parent d'un element. Une fonction de validation peut stopper le parcour en retournant true. Chaque parent parcourut est renvoyer via la fonction de validation
+   * @param child Element à parcourir
+   * @param validator Fonction de validation
+   * @example
+   * BrowseDOMPath( element, ( parent ) => ... )
+   */
+  export function AscendingDOMPath<T extends Node | HTMLElement>(child: T, validator: (parent: T) => boolean): T | undefined;
+  /**
+   * UpdateObject
+   * @description Mise à jour d'un objet à partir d'un autre objet
+   * @param originalObject Object original
+   * @param parameters À injecter
+   */
+  export function UpdateObject<T>(originalObject: T, parameters?: Partial<T> | undefined): T;
+  /**
+   * AttributesValuesAunrser
+   * @description Analyse et donne la valeur en fonction du type
+   * @param value Valeur de l'attribute
+   * @example AttributesValuesAunrser( data )
+   */
+  export function AttributesValuesAunrser(value: IElementAttributesMapValues): IElementAttributesMapValues;
+  /**
+   * AttributesObject
+   * @param attributes Charge utile
+   * @param ns nom de l'espace — `ui:button="success"`
+   * @param separator Chaine de caratère entre le nom d'espace et le nom de l'attribut
+   */
+  export function AttributesObject<T extends IElementAttributesMap>(attributes: IElementAttributesMap, ns?: string | undefined, separator?: string | undefined): T;
+  export function ObjectToString(payload: object, c?: IObjectToString): string;
+  /**
+   * SafeText
+   * @description Désactiver les crochets et quotes dans du texte
+   */
+  export function safeText(text: string): string;
+  /**
+   * SafeText
+   * @description Activer les crochets et quotes dans du texte
+   */
+  export function unSafeText(text: string): string;
+  /**
+   * addSlashes
+   * @description Désactiver les crochets et quotes dans du texte
+   */
+  export function AddSlashes(text: string): string;
+  /**
+   * stripSlashes
+   * @description Désactiver les crochets et quotes dans du texte
+   */
+  export function StripSlashes(text: string): string;
+  /**
+   * uncamelize
+   */
+  export function UnCamelize(value: string): string;
+  /**
+   * camelize
+   */
+  export function Camelize(value: string): string;
+  export function fixExponent(x: number): string;
 
 }
 declare module '@protorians/core' {

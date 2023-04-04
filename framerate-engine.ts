@@ -6,9 +6,9 @@ import type {
   IFrameRateProps, 
   IFrameRates
 } from "./types";
-import { CompositeModel } from "./compound.composite";
-import Climbing from "./compound.climbing";
-import EventDispatcher from "./event.dispatcher";
+import { CompositeModel } from "./composite";
+import Climbing from "./climbing";
+import EventDispatcher from "./event-dispatcher";
 
 
 export class FrameRate implements IFrameRate{

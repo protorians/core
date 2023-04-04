@@ -10,8 +10,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _ElementAnimation_instances, _ElementAnimation_features, _ElementAnimation_frameRates, _ElementAnimation_options, _ElementAnimation_createFrameRatesEntries;
-import { CompositeModel } from './compound.composite';
-import FrameRates, { FrameRate } from './framerate.engine';
+import { CompositeModel } from './composite';
+import FrameRates, { FrameRate } from './framerate-engine';
 export class ElementAnimation {
     constructor(features, options) {
         _ElementAnimation_instances.add(this);

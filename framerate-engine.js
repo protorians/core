@@ -10,9 +10,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _FrameRate_instances, _FrameRate_options, _FrameRate_current, _FrameRate_status, _FrameRate_paused, _FrameRate_stopped, _FrameRate_handler, _FrameRate_initialize, _FrameRate_prepare, _FrameRate_elapsed, _FrameRate_calculate, _FrameRate_frame, _FrameRate_playing, _FrameRates_executed;
-import { CompositeModel } from "./compound.composite";
-import Climbing from "./compound.climbing";
-import EventDispatcher from "./event.dispatcher";
+import { CompositeModel } from "./composite";
+import Climbing from "./climbing";
+import EventDispatcher from "./event-dispatcher";
 export class FrameRate {
     constructor(options) {
         _FrameRate_instances.add(this);

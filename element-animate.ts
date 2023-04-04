@@ -10,8 +10,8 @@ import type {
   IFrameRate, 
   IFrameRates 
 } from './types';
-import { CompositeModel } from './compound.composite'
-import FrameRates, { FrameRate } from './framerate.engine';
+import { CompositeModel } from './composite'
+import FrameRates, { FrameRate } from './framerate-engine';
 
 
 
