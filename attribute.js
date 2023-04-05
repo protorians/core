@@ -9,16 +9,16 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _ElementAttribute_entries, _ElementAttribute_element;
+var _CoreAttribute_entries, _CoreAttribute_element;
 import EventDispatcher from "./event-dispatcher";
 /**
  * AUN Attribute
  * @description Gestionnaire d'attribute dynamique
  */
-export class ElementAttribute {
+export class CoreAttribute {
     constructor(element, attributeName = '') {
-        _ElementAttribute_entries.set(this, []);
-        _ElementAttribute_element.set(this, null);
+        _CoreAttribute_entries.set(this, []);
+        _CoreAttribute_element.set(this, null);
         /**
          * Nom de lattribut
          */
@@ -27,18 +27,18 @@ export class ElementAttribute {
          * Emetteur
          */
         this.emitter = new EventDispatcher();
-        __classPrivateFieldSet(this, _ElementAttribute_element, element, "f");
+        __classPrivateFieldSet(this, _CoreAttribute_element, element, "f");
         this.attributeName = attributeName;
         this.sync(this.attributeName);
     }
     /**
      * Les entrées
      */
-    get entries() { return __classPrivateFieldGet(this, _ElementAttribute_entries, "f"); }
+    get entries() { return __classPrivateFieldGet(this, _CoreAttribute_entries, "f"); }
     /**
      * La valeur de l'attribut
      */
-    get value() { return __classPrivateFieldGet(this, _ElementAttribute_entries, "f").filter(value => value.trim().length).join(' ').trim(); }
+    get value() { return __classPrivateFieldGet(this, _CoreAttribute_entries, "f").filter(value => value.trim().length).join(' ').trim(); }
     /**
      * sync
      * @description Synchronise les attributs
@@ -48,10 +48,10 @@ export class ElementAttribute {
      */
     sync(attributeName) {
         this.attributeName = attributeName || this.attributeName;
-        (__classPrivateFieldGet(this, _ElementAttribute_element, "f")?.getAttribute(`${this.attributeName}`) || '').split(' ')
+        (__classPrivateFieldGet(this, _CoreAttribute_element, "f")?.getAttribute(`${this.attributeName}`) || '').split(' ')
             .filter(value => value.trim().length)
             .map(value => this.add(`${value.trim()}`));
-        this.emitter.dispatch('sync', { entries: __classPrivateFieldGet(this, _ElementAttribute_entries, "f") });
+        this.emitter.dispatch('sync', { entries: __classPrivateFieldGet(this, _CoreAttribute_entries, "f") });
         return this;
     }
     /**
@@ -63,7 +63,7 @@ export class ElementAttribute {
      */
     add(value) {
         if (!this.contains(value)) {
-            __classPrivateFieldGet(this, _ElementAttribute_entries, "f").push(value);
+            __classPrivateFieldGet(this, _CoreAttribute_entries, "f").push(value);
             this.emitter.dispatch('add', { added: value });
         }
         return this;
@@ -76,7 +76,7 @@ export class ElementAttribute {
      * attribut.remove( ... )
      */
     remove(value) {
-        __classPrivateFieldSet(this, _ElementAttribute_entries, __classPrivateFieldGet(this, _ElementAttribute_entries, "f").filter(entry => entry != value), "f");
+        __classPrivateFieldSet(this, _CoreAttribute_entries, __classPrivateFieldGet(this, _CoreAttribute_entries, "f").filter(entry => entry != value), "f");
         this.emitter.dispatch('remove', { removed: value });
         return this;
     }
@@ -101,7 +101,7 @@ export class ElementAttribute {
      * attribut.contains( 'searchValue' )
      */
     contains(value) {
-        return __classPrivateFieldGet(this, _ElementAttribute_entries, "f").includes(value, 0);
+        return __classPrivateFieldGet(this, _CoreAttribute_entries, "f").includes(value, 0);
     }
     /**
      * link
@@ -110,7 +110,7 @@ export class ElementAttribute {
      * attribut.link()
      */
     link() {
-        __classPrivateFieldGet(this, _ElementAttribute_element, "f")?.setAttribute(this.attributeName, `${this.value}`);
+        __classPrivateFieldGet(this, _CoreAttribute_element, "f")?.setAttribute(this.attributeName, `${this.value}`);
         this.emitter.dispatch('link', this);
         return this;
     }
@@ -126,14 +126,14 @@ export class ElementAttribute {
             if (Array.isArray(attributes)) {
                 attributes.map(attribute => this.remove(attribute));
             }
-            __classPrivateFieldGet(this, _ElementAttribute_element, "f")?.setAttribute(this.attributeName, `${this.value}`);
+            __classPrivateFieldGet(this, _CoreAttribute_element, "f")?.setAttribute(this.attributeName, `${this.value}`);
             this.emitter.dispatch('unlink', { value: attributes || this.value });
         }
         else {
-            __classPrivateFieldGet(this, _ElementAttribute_element, "f")?.removeAttribute(this.attributeName);
+            __classPrivateFieldGet(this, _CoreAttribute_element, "f")?.removeAttribute(this.attributeName);
             this.emitter.dispatch('unlinks', this);
         }
         return this;
     }
 }
-_ElementAttribute_entries = new WeakMap(), _ElementAttribute_element = new WeakMap();
+_CoreAttribute_entries = new WeakMap(), _CoreAttribute_element = new WeakMap();

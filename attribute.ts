@@ -1,6 +1,7 @@
 import type { 
-  IElementAttribute, 
-  IElementAttributesEmitterScheme 
+  ICoreAttribute, 
+  ICoreAttributesEmitterScheme, 
+  IElementTarget
 } from "./types";
 import EventDispatcher from "./event-dispatcher";
 
@@ -8,7 +9,7 @@ import EventDispatcher from "./event-dispatcher";
  * AUN Attribute
  * @description Gestionnaire d'attribute dynamique
  */
-export class ElementAttribute implements IElementAttribute {
+export class CoreAttribute implements ICoreAttribute {
 
   #entries : string[] = [];
   
@@ -22,7 +23,7 @@ export class ElementAttribute implements IElementAttribute {
   /**
    * Emetteur
    */
-  emitter = new EventDispatcher<IElementAttributesEmitterScheme>()
+  emitter = new EventDispatcher<ICoreAttributesEmitterScheme>()
 
   /**
    * Les entrées
@@ -34,7 +35,7 @@ export class ElementAttribute implements IElementAttribute {
    */
   get value(){ return this.#entries.filter( value => value.trim().length ).join(' ').trim(); }
 
-  constructor( element : HTMLElement | null, attributeName  = '' ){
+  constructor( element : IElementTarget | null, attributeName  = '' ){
 
     this.#element = element;
 

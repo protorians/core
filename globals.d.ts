@@ -1,100 +1,39 @@
-declare module '@protorians/core/climbing' {
-  import type { IClimbing, IClimbingAsyncTask, IClimbingNext, IClimbingTask, IClimbingYield } from "@protorians/core/types";
-  export default class Climbing<R> implements IClimbing<R> {
-      /**
-       * Tableau de réponse
-       */
-      responses: Array<R>;
-      /**
-       * Liste des étapes préparées
-       */
-      prepared: IClimbingTask<R> | undefined;
-      /**
-       * Fonction de rendement
-       */
-      yield: IClimbingYield<R>;
-      constructor(entries: Array<R>, callback: IClimbingAsyncTask<R>);
-      /**
-       * Déclencher l'escalade
-       * @param done Fonction de rappel quand l'escalade est complète
-       * @param start Index à laquelle doit commencer l'escalade
-       */
-      trigger(done: IClimbingNext<R>, start?: number): this;
-      /**
-       * Création de l'escalade
-       * @param entries Tableau d'élément de type <R>
-       * @param callback Fonction de rappel pour instancier une nouvelle entrée de l'escalade
-       */
-      create(entries: Array<R>, callback: IClimbingAsyncTask<R>): IClimbingYield<R>;
-      /**
-       * Prochaine étape dans le tableau de l'escalade
-       * @param prepared Préparation de la liste des étapes de l'escalade
-       * @param next Fonction de rapel pour la prochaine étape dans l'escalade
-       */
-      next(prepared: IClimbingTask<R>, next: IClimbingNext<R>): boolean;
-  }
-
-}
-declare module '@protorians/core/composite' {
-  import type { ICompositeModel, IProps } from "@protorians/core/types";
-  export class CompositeModel<P extends IProps> implements ICompositeModel {
+declare module '@protorians/core/animation' {
+  import type { ICoreAnimation, ICoreAnimationFeatures, ICoreAnimationOptions, IElementTarget, IAnimationStateCallback } from '@protorians/core/types';
+  export class CoreAnimation implements ICoreAnimation {
       #private;
-      get properties(): P;
-      property(name: keyof P): P[keyof P] | undefined;
-      constructor(props: P);
-  }
-
-}
-declare module '@protorians/core/element-animate' {
-  import type { IElementAnimation, IElementAnimationFeatures, IElementAnimationOptions, IElementTarget, IElementTransition, IAnimationStateCallback, IElementTransitionProps } from '@protorians/core/types';
-  import { CompositeModel } from '@protorians/core/composite';
-  export class ElementAnimation implements IElementAnimation {
-      #private;
-      get features(): IElementAnimationFeatures;
-      constructor(features: IElementAnimationFeatures, options?: IElementAnimationOptions);
+      get features(): ICoreAnimationFeatures;
+      constructor(features: ICoreAnimationFeatures, options?: ICoreAnimationOptions);
       reset(target: IElementTarget): this;
       start(target: IElementTarget, callback?: IAnimationStateCallback): this;
   }
-  export class ElementTransition extends CompositeModel<IElementTransitionProps> implements IElementTransition {
-      currentMoment?: boolean;
-      constructor(props: IElementTransitionProps);
-      startIn(target: IElementTarget, callback?: IAnimationStateCallback): this;
-      startOut(target: IElementTarget, callback?: IAnimationStateCallback): this;
-      toggle(target: IElementTarget, callback?: IAnimationStateCallback): this;
-  }
-  export class ElementTransitions {
-      /**
-       * Fade Transition
-       */
-      static get fade(): ElementTransition;
-  }
 
 }
-declare module '@protorians/core/element-appearance' {
+declare module '@protorians/core/appearance' {
   import EventDispatcher from "@protorians/core/event-dispatcher";
   import type { IAppearance, IAppearanceEmitterScheme, IAppearanceObject, IAppearanceObjectDestroyed, IAppearanceStyleSheet, IAppearanceValues } from "@protorians/core/types";
   /**
-   * ElementAppearanceProps
+   * CoreAppearanceProps
    * @description Analyse la propriété de l'apparence et la réecrit
    * @param name Nom de la propriété
    * @param value Valeur de la propriété
    * @example
-   * ElementAppearanceProps<IAppearanceObject>( { color : '#777' } )
+   * CoreAppearanceProps<IAppearanceObject>( { color : '#777' } )
    */
-  export function ElementAppearanceProps<T extends IAppearanceObject | IAppearanceObjectDestroyed>(name: keyof IAppearanceObject, value: IAppearanceValues): T;
+  export function CoreAppearanceProps<T extends IAppearanceObject | IAppearanceObjectDestroyed>(name: keyof IAppearanceObject, value: IAppearanceValues): T;
   /**
-   * ElementAppearanceValues
+   * CoreAppearanceValues
    * @description Analyse la valeur d'une propriété de l'apparence
    * @param value Valeur de la propriété
    * @example
-   * ElementAppearanceValues( ... )
+   * CoreAppearanceValues( ... )
    */
-  export function ElementAppearanceValues(value: IAppearanceValues): string | undefined;
+  export function CoreAppearanceValues(value: IAppearanceValues): string | undefined;
   /**
    * AUN Appearance
    * @description Gestionnaire d'apparence des éléments AUN
    */
-  export class ElementAppearance implements IAppearance {
+  export default class CoreAppearance implements IAppearance {
       /**
        * Instance du DOM
        */
@@ -196,14 +135,14 @@ declare module '@protorians/core/element-appearance' {
   }
 
 }
-declare module '@protorians/core/element-attribute' {
-  import type { IElementAttribute, IElementAttributesEmitterScheme } from "@protorians/core/types";
+declare module '@protorians/core/attribute' {
+  import type { ICoreAttribute, ICoreAttributesEmitterScheme, IElementTarget } from "@protorians/core/types";
   import EventDispatcher from "@protorians/core/event-dispatcher";
   /**
    * AUN Attribute
    * @description Gestionnaire d'attribute dynamique
    */
-  export class ElementAttribute implements IElementAttribute {
+  export class CoreAttribute implements ICoreAttribute {
       #private;
       /**
        * Nom de lattribut
@@ -212,7 +151,7 @@ declare module '@protorians/core/element-attribute' {
       /**
        * Emetteur
        */
-      emitter: EventDispatcher<IElementAttributesEmitterScheme>;
+      emitter: EventDispatcher<ICoreAttributesEmitterScheme>;
       /**
        * Les entrées
        */
@@ -221,7 +160,7 @@ declare module '@protorians/core/element-attribute' {
        * La valeur de l'attribut
        */
       get value(): string;
-      constructor(element: HTMLElement | null, attributeName?: string);
+      constructor(element: IElementTarget | null, attributeName?: string);
       /**
        * sync
        * @description Synchronise les attributs
@@ -278,6 +217,53 @@ declare module '@protorians/core/element-attribute' {
        * attribut.unlink( 'attributName' )
        */
       unlink(attributes?: string | string[]): this;
+  }
+
+}
+declare module '@protorians/core/climbing' {
+  import type { IClimbing, IClimbingAsyncTask, IClimbingNext, IClimbingTask, IClimbingYield } from "@protorians/core/types";
+  export default class Climbing<R> implements IClimbing<R> {
+      /**
+       * Tableau de réponse
+       */
+      responses: Array<R>;
+      /**
+       * Liste des étapes préparées
+       */
+      prepared: IClimbingTask<R> | undefined;
+      /**
+       * Fonction de rendement
+       */
+      yield: IClimbingYield<R>;
+      constructor(entries: Array<R>, callback: IClimbingAsyncTask<R>);
+      /**
+       * Déclencher l'escalade
+       * @param done Fonction de rappel quand l'escalade est complète
+       * @param start Index à laquelle doit commencer l'escalade
+       */
+      trigger(done: IClimbingNext<R>, start?: number): this;
+      /**
+       * Création de l'escalade
+       * @param entries Tableau d'élément de type <R>
+       * @param callback Fonction de rappel pour instancier une nouvelle entrée de l'escalade
+       */
+      create(entries: Array<R>, callback: IClimbingAsyncTask<R>): IClimbingYield<R>;
+      /**
+       * Prochaine étape dans le tableau de l'escalade
+       * @param prepared Préparation de la liste des étapes de l'escalade
+       * @param next Fonction de rapel pour la prochaine étape dans l'escalade
+       */
+      next(prepared: IClimbingTask<R>, next: IClimbingNext<R>): boolean;
+  }
+
+}
+declare module '@protorians/core/composite' {
+  import type { ICompositeModel, IProps } from "@protorians/core/types";
+  export class CompositeModel<P extends IProps> implements ICompositeModel {
+      #private;
+      get properties(): P;
+      property(name: keyof P): P[keyof P] | undefined;
+      constructor(props: P);
   }
 
 }
@@ -520,11 +506,13 @@ declare module '@protorians/core/index' {
   import * as FrameRatesEngine from '@protorians/core/framerate-engine';
   import * as FrameRateEasing from '@protorians/core/framerate-easings';
   import * as EventDispatchers from '@protorians/core/event-dispatcher';
-  import * as ElementAnimate from '@protorians/core/element-animate';
-  import * as ElementAttribute from '@protorians/core/element-attribute';
-  import * as ElementAppearance from '@protorians/core/element-appearance';
+  import * as ElementAnimate from '@protorians/core/animation';
+  import * as CoreAttribute from '@protorians/core/attribute';
+  import * as CoreAppearance from '@protorians/core/appearance';
   import * as Utilities from '@protorians/core/utilities';
+  import * as Typing from '@protorians/core/types';
   const _default: {
+      Typing: typeof Typing;
       FrameRates: {
           Engine: typeof FrameRatesEngine;
           Easing: typeof FrameRateEasing;
@@ -538,8 +526,8 @@ declare module '@protorians/core/index' {
       };
       Element: {
           Animate: typeof ElementAnimate;
-          Attribute: typeof ElementAttribute;
-          Appearance: typeof ElementAppearance;
+          Attribute: typeof CoreAttribute;
+          Appearance: typeof CoreAppearance;
       };
       Events: {
           Dispatcher: typeof EventDispatchers;
@@ -593,6 +581,59 @@ declare module '@protorians/core/navigation' {
   }
 
 }
+declare module '@protorians/core/transitions' {
+  import type { IElementTarget, ICoreTransition, IAnimationStateCallback, ICoreTransitionProps } from '@protorians/core/types';
+  import { CompositeModel } from '@protorians/core/composite';
+  export class CoreTransition extends CompositeModel<ICoreTransitionProps> implements ICoreTransition {
+      currentMoment?: boolean;
+      constructor(props: ICoreTransitionProps);
+      startIn(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      startOut(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      toggle(target: IElementTarget, callback?: IAnimationStateCallback): this;
+  }
+  export class CoreTransitions {
+      #private;
+      static get duration(): number;
+      static set duration(value: number);
+      /**
+       * Fade Transition
+       */
+      static get Fade(): CoreTransition;
+      /**
+       * SlideHorizontal  Transition avec fondu
+       */
+      static get SlideFadedHorizontal(): CoreTransition;
+      /**
+       * SlideHorizontal  Transition
+       */
+      static get SlideHorizontal(): CoreTransition;
+      /**
+       * SlideVertical  Transition avec fondu
+       */
+      static get SlideFadedVertical(): CoreTransition;
+      /**
+       * SlideVertical  Transition
+       */
+      static get SlideVertical(): CoreTransition;
+      /**
+       * SlideHorizontalReverse  Transition avec fondu
+       */
+      static get SlideFadedHorizontalReverse(): CoreTransition;
+      /**
+       * SlideHorizontal  Transition
+       */
+      static get SlideHorizontalReverse(): CoreTransition;
+      /**
+       * SlideVertical  Transition avec fondu
+       */
+      static get SlideFadedVerticalReverse(): CoreTransition;
+      /**
+       * SlideVerticalReverse  Transition
+       */
+      static get SlideVerticalReverse(): CoreTransition;
+  }
+
+}
 declare module '@protorians/core/types' {
   export type IElementTarget = HTMLElement | null;
   export type IObjectToString = {
@@ -601,42 +642,42 @@ declare module '@protorians/core/types' {
       end?: string | undefined;
       joiner?: string | undefined;
   };
-  export interface IElementTransition {
+  export interface ICoreTransition {
       currentMoment?: boolean;
       startIn(target: IElementTarget, callback: IAnimationStateCallback): this;
       startOut(target: IElementTarget, callback: IAnimationStateCallback): this;
       toggle(target: IElementTarget, callback: IAnimationStateCallback): this;
   }
-  export type IElementTransitionProps = {
-      in: IElementAnimation;
-      out: IElementAnimation;
+  export type ICoreTransitionProps = {
+      in: ICoreAnimation;
+      out: ICoreAnimation;
   };
   export type IAnimationStateCallback = (payload: IAnimationStatePayload) => void;
-  export type IElementAnimationFeatureCallback = (payload: IElementAnimationFeaturePayload) => string;
+  export type ICoreAnimationFeatureCallback = (payload: ICoreAnimationFeaturePayload) => string;
   export type IAnimationStatePayload = {
-      animate: IElementAnimation;
+      animate: ICoreAnimation;
       target: IElementTarget;
   };
-  export type IElementAnimationFeaturePayload = {
+  export type ICoreAnimationFeaturePayload = {
       value: number;
       percent: number;
   };
-  export type IElementAnimationFeature = {
+  export type ICoreAnimationFeature = {
       from: number;
       to: number;
       duration: number;
       ease?: IEasing | undefined;
-      set: IElementAnimationFeatureCallback;
+      set: ICoreAnimationFeatureCallback;
   };
-  export type IElementAnimationFeatures = {
-      [K in keyof Partial<CSSStyleDeclaration>]: IElementAnimationFeature;
+  export type ICoreAnimationFeatures = {
+      [K in keyof Partial<CSSStyleDeclaration>]: ICoreAnimationFeature;
   };
-  export type IElementAnimationOptions = {
+  export type ICoreAnimationOptions = {
       parallel?: boolean;
       infinite?: boolean;
   };
-  export interface IElementAnimation {
-      get features(): IElementAnimationFeatures;
+  export interface ICoreAnimation {
+      get features(): ICoreAnimationFeatures;
       start(target: IElementTarget, callback?: IAnimationStateCallback): this;
   }
   export type IClimbingTask<R> = Generator<Promise<R>, void, IClimbingNext<R>>;
@@ -754,42 +795,42 @@ declare module '@protorians/core/types' {
       value(x: number): number;
       property(): string;
   }
-  export type IElementAttributesMapValues = IElementAttributesMap | Array<any> | string | number | boolean | null | (() => void);
-  export type IElementAttributesMap = {
-      [A: string]: IElementAttributesMapValues;
+  export type ICoreAttributesMapValues = ICoreAttributesMap | Array<any> | string | number | boolean | null | (() => void);
+  export type ICoreAttributesMap = {
+      [A: string]: ICoreAttributesMapValues;
   };
-  export type IElementAttributesAunrsed = {
+  export type ICoreAttributesAunrsed = {
       [A: string]: string;
   };
-  export type IElementAttributesToggleMap = {
+  export type ICoreAttributesToggleMap = {
       [A: string]: boolean;
   };
-  export type IElementAttributeSyncAunyload = {
+  export type ICoreAttributeSyncAunyload = {
       entries: string[];
   };
-  export type IElementAttributeAddAunyload = {
+  export type ICoreAttributeAddAunyload = {
       added: string;
   };
-  export type IElementAttributeRemoveAunyload = {
+  export type ICoreAttributeRemoveAunyload = {
       removed: string;
   };
-  export type IElementAttributeReplaceAunyload = {
+  export type ICoreAttributeReplaceAunyload = {
       older: string;
       newer: string;
   };
-  export type IElementAttributeUnlinkAunyload = {
+  export type ICoreAttributeUnlinkAunyload = {
       value: string[] | string;
   };
-  export type IElementAttributesEmitterScheme = {
-      sync: IElementAttributeSyncAunyload;
-      add: IElementAttributeAddAunyload;
-      remove: IElementAttributeRemoveAunyload;
-      replace: IElementAttributeReplaceAunyload;
-      link: IElementAttribute;
-      unlink: IElementAttributeUnlinkAunyload;
-      unlinks: IElementAttribute;
+  export type ICoreAttributesEmitterScheme = {
+      sync: ICoreAttributeSyncAunyload;
+      add: ICoreAttributeAddAunyload;
+      remove: ICoreAttributeRemoveAunyload;
+      replace: ICoreAttributeReplaceAunyload;
+      link: ICoreAttribute;
+      unlink: ICoreAttributeUnlinkAunyload;
+      unlinks: ICoreAttribute;
   };
-  export interface IElementAttribute {
+  export interface ICoreAttribute {
       attributeName: string;
       get entries(): string[];
       get value(): string;
@@ -882,7 +923,7 @@ declare module '@protorians/core/types' {
 
 }
 declare module '@protorians/core/utilities' {
-  import type { IElementAttributesMap, IElementAttributesMapValues, IObjectToString } from "@protorians/core/types";
+  import type { ICoreAttributesMap, ICoreAttributesMapValues, IObjectToString } from "@protorians/core/types";
   /**
    * URLParamsObject
    * @param searchParams Chaine de caractère des paramètres
@@ -911,14 +952,14 @@ declare module '@protorians/core/utilities' {
    * @param value Valeur de l'attribute
    * @example AttributesValuesAunrser( data )
    */
-  export function AttributesValuesAunrser(value: IElementAttributesMapValues): IElementAttributesMapValues;
+  export function AttributesValuesAunrser(value: ICoreAttributesMapValues): ICoreAttributesMapValues;
   /**
    * AttributesObject
    * @param attributes Charge utile
    * @param ns nom de l'espace — `ui:button="success"`
    * @param separator Chaine de caratère entre le nom d'espace et le nom de l'attribut
    */
-  export function AttributesObject<T extends IElementAttributesMap>(attributes: IElementAttributesMap, ns?: string | undefined, separator?: string | undefined): T;
+  export function AttributesObject<T extends ICoreAttributesMap>(attributes: ICoreAttributesMap, ns?: string | undefined, separator?: string | undefined): T;
   export function ObjectToString(payload: object, c?: IObjectToString): string;
   /**
    * SafeText

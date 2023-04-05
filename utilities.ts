@@ -1,8 +1,8 @@
 'use-struct';
 
 import type { 
-  IElementAttributesMap, 
-  IElementAttributesMapValues, 
+  ICoreAttributesMap, 
+  ICoreAttributesMapValues, 
   IObjectToString 
 } from "./types";
 
@@ -116,7 +116,7 @@ export function UpdateObject<T>(
  * @param value Valeur de l'attribute
  * @example AttributesValuesAunrser( data )
  */
-export function AttributesValuesAunrser( value : IElementAttributesMapValues ){
+export function AttributesValuesAunrser( value : ICoreAttributesMapValues ){
 
   let parsed = value;
 
@@ -138,9 +138,9 @@ export function AttributesValuesAunrser( value : IElementAttributesMapValues ){
  * @param ns nom de l'espace — `ui:button="success"`
  * @param separator Chaine de caratère entre le nom d'espace et le nom de l'attribut
  */
-export function AttributesObject<T extends IElementAttributesMap>( 
+export function AttributesObject<T extends ICoreAttributesMap>( 
 
-attributes : IElementAttributesMap, 
+attributes : ICoreAttributesMap, 
 
 ns ?: string | undefined,
 

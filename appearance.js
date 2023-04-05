@@ -2,14 +2,14 @@ import { MetricRandom } from "./metric";
 import EventDispatcher from "./event-dispatcher";
 import { ObjectToString, UnCamelize } from "./utilities";
 /**
- * ElementAppearanceProps
+ * CoreAppearanceProps
  * @description Analyse la propriété de l'apparence et la réecrit
  * @param name Nom de la propriété
  * @param value Valeur de la propriété
  * @example
- * ElementAppearanceProps<IAppearanceObject>( { color : '#777' } )
+ * CoreAppearanceProps<IAppearanceObject>( { color : '#777' } )
  */
-export function ElementAppearanceProps(name, value) {
+export function CoreAppearanceProps(name, value) {
     const keys = [];
     const parsed = {};
     /**
@@ -40,18 +40,18 @@ export function ElementAppearanceProps(name, value) {
      * Injection
      */
     keys.forEach(key => {
-        parsed[UnCamelize(key)] = ElementAppearanceValues(value);
+        parsed[UnCamelize(key)] = CoreAppearanceValues(value);
     });
     return parsed;
 }
 /**
- * ElementAppearanceValues
+ * CoreAppearanceValues
  * @description Analyse la valeur d'une propriété de l'apparence
  * @param value Valeur de la propriété
  * @example
- * ElementAppearanceValues( ... )
+ * CoreAppearanceValues( ... )
  */
-export function ElementAppearanceValues(value) {
+export function CoreAppearanceValues(value) {
     if (typeof value == 'number') {
         return `${value}`;
     }
@@ -61,7 +61,7 @@ export function ElementAppearanceValues(value) {
  * AUN Appearance
  * @description Gestionnaire d'apparence des éléments AUN
  */
-export class ElementAppearance {
+export default class CoreAppearance {
     constructor() {
         /**
          * Instance de l'emetteur
@@ -110,7 +110,7 @@ export class ElementAppearance {
      */
     insertProperties(properties, data) {
         Object.entries(data).forEach(({ 0: name, 1: value }) => {
-            Object.entries(ElementAppearanceProps(name, value)).forEach(({ 0: key, 1: data }) => properties[key] = data);
+            Object.entries(CoreAppearanceProps(name, value)).forEach(({ 0: key, 1: data }) => properties[key] = data);
         });
         this.emitter.dispatch('insertProperties', properties);
         return properties;
@@ -125,7 +125,7 @@ export class ElementAppearance {
      */
     removeProperties(properties, payload) {
         Object.values(payload).forEach(name => {
-            Object.entries(ElementAppearanceProps(name, undefined)).forEach(({ 0: key }) => properties[key] = undefined);
+            Object.entries(CoreAppearanceProps(name, undefined)).forEach(({ 0: key }) => properties[key] = undefined);
         });
         this.emitter.dispatch('removeProperties', properties);
         return properties;

@@ -9,14 +9,14 @@ import { ObjectToString, UnCamelize } from "./utilities";
 
 
 /**
- * ElementAppearanceProps
+ * CoreAppearanceProps
  * @description Analyse la propriété de l'apparence et la réecrit
  * @param name Nom de la propriété
  * @param value Valeur de la propriété
  * @example 
- * ElementAppearanceProps<IAppearanceObject>( { color : '#777' } )
+ * CoreAppearanceProps<IAppearanceObject>( { color : '#777' } )
  */
-export function ElementAppearanceProps<T extends IAppearanceObject | IAppearanceObjectDestroyed>( 
+export function CoreAppearanceProps<T extends IAppearanceObject | IAppearanceObjectDestroyed>( 
   
   name : keyof IAppearanceObject, 
   
@@ -79,7 +79,7 @@ export function ElementAppearanceProps<T extends IAppearanceObject | IAppearance
    */
   keys.forEach( key => {
 
-    parsed[ UnCamelize(key) as any ] = ElementAppearanceValues( value )
+    parsed[ UnCamelize(key) as any ] = CoreAppearanceValues( value )
     
   } )
 
@@ -88,13 +88,13 @@ export function ElementAppearanceProps<T extends IAppearanceObject | IAppearance
 }
 
 /**
- * ElementAppearanceValues
+ * CoreAppearanceValues
  * @description Analyse la valeur d'une propriété de l'apparence
  * @param value Valeur de la propriété
  * @example 
- * ElementAppearanceValues( ... )
+ * CoreAppearanceValues( ... )
  */
-export function ElementAppearanceValues( value : IAppearanceValues ){
+export function CoreAppearanceValues( value : IAppearanceValues ){
 
   if( typeof value == 'number' ){
 
@@ -111,7 +111,7 @@ export function ElementAppearanceValues( value : IAppearanceValues ){
  * AUN Appearance
  * @description Gestionnaire d'apparence des éléments AUN
  */
-export class ElementAppearance implements IAppearance{
+export default class CoreAppearance implements IAppearance{
 
   /**
    * Instance du DOM
@@ -198,7 +198,7 @@ export class ElementAppearance implements IAppearance{
         
       Object.entries( 
         
-        ElementAppearanceProps<IAppearanceObject>( name as keyof IAppearanceObject, value )
+        CoreAppearanceProps<IAppearanceObject>( name as keyof IAppearanceObject, value )
         
       ).forEach( ({ 0: key, 1: data }) => properties[ key as any ] = data )
       
@@ -224,7 +224,7 @@ export class ElementAppearance implements IAppearance{
       
       Object.entries( 
         
-        ElementAppearanceProps<IAppearanceObjectDestroyed>( name as keyof IAppearanceObject, undefined ) 
+        CoreAppearanceProps<IAppearanceObjectDestroyed>( name as keyof IAppearanceObject, undefined ) 
         
       ).forEach( ({ 0: key }) => properties[ key as any ] = undefined )
       

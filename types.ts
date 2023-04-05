@@ -22,7 +22,7 @@ export type IObjectToString = {
 
 
 
-export interface IElementTransition {
+export interface ICoreTransition {
 
   currentMoment ?: boolean;
 
@@ -34,11 +34,11 @@ export interface IElementTransition {
   
 }
 
-export type IElementTransitionProps = {
+export type ICoreTransitionProps = {
 
-  in: IElementAnimation;
+  in: ICoreAnimation;
 
-  out: IElementAnimation;
+  out: ICoreAnimation;
 
 }
 
@@ -50,17 +50,17 @@ export type IAnimationStateCallback = ( payload : IAnimationStatePayload ) => vo
 
 
 
-export type IElementAnimationFeatureCallback = ( payload : IElementAnimationFeaturePayload ) => string;
+export type ICoreAnimationFeatureCallback = ( payload : ICoreAnimationFeaturePayload ) => string;
 
 export type IAnimationStatePayload = {
 
-  animate: IElementAnimation;
+  animate: ICoreAnimation;
 
   target: IElementTarget;
   
 }
 
-export type IElementAnimationFeaturePayload = {
+export type ICoreAnimationFeaturePayload = {
 
   value: number;
 
@@ -68,7 +68,7 @@ export type IElementAnimationFeaturePayload = {
   
 }
 
-export type IElementAnimationFeature = {
+export type ICoreAnimationFeature = {
 
   from: number;
 
@@ -78,17 +78,17 @@ export type IElementAnimationFeature = {
 
   ease?: IEasing | undefined
 
-  set: IElementAnimationFeatureCallback;
+  set: ICoreAnimationFeatureCallback;
   
 }
 
-export type IElementAnimationFeatures = {
+export type ICoreAnimationFeatures = {
 
-  [ K in keyof Partial<CSSStyleDeclaration> ] : IElementAnimationFeature
+  [ K in keyof Partial<CSSStyleDeclaration> ] : ICoreAnimationFeature
 
 }
 
-export type IElementAnimationOptions = {
+export type ICoreAnimationOptions = {
 
   parallel ?: boolean,
 
@@ -96,9 +96,9 @@ export type IElementAnimationOptions = {
   
 }
 
-export interface IElementAnimation {
+export interface ICoreAnimation {
 
-  get features() : IElementAnimationFeatures;
+  get features() : ICoreAnimationFeatures;
 
   start( target : IElementTarget, callback ?: IAnimationStateCallback ) : this;
 
@@ -355,45 +355,45 @@ export interface IEasing{
 
 
 
-export type IElementAttributesMapValues = IElementAttributesMap | Array<any> | string  | number | boolean | null | (() => void)
+export type ICoreAttributesMapValues = ICoreAttributesMap | Array<any> | string  | number | boolean | null | (() => void)
 
-export type IElementAttributesMap = {
+export type ICoreAttributesMap = {
 
-  [ A : string ] : IElementAttributesMapValues
+  [ A : string ] : ICoreAttributesMapValues
   
 }
 
-export type IElementAttributesAunrsed = {
+export type ICoreAttributesAunrsed = {
 
     [ A : string ] : string;
     
 }
 
-export type IElementAttributesToggleMap = {
+export type ICoreAttributesToggleMap = {
 
     [ A : string ] : boolean;
     
 }
 
-export type IElementAttributeSyncAunyload = {
+export type ICoreAttributeSyncAunyload = {
   
   entries: string[];
 
 }
 
-export type IElementAttributeAddAunyload = {
+export type ICoreAttributeAddAunyload = {
   
   added: string;
 
 }
 
-export type IElementAttributeRemoveAunyload = {
+export type ICoreAttributeRemoveAunyload = {
   
   removed: string;
 
 }
 
-export type IElementAttributeReplaceAunyload = {
+export type ICoreAttributeReplaceAunyload = {
   
   older: string;
 
@@ -401,31 +401,31 @@ export type IElementAttributeReplaceAunyload = {
 
 }
 
-export type IElementAttributeUnlinkAunyload = {
+export type ICoreAttributeUnlinkAunyload = {
   
   value: string[] | string;
 
 }
 
-export type IElementAttributesEmitterScheme = {
+export type ICoreAttributesEmitterScheme = {
 
-  sync: IElementAttributeSyncAunyload;
+  sync: ICoreAttributeSyncAunyload;
 
-  add: IElementAttributeAddAunyload;
+  add: ICoreAttributeAddAunyload;
 
-  remove: IElementAttributeRemoveAunyload;
+  remove: ICoreAttributeRemoveAunyload;
 
-  replace: IElementAttributeReplaceAunyload;
+  replace: ICoreAttributeReplaceAunyload;
 
-  link: IElementAttribute;
+  link: ICoreAttribute;
   
-  unlink: IElementAttributeUnlinkAunyload;
+  unlink: ICoreAttributeUnlinkAunyload;
 
-  unlinks: IElementAttribute;
+  unlinks: ICoreAttribute;
 
 }
 
-export interface IElementAttribute{
+export interface ICoreAttribute{
 
   attributeName : string;
   

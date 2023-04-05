@@ -5,14 +5,17 @@ import * as CompoundNavigation from './navigation';
 import * as FrameRatesEngine from './framerate-engine';
 import * as FrameRateEasing from './framerate-easings';
 import * as EventDispatchers from './event-dispatcher'
-import * as ElementAnimate from './element-animate';
-import * as ElementAttribute from './element-attribute';
-import * as ElementAppearance from './element-appearance';
+import * as ElementAnimate from './animation';
+import * as CoreAttribute from './attribute';
+import * as CoreAppearance from './appearance';
 import * as Utilities from './utilities';
+import * as Typing from './types';
 
 
 
 export default {
+
+  Typing,
   
   FrameRates : {
 
@@ -40,9 +43,9 @@ export default {
 
     Animate : ElementAnimate,
 
-    Attribute : ElementAttribute,
+    Attribute : CoreAttribute,
 
-    Appearance : ElementAppearance,
+    Appearance : CoreAppearance,
     
   },
 
