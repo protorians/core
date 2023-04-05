@@ -30,10 +30,13 @@ export class ElementAnimation {
         }), "f");
         return this;
     }
-    start(target) {
+    start(target, callback) {
         this.reset(target);
         if (__classPrivateFieldGet(this, _ElementAnimation_frameRates, "f")) {
-            __classPrivateFieldGet(this, _ElementAnimation_frameRates, "f").start();
+            __classPrivateFieldGet(this, _ElementAnimation_frameRates, "f").start(() => {
+                if (typeof callback == 'function')
+                    callback({ animate: this, target, });
+            });
         }
         return this;
     }
@@ -61,25 +64,28 @@ export class ElementTransition extends CompositeModel {
         super(props);
         this.currentMoment = undefined;
     }
-    startIn(target) {
+    startIn(target, callback) {
         this.currentMoment = true;
-        this.properties.in.start(target);
+        this.properties.in.start(target, callback);
         return this;
     }
-    startOut(target) {
+    startOut(target, callback) {
         this.currentMoment = false;
-        this.properties.out.start(target);
+        this.properties.out.start(target, callback);
         return this;
     }
-    toggle(target) {
+    toggle(target, callback) {
         if (this.currentMoment)
-            this.startOut(target);
+            this.startOut(target, callback);
         else
-            this.startIn(target);
+            this.startIn(target, callback);
         return this;
     }
 }
 export class ElementTransitions {
+    /**
+     * Fade Transition
+     */
     static get fade() {
         return new ElementTransition({
             in: new ElementAnimation({

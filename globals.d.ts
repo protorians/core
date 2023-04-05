@@ -46,23 +46,26 @@ declare module '@protorians/core/composite' {
 
 }
 declare module '@protorians/core/element-animate' {
-  import type { IElementAnimation, IElementAnimationFeatures, IElementAnimationOptions, IElementTarget, IElementTransition, IElementTransitionProps } from '@protorians/core/types';
+  import type { IElementAnimation, IElementAnimationFeatures, IElementAnimationOptions, IElementTarget, IElementTransition, IAnimationStateCallback, IElementTransitionProps } from '@protorians/core/types';
   import { CompositeModel } from '@protorians/core/composite';
   export class ElementAnimation implements IElementAnimation {
       #private;
       get features(): IElementAnimationFeatures;
       constructor(features: IElementAnimationFeatures, options?: IElementAnimationOptions);
       reset(target: IElementTarget): this;
-      start(target: IElementTarget): this;
+      start(target: IElementTarget, callback?: IAnimationStateCallback): this;
   }
   export class ElementTransition extends CompositeModel<IElementTransitionProps> implements IElementTransition {
       currentMoment?: boolean;
       constructor(props: IElementTransitionProps);
-      startIn(target: IElementTarget): this;
-      startOut(target: IElementTarget): this;
-      toggle(target: IElementTarget): this;
+      startIn(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      startOut(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      toggle(target: IElementTarget, callback?: IAnimationStateCallback): this;
   }
   export class ElementTransitions {
+      /**
+       * Fade Transition
+       */
       static get fade(): ElementTransition;
   }
 
@@ -471,7 +474,7 @@ declare module '@protorians/core/framerate-easings' {
 
 }
 declare module '@protorians/core/framerate-engine' {
-  import type { IFrameRate, IFrameRateEmitterScheme, IFrameRateOptions, IFrameRatePlayload, IFrameRateProps, IFrameRates } from "@protorians/core/types";
+  import type { IFrameRate, IFrameRateEmitterScheme, IFrameRateOptions, IFrameRatePlayload, IFrameRateProps, IFrameRatesStateCallback, IFrameRates } from "@protorians/core/types";
   import { CompositeModel } from "@protorians/core/composite";
   import Climbing from "@protorians/core/climbing";
   import EventDispatcher from "@protorians/core/event-dispatcher";
@@ -500,12 +503,12 @@ declare module '@protorians/core/framerate-engine' {
       climbing: Climbing<IFrameRate> | undefined;
       constructor(props: IFrameRateProps);
       reset(): this;
-      startParallel(): this;
-      startConsecutive(callback?: (instance: Climbing<IFrameRate>) => void): this;
+      startParallel(callback?: IFrameRatesStateCallback): this;
+      startConsecutive(callback?: IFrameRatesStateCallback): this;
       /**
        * Démarrage des FrameRates
        */
-      start(): this;
+      start(callback?: IFrameRatesStateCallback): this;
   }
 
 }
@@ -600,15 +603,20 @@ declare module '@protorians/core/types' {
   };
   export interface IElementTransition {
       currentMoment?: boolean;
-      startIn(target: IElementTarget): this;
-      startOut(target: IElementTarget): this;
-      toggle(target: IElementTarget): this;
+      startIn(target: IElementTarget, callback: IAnimationStateCallback): this;
+      startOut(target: IElementTarget, callback: IAnimationStateCallback): this;
+      toggle(target: IElementTarget, callback: IAnimationStateCallback): this;
   }
   export type IElementTransitionProps = {
       in: IElementAnimation;
       out: IElementAnimation;
   };
+  export type IAnimationStateCallback = (payload: IAnimationStatePayload) => void;
   export type IElementAnimationFeatureCallback = (payload: IElementAnimationFeaturePayload) => string;
+  export type IAnimationStatePayload = {
+      animate: IElementAnimation;
+      target: IElementTarget;
+  };
   export type IElementAnimationFeaturePayload = {
       value: number;
       percent: number;
@@ -629,7 +637,7 @@ declare module '@protorians/core/types' {
   };
   export interface IElementAnimation {
       get features(): IElementAnimationFeatures;
-      start(target: IElementTarget): this;
+      start(target: IElementTarget, callback?: IAnimationStateCallback): this;
   }
   export type IClimbingTask<R> = Generator<Promise<R>, void, IClimbingNext<R>>;
   export type IClimbingYield<R> = (index: number) => IClimbingTask<R>;
@@ -679,11 +687,10 @@ declare module '@protorians/core/types' {
       dispatch(type: keyof Scheme, data?: any): this;
   }
   /**
-   * Animate
-   */
-  /**
    * Animates Engine
    */
+  export type IFrameRateStateCallback = () => void;
+  export type IFrameRatesStateCallback = (instance: IFrameRates) => void;
   export type IFrameRateFramePayload = {
       percent: number;
       value: number;
@@ -727,7 +734,10 @@ declare module '@protorians/core/types' {
       entries: IFrameRate[];
   };
   export interface IFrameRates {
-      start(): this;
+      start(callback?: IFrameRatesStateCallback): this;
+      startConsecutive(callback?: IFrameRatesStateCallback): this;
+      startParallel(callback?: IFrameRatesStateCallback): this;
+      reset(): this;
   }
   export interface IEasingEmitterScheme {
       make: {

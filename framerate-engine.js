@@ -167,13 +167,18 @@ export default class FrameRates extends CompositeModel {
         __classPrivateFieldSet(this, _FrameRates_executed, [], "f");
         return this;
     }
-    startParallel() {
+    startParallel(callback) {
         Object.values(this.reset().properties.entries)
             .sort((a, b) => b.options.duration - a.options.duration)
             .forEach((entry, key) => {
             __classPrivateFieldGet(this, _FrameRates_executed, "f").push(entry);
             if (key == 0)
-                return entry.asyncStart().then(() => (this.properties.infinite) ? this.start() : {});
+                return entry.asyncStart().then(() => {
+                    if (typeof callback == 'function')
+                        callback(this);
+                    if (this.properties.infinite)
+                        this.start();
+                });
             return entry.start();
         });
         return this;
@@ -183,9 +188,9 @@ export default class FrameRates extends CompositeModel {
             if (this.properties.entries[key])
                 __classPrivateFieldGet(this, _FrameRates_executed, "f").push(this.properties.entries[key]);
             return this.properties.entries[key]?.asyncStart();
-        })).trigger(instance => {
+        })).trigger(() => {
             if (typeof callback == 'function')
-                callback(instance);
+                callback(this);
             if (this.properties.infinite)
                 this.start();
         });
@@ -194,18 +199,18 @@ export default class FrameRates extends CompositeModel {
     /**
      * Démarrage des FrameRates
      */
-    start() {
+    start(callback) {
         /**
          * Execution parallèle
          */
         if (this.properties.parallel) {
-            this.startParallel();
+            this.startParallel(callback);
         }
         /**
          * Execution consécutive
          */
         else {
-            this.startConsecutive();
+            this.startConsecutive(callback);
         }
         return this;
     }

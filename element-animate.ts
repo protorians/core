@@ -6,6 +6,7 @@ import type {
   IElementAnimationOptions,
   IElementTarget, 
   IElementTransition, 
+  IAnimationStateCallback, 
   IElementTransitionProps, 
   IFrameRate, 
   IFrameRates 
@@ -90,13 +91,17 @@ export class ElementAnimation implements IElementAnimation {
     
   }
 
-  start( target : IElementTarget ){
+  start( target : IElementTarget, callback ?: IAnimationStateCallback ){
 
     this.reset( target );
 
     if( this.#frameRates ){
 
-      this.#frameRates.start();
+      this.#frameRates.start( ()=>{
+
+        if( typeof callback == 'function' ) callback({ animate: this, target, })
+        
+      } );
       
     }
 
@@ -119,31 +124,31 @@ export class ElementTransition extends CompositeModel<IElementTransitionProps> i
     
   }
   
-  startIn( target : IElementTarget ): this {
+  startIn( target : IElementTarget, callback ?: IAnimationStateCallback ): this {
 
     this.currentMoment = true;
 
-    this.properties.in.start( target )
+    this.properties.in.start( target, callback );
 
     return this;
     
   }
 
-  startOut( target : IElementTarget ): this {
+  startOut( target : IElementTarget, callback ?: IAnimationStateCallback ): this {
       
     this.currentMoment = false;
 
-    this.properties.out.start( target )
+    this.properties.out.start( target, callback )
 
     return this;
     
   }
   
-  toggle( target : IElementTarget ): this {
+  toggle( target : IElementTarget, callback ?: IAnimationStateCallback ): this {
 
-    if( this.currentMoment ) this.startOut( target ) 
+    if( this.currentMoment ) this.startOut( target, callback ) 
 
-    else this.startIn( target )
+    else this.startIn( target, callback )
         
     return this;
     
@@ -156,6 +161,10 @@ export class ElementTransition extends CompositeModel<IElementTransitionProps> i
 
 export class ElementTransitions{
 
+
+  /**
+   * Fade Transition
+   */
   static get fade(){
 
     return new ElementTransition({
@@ -183,6 +192,8 @@ export class ElementTransitions{
     })
     
   }
+
+
 
 }
 

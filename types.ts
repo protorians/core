@@ -20,15 +20,17 @@ export type IObjectToString = {
 
 
 
+
+
 export interface IElementTransition {
 
   currentMoment ?: boolean;
 
-  startIn( target : IElementTarget ) : this;
+  startIn( target : IElementTarget, callback : IAnimationStateCallback ) : this;
 
-  startOut( target : IElementTarget ) : this;
+  startOut( target : IElementTarget, callback : IAnimationStateCallback ) : this;
   
-  toggle( target : IElementTarget ) : this;
+  toggle( target : IElementTarget, callback : IAnimationStateCallback ) : this;
   
 }
 
@@ -40,7 +42,23 @@ export type IElementTransitionProps = {
 
 }
 
+
+
+
+
+export type IAnimationStateCallback = ( payload : IAnimationStatePayload ) => void;
+
+
+
 export type IElementAnimationFeatureCallback = ( payload : IElementAnimationFeaturePayload ) => string;
+
+export type IAnimationStatePayload = {
+
+  animate: IElementAnimation;
+
+  target: IElementTarget;
+  
+}
 
 export type IElementAnimationFeaturePayload = {
 
@@ -82,7 +100,7 @@ export interface IElementAnimation {
 
   get features() : IElementAnimationFeatures;
 
-  start( target : IElementTarget ) : this;
+  start( target : IElementTarget, callback ?: IAnimationStateCallback ) : this;
 
 }
 
@@ -193,12 +211,13 @@ export interface IEventDispatcher<Scheme extends IEventDispatcherScheme>{
 
 
 /**
- * Animate
- */
-
-/**
  * Animates Engine
  */
+
+export type IFrameRateStateCallback = () => void;
+
+export type IFrameRatesStateCallback = ( instance : IFrameRates ) => void;
+
 export type IFrameRateFramePayload = {
 
   percent: number;
@@ -287,8 +306,14 @@ export type IFrameRateProps = {
 
 export interface IFrameRates{
 
-  start() : this;
+  start( callback ?: IFrameRatesStateCallback ) : this;
   
+  startConsecutive(callback?: IFrameRatesStateCallback): this;
+
+  startParallel(callback?: IFrameRatesStateCallback): this;
+
+  reset() : this;
+
 }
 
 

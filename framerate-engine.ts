@@ -4,6 +4,7 @@ import type {
   IFrameRateOptions, 
   IFrameRatePlayload, 
   IFrameRateProps, 
+  IFrameRatesStateCallback, 
   IFrameRates
 } from "./types";
 import { CompositeModel } from "./composite";
@@ -343,7 +344,7 @@ export default class FrameRates extends CompositeModel<IFrameRateProps> implemen
   }
   
 
-  startParallel(){
+  startParallel( callback ?: IFrameRatesStateCallback ){
 
     Object.values( this.reset().properties.entries )
     
@@ -353,11 +354,14 @@ export default class FrameRates extends CompositeModel<IFrameRateProps> implemen
 
       this.#executed.push( entry );
       
-      if( key == 0 ) return entry.asyncStart().then( () => 
+      if( key == 0 ) return entry.asyncStart().then( () => {
 
-        ( this.properties.infinite ) ? this.start() : {} 
+        if( typeof callback == 'function' ) callback( this );
         
-      )
+        if( this.properties.infinite )  this.start()
+
+
+      })
         
       return entry.start()
 
@@ -369,7 +373,7 @@ export default class FrameRates extends CompositeModel<IFrameRateProps> implemen
   
 
 
-  startConsecutive( callback?: ( instance : Climbing<IFrameRate> ) => void ){
+  startConsecutive(  callback ?: IFrameRatesStateCallback  ){
 
     this.climbing = (new Climbing<IFrameRate>(this.properties.entries, (key) => {
 
@@ -377,9 +381,9 @@ export default class FrameRates extends CompositeModel<IFrameRateProps> implemen
         
       return this.properties.entries[ key ]?.asyncStart()
       
-    })).trigger( instance => {
+    })).trigger( () => {
 
-      if( typeof callback == 'function' ) callback(instance)
+      if( typeof callback == 'function' ) callback( this );
 
       if( this.properties.infinite ) this.start() 
           
@@ -394,14 +398,14 @@ export default class FrameRates extends CompositeModel<IFrameRateProps> implemen
   /**
    * Démarrage des FrameRates
    */
-  start(): this {
+  start( callback ?: IFrameRatesStateCallback ): this {
 
     /**
      * Execution parallèle
      */
     if( this.properties.parallel ){
 
-      this.startParallel()
+      this.startParallel( callback )
 
     }
 
@@ -410,7 +414,7 @@ export default class FrameRates extends CompositeModel<IFrameRateProps> implemen
      */
     else{
 
-      this.startConsecutive();
+      this.startConsecutive( callback );
 
     }
     
