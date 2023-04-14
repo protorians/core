@@ -9,9 +9,7 @@ import * as ElementAnimate from './animation';
 import * as CoreAttribute from './attribute';
 import * as CoreAppearance from './appearance';
 import * as Utilities from './utilities';
-import * as Typing from './types';
 export default {
-    Typing,
     FrameRates: {
         Engine: FrameRatesEngine,
         Easing: FrameRateEasing,

@@ -200,6 +200,8 @@ export class Navigation<Scheme> implements INavigation<Scheme>{
     
     })
 
+    this.#oldRoute = routeName as keyof Scheme;
+    
     return this;
     
   }
@@ -216,8 +218,6 @@ export class Navigation<Scheme> implements INavigation<Scheme>{
 
     const query = hasProps ? `?${ ObjectURLParams( props||{} ) }` : '';
 
-    
-    this.#oldRoute = routeName as keyof Scheme;
     
     if( currentRoute != routeName ){
 

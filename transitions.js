@@ -4,12 +4,24 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _a, _CoreTransitions_duration;
-import { CompositeModel } from './composite';
+import { ModelComposite } from './composite';
 import { CoreAnimation } from './animation';
-export class CoreTransition extends CompositeModel {
+export class CoreTransition extends ModelComposite {
     constructor(props) {
         super(props);
         this.currentMoment = undefined;
+    }
+    calibrate(moment, property, value) {
+        this.properties[moment].calibrates(property, value);
+        return this;
+    }
+    calibrateIn(property, value) {
+        this.calibrate('in', property, value);
+        return this;
+    }
+    calibrateOut(property, value) {
+        this.calibrate('in', property, value);
+        return this;
     }
     startIn(target, callback) {
         this.currentMoment = true;
@@ -63,8 +75,8 @@ export class CoreTransitions {
         return new CoreTransition({
             in: new CoreAnimation({
                 transform: {
-                    from: 0,
-                    to: 100,
+                    from: 100,
+                    to: 0,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateX(${value}%)`
                 },
@@ -79,8 +91,8 @@ export class CoreTransitions {
             }),
             out: new CoreAnimation({
                 transform: {
-                    from: 100,
-                    to: 0,
+                    from: 0,
+                    to: 100,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateX(${value}%)`
                 },
@@ -102,8 +114,8 @@ export class CoreTransitions {
         return new CoreTransition({
             in: new CoreAnimation({
                 transform: {
-                    from: 0,
-                    to: 100,
+                    from: 100,
+                    to: 0,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateX(${value}%)`
                 },
@@ -112,8 +124,8 @@ export class CoreTransitions {
             }),
             out: new CoreAnimation({
                 transform: {
-                    from: 100,
-                    to: 0,
+                    from: 0,
+                    to: 100,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateX(${value}%)`
                 },
@@ -129,8 +141,8 @@ export class CoreTransitions {
         return new CoreTransition({
             in: new CoreAnimation({
                 transform: {
-                    from: 0,
-                    to: 100,
+                    from: 100,
+                    to: 0,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateY(${value}%)`
                 },
@@ -145,8 +157,8 @@ export class CoreTransitions {
             }),
             out: new CoreAnimation({
                 transform: {
-                    from: 100,
-                    to: 0,
+                    from: 0,
+                    to: 100,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateY(${value}%)`
                 },
@@ -168,8 +180,8 @@ export class CoreTransitions {
         return new CoreTransition({
             in: new CoreAnimation({
                 transform: {
-                    from: 0,
-                    to: 100,
+                    from: 100,
+                    to: 0,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateY(${value}%)`
                 },
@@ -178,8 +190,8 @@ export class CoreTransitions {
             }),
             out: new CoreAnimation({
                 transform: {
-                    from: 100,
-                    to: 0,
+                    from: 0,
+                    to: 100,
                     duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
                     set: ({ value }) => `translateY(${value}%)`
                 },

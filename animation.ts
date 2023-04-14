@@ -1,13 +1,15 @@
 
 
-import type { 
+import type {
   ICoreAnimation,
   ICoreAnimationFeatures,
   ICoreAnimationOptions,
-  IElementTarget, 
-  IAnimationStateCallback, 
-  IFrameRate, 
-  IFrameRates 
+  IElementTarget,
+  IAnimationStateCallback,
+  IFrameRate,
+  IFrameRates,
+  IAnimationCalibrate,
+  ICoreAnimationFeature,
 } from './types';
 import FrameRates, { FrameRate } from './framerate-engine';
 
@@ -16,17 +18,17 @@ import FrameRates, { FrameRate } from './framerate-engine';
 
 export class CoreAnimation implements ICoreAnimation {
 
-  get features(){ return this.#features }
+  get features() { return this.#features }
 
   #features: ICoreAnimationFeatures;
 
-  #frameRates ?: IFrameRates;
+  #frameRates?: IFrameRates;
 
-  #options ?: ICoreAnimationOptions;
+  #options?: ICoreAnimationOptions;
 
 
 
-  constructor( features : ICoreAnimationFeatures, options ?: ICoreAnimationOptions ){
+  constructor(features: ICoreAnimationFeatures, options?: ICoreAnimationOptions) {
 
     this.#features = features;
 
@@ -35,79 +37,132 @@ export class CoreAnimation implements ICoreAnimation {
   }
 
 
-  reset( target : IElementTarget ){
+  calibrate(
+
+    feature: keyof ICoreAnimationFeatures,
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ) {
+
+    if (this.features[feature] != undefined) {
+
+      const calibrate: ICoreAnimationFeature = { ...this.#features[feature as any] }
+
+      // @ts-ignore
+      calibrate[property] = value;
+
+      this.#features[feature as any] = calibrate
+
+    }
+
+    return this;
+
+  }
+
+
+  calibrates(
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ): this {
+
+    Object.entries(this.#features).forEach(({ 0: name }) => {
+
+      this.calibrate(
+
+        name as keyof ICoreAnimationFeatures,
+
+        property,
+
+        value
+
+      )
+
+    })
+
+    return this;
+
+  }
+
+
+  reset(target: IElementTarget) {
 
     this.#frameRates = new FrameRates({
 
       parallel: this.#options?.parallel,
 
       infinite: this.#options?.infinite,
-      
-      entries: this.#createFrameRatesEntries( target )
-      
+
+      entries: this.#createFrameRatesEntries(target)
+
     })
 
     return this;
-    
+
   }
-  
 
-  #createFrameRatesEntries( target : IElementTarget ) {
 
-    const entries : IFrameRate[] = [];
+  #createFrameRatesEntries(target: IElementTarget) {
 
-    (Object.entries( this.#features ).forEach( ({0:property, 1: animation}) => {
+    const entries: IFrameRate[] = [];
 
-      entries.push( new FrameRate({
+    (Object.entries(this.#features).forEach(({ 0: property, 1: animation }) => {
+
+      entries.push(new FrameRate({
 
         from: animation.from,
 
         to: animation.to,
-        
+
         duration: animation.duration,
 
         ease: animation.ease,
 
         frame: (payload) => {
 
-          if( target ){
+          if (target) {
 
-            const propertyValue = animation.set( payload );
-  
-            target.style[ property as any ] = propertyValue
-            
+            const propertyValue = animation.set(payload);
+
+            target.style[property as any] = propertyValue
+
           }
-          
+
         }
-        
-      }) )
+
+      }))
 
 
-    }) );
-    
+    }));
+
     return entries;
-    
+
   }
 
-  
-  start( target : IElementTarget, callback ?: IAnimationStateCallback ){
 
-    this.reset( target );
+  start(target: IElementTarget, callback?: IAnimationStateCallback) {
 
-    if( this.#frameRates ){
+    this.reset(target);
 
-      this.#frameRates.start( ()=>{
+    if (this.#frameRates) {
 
-        if( typeof callback == 'function' ) callback({ animate: this, target, })
-        
-      } );
-      
+      this.#frameRates.start(() => {
+
+        if (typeof callback == 'function') callback({ animate: this, target, })
+
+      });
+
     }
 
     return this;
-    
+
   }
-  
+
 }
 
 

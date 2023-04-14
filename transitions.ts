@@ -1,74 +1,119 @@
-import type { 
-  IElementTarget, 
-  ICoreTransition, 
-  IAnimationStateCallback, 
-  ICoreTransitionProps, 
+import type {
+  IElementTarget,
+  ICoreTransition,
+  IAnimationStateCallback,
+  ICoreTransitionProps,
+  IAnimationCalibrate,
 } from './types';
-import { CompositeModel } from './composite'
+import { ModelComposite } from './composite'
 import { CoreAnimation } from './animation';
 
 
 
 
-export class CoreTransition extends CompositeModel<ICoreTransitionProps> implements ICoreTransition {
+export class CoreTransition extends ModelComposite<ICoreTransitionProps> implements ICoreTransition {
 
-  currentMoment ?: boolean = undefined;
+  currentMoment?: boolean = undefined;
 
-  constructor( props: ICoreTransitionProps ){
+  constructor(props: ICoreTransitionProps) {
 
-    super( props );
-    
+    super(props);
+
   }
-  
-  startIn( target : IElementTarget, callback ?: IAnimationStateCallback ): this {
+
+  calibrate(
+
+    moment: 'in' | 'out',
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ) {
+
+    this.properties[moment].calibrates(property, value)
+
+    return this;
+
+  }
+
+  calibrateIn(
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ) {
+
+    this.calibrate('in', property, value)
+
+    return this;
+
+  }
+
+  calibrateOut(
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ) {
+
+    this.calibrate('in', property, value)
+
+    return this;
+
+  }
+
+  startIn(target: IElementTarget, callback?: IAnimationStateCallback): this {
 
     this.currentMoment = true;
 
-    this.properties.in.start( target, callback );
+    this.properties.in.start(target, callback);
 
     return this;
-    
+
   }
 
-  startOut( target : IElementTarget, callback ?: IAnimationStateCallback ): this {
-      
+  startOut(target: IElementTarget, callback?: IAnimationStateCallback): this {
+
     this.currentMoment = false;
 
-    this.properties.out.start( target, callback )
+    this.properties.out.start(target, callback)
 
     return this;
-    
+
   }
-  
-  toggle( target : IElementTarget, callback ?: IAnimationStateCallback ): this {
 
-    if( this.currentMoment ) this.startOut( target, callback ) 
+  toggle(target: IElementTarget, callback?: IAnimationStateCallback): this {
 
-    else this.startIn( target, callback )
-        
+    if (this.currentMoment) this.startOut(target, callback)
+
+    else this.startIn(target, callback)
+
     return this;
-    
+
   }
-  
+
 }
 
 
 
 
-export class CoreTransitions{
+export class CoreTransitions {
 
 
-  static get duration() : number{ return this.#duration || 500; }
+  static get duration(): number { return this.#duration || 500; }
 
-  static set duration( value ){ if(typeof value == 'number') this.#duration; }
-  
-  static #duration : number = 500;
-  
+  static set duration(value) { if (typeof value == 'number') this.#duration; }
+
+  static #duration: number = 500;
+
 
   /**
    * Fade Transition
    */
-  static get Fade(){
+  static get Fade() {
 
     return new CoreTransition({
 
@@ -77,23 +122,23 @@ export class CoreTransitions{
           from: 0,
           to: 1000,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         }
-  
+
       }),
-      
+
       out: new CoreAnimation({
         opacity: {
           from: 1000,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         }
-        
+
       }),
-      
+
     })
-    
+
   }
 
 
@@ -104,170 +149,176 @@ export class CoreTransitions{
   /**
    * SlideHorizontal  Transition avec fondu
    */
-  static get SlideFadedHorizontal(){
+  static get SlideFadedHorizontal() {
 
     return new CoreTransition({
 
       in: new CoreAnimation({
         transform: {
-          from: 0,
-          to: 100,
+          from: 100,
+          to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateX(${ value }%)`
+          set: ({ value }) => `translateX(${value}%)`
         },
 
         opacity: {
           from: 0,
           to: 1000,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         },
-          
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
       out: new CoreAnimation({
         transform: {
-          from: 100,
-          to: 0,
+          from: 0,
+          to: 100,
           duration: this.#duration,
-          set: ({ value })=> `translateX(${ value }%)`
+          set: ({ value }) => `translateX(${value}%)`
         },
         opacity: {
           from: 1000,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         }
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
     })
-    
+
   }
+
+
 
 
   /**
    * SlideHorizontal  Transition
    */
-  static get SlideHorizontal(){
+  static get SlideHorizontal() {
 
     return new CoreTransition({
 
       in: new CoreAnimation({
         transform: {
-          from: 0,
-          to: 100,
-          duration: this.#duration,
-          set: ({ value })=> `translateX(${ value }%)`
-        },
-
-      },{
-        parallel: true,
-      }),
-      
-      out: new CoreAnimation({
-        transform: {
           from: 100,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateX(${ value }%)`
+          set: ({ value }) => `translateX(${value}%)`
         },
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
+      out: new CoreAnimation({
+        transform: {
+          from: 0,
+          to: 100,
+          duration: this.#duration,
+          set: ({ value }) => `translateX(${value}%)`
+        },
+
+      }, {
+        parallel: true,
+      }),
+
     })
-    
+
   }
+
+
 
 
   /**
    * SlideVertical  Transition avec fondu
    */
-  static get SlideFadedVertical(){
+  static get SlideFadedVertical() {
 
     return new CoreTransition({
 
       in: new CoreAnimation({
         transform: {
-          from: 0,
-          to: 100,
+          from: 100,
+          to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateY(${ value }%)`
+          set: ({ value }) => `translateY(${value}%)`
         },
 
         opacity: {
           from: 0,
           to: 1000,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         },
-          
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
       out: new CoreAnimation({
         transform: {
-          from: 100,
-          to: 0,
+          from: 0,
+          to: 100,
           duration: this.#duration,
-          set: ({ value })=> `translateY(${ value }%)`
+          set: ({ value }) => `translateY(${value}%)`
         },
         opacity: {
           from: 1000,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         }
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
     })
-    
+
   }
+
+
 
 
   /**
    * SlideVertical  Transition
    */
-  static get SlideVertical(){
+  static get SlideVertical() {
 
     return new CoreTransition({
 
       in: new CoreAnimation({
         transform: {
-          from: 0,
-          to: 100,
-          duration: this.#duration,
-          set: ({ value })=> `translateY(${ value }%)`
-        },
-
-      },{
-        parallel: true,
-      }),
-      
-      out: new CoreAnimation({
-        transform: {
           from: 100,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateY(${ value }%)`
+          set: ({ value }) => `translateY(${value}%)`
         },
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
+      out: new CoreAnimation({
+        transform: {
+          from: 0,
+          to: 100,
+          duration: this.#duration,
+          set: ({ value }) => `translateY(${value}%)`
+        },
+
+      }, {
+        parallel: true,
+      }),
+
     })
-    
+
   }
 
 
@@ -279,7 +330,7 @@ export class CoreTransitions{
   /**
    * SlideHorizontalReverse  Transition avec fondu
    */
-  static get SlideFadedHorizontalReverse(){
+  static get SlideFadedHorizontalReverse() {
 
     return new CoreTransition({
 
@@ -288,47 +339,47 @@ export class CoreTransitions{
           from: 100,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateX(-${ value }%)`
+          set: ({ value }) => `translateX(-${value}%)`
         },
 
         opacity: {
           from: 0,
           to: 1000,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         },
-          
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
       out: new CoreAnimation({
         transform: {
           from: 0,
           to: 100,
           duration: this.#duration,
-          set: ({ value })=> `translateX(-${ value }%)`
+          set: ({ value }) => `translateX(-${value}%)`
         },
         opacity: {
           from: 1000,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         }
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
     })
-    
+
   }
 
 
   /**
    * SlideHorizontal  Transition
    */
-  static get SlideHorizontalReverse(){
+  static get SlideHorizontalReverse() {
 
     return new CoreTransition({
 
@@ -337,34 +388,34 @@ export class CoreTransitions{
           from: 100,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateX(-${ value }%)`
+          set: ({ value }) => `translateX(-${value}%)`
         },
 
-      },{
+      }, {
         parallel: true,
       }),
-      
+
       out: new CoreAnimation({
         transform: {
           from: 0,
           to: 100,
           duration: this.#duration,
-          set: ({ value })=> `translateX(-${ value }%)`
+          set: ({ value }) => `translateX(-${value}%)`
         },
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
     })
-    
+
   }
 
 
   /**
    * SlideVertical  Transition avec fondu
    */
-  static get SlideFadedVerticalReverse(){
+  static get SlideFadedVerticalReverse() {
 
     return new CoreTransition({
 
@@ -373,47 +424,47 @@ export class CoreTransitions{
           from: 100,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateY(-${ value }%)`
+          set: ({ value }) => `translateY(-${value}%)`
         },
 
         opacity: {
           from: 0,
           to: 1000,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         },
-          
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
       out: new CoreAnimation({
         transform: {
           from: 0,
           to: 100,
           duration: this.#duration,
-          set: ({ value })=> `translateY(-${ value }%)`
+          set: ({ value }) => `translateY(-${value}%)`
         },
         opacity: {
           from: 1000,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `${ value / 1000 }`
+          set: ({ value }) => `${value / 1000}`
         }
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
     })
-    
+
   }
 
 
   /**
    * SlideVerticalReverse  Transition
    */
-  static get SlideVerticalReverse(){
+  static get SlideVerticalReverse() {
 
     return new CoreTransition({
 
@@ -422,27 +473,27 @@ export class CoreTransitions{
           from: 100,
           to: 0,
           duration: this.#duration,
-          set: ({ value })=> `translateY(-${ value }%)`
+          set: ({ value }) => `translateY(-${value}%)`
         },
 
-      },{
+      }, {
         parallel: true,
       }),
-      
+
       out: new CoreAnimation({
         transform: {
           from: 0,
           to: 100,
           duration: this.#duration,
-          set: ({ value })=> `translateY(-${ value }%)`
+          set: ({ value }) => `translateY(-${value}%)`
         },
-        
-      },{
+
+      }, {
         parallel: true,
       }),
-      
+
     })
-    
+
   }
 
 

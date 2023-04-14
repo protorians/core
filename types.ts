@@ -5,17 +5,51 @@ export type IElementTarget = HTMLElement | null;
 
 
 
+export type ISchemaValidator = {
+
+  value: IDataValue;
+
+  expert: IDataValue;
+
+  valid: boolean;
+
+}
+
+export type ISchemaValidators = {
+
+  score: number;
+
+  hit: number;
+
+  total: number;
+
+  responses: ISchemaValidator[];
+
+}
+
+
+
+export type IObjectData = {
+
+  [K: string]: IDataValue
+
+};
+
+export type IDataValue = string | number | boolean | object;
+
+
+
 
 export type IObjectToString = {
 
-  eq ?: string | undefined;
+  eq?: string | undefined;
 
-  start ?: string | undefined;
+  start?: string | undefined;
 
-  end ?: string | undefined;
+  end?: string | undefined;
 
-  joiner ?: string | undefined;
-  
+  joiner?: string | undefined;
+
 }
 
 
@@ -24,14 +58,40 @@ export type IObjectToString = {
 
 export interface ICoreTransition {
 
-  currentMoment ?: boolean;
+  currentMoment?: boolean;
 
-  startIn( target : IElementTarget, callback : IAnimationStateCallback ) : this;
+  startIn(target: IElementTarget, callback?: IAnimationStateCallback): this;
 
-  startOut( target : IElementTarget, callback : IAnimationStateCallback ) : this;
-  
-  toggle( target : IElementTarget, callback : IAnimationStateCallback ) : this;
-  
+  startOut(target: IElementTarget, callback?: IAnimationStateCallback): this;
+
+  toggle(target: IElementTarget, callback?: IAnimationStateCallback): this;
+
+  calibrate(
+
+    moment: 'in' | 'out',
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ): this
+
+  calibrateIn(
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ): this
+
+  calibrateOut(
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ): this
+
 }
 
 export type ICoreTransitionProps = {
@@ -46,18 +106,32 @@ export type ICoreTransitionProps = {
 
 
 
-export type IAnimationStateCallback = ( payload : IAnimationStatePayload ) => void;
+export type IAnimationStateCallback = (payload: IAnimationStatePayload) => void;
 
 
 
-export type ICoreAnimationFeatureCallback = ( payload : ICoreAnimationFeaturePayload ) => string;
+export type IAnimationCalibrate = {
+
+  from: number;
+
+  to: number;
+
+  duration: number;
+
+  ease: IEasing;
+
+}
+
+
+
+export type ICoreAnimationFeatureCallback = (payload: ICoreAnimationFeaturePayload) => string;
 
 export type IAnimationStatePayload = {
 
   animate: ICoreAnimation;
 
   target: IElementTarget;
-  
+
 }
 
 export type ICoreAnimationFeaturePayload = {
@@ -65,7 +139,7 @@ export type ICoreAnimationFeaturePayload = {
   value: number;
 
   percent: number;
-  
+
 }
 
 export type ICoreAnimationFeature = {
@@ -73,34 +147,54 @@ export type ICoreAnimationFeature = {
   from: number;
 
   to: number;
-  
+
   duration: number;
 
   ease?: IEasing | undefined
 
   set: ICoreAnimationFeatureCallback;
-  
+
 }
 
 export type ICoreAnimationFeatures = {
 
-  [ K in keyof Partial<CSSStyleDeclaration> ] : ICoreAnimationFeature
+  [K in keyof Partial<CSSStyleDeclaration>]: ICoreAnimationFeature
 
 }
 
 export type ICoreAnimationOptions = {
 
-  parallel ?: boolean,
+  parallel?: boolean,
 
-  infinite ?: boolean,
-  
+  infinite?: boolean,
+
 }
 
 export interface ICoreAnimation {
 
-  get features() : ICoreAnimationFeatures;
+  get features(): ICoreAnimationFeatures;
 
-  start( target : IElementTarget, callback ?: IAnimationStateCallback ) : this;
+  start(target: IElementTarget, callback?: IAnimationStateCallback): this;
+
+  calibrate(
+
+    feature: keyof ICoreAnimationFeatures,
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ): this;
+
+  calibrates(
+
+    property: keyof IAnimationCalibrate,
+
+    value: IAnimationCalibrate[keyof IAnimationCalibrate]
+
+  ): this;
+
+  reset(target: IElementTarget): this;
 
 }
 
@@ -109,22 +203,22 @@ export interface ICoreAnimation {
 
 export type IClimbingTask<R> = Generator<Promise<R>, void, IClimbingNext<R>>;
 
-export type IClimbingYield<R> = ( index: number ) => IClimbingTask<R>;
+export type IClimbingYield<R> = (index: number) => IClimbingTask<R>;
 
-export type IClimbingAsyncTask<R> = ( index: number ) => Promise<R> | undefined;
+export type IClimbingAsyncTask<R> = (index: number) => Promise<R> | undefined;
 
-export type IClimbingNext<R> = (( instance : IClimbing<R> ) => any) | undefined;
-
-
+export type IClimbingNext<R> = ((instance: IClimbing<R>) => any) | undefined;
 
 
-export interface IClimbing<R>{
 
-  responses : Array<R>
 
-  prepared : IClimbingTask<R> | undefined;
+export interface IClimbing<R> {
 
-  yield : IClimbingYield<R>;
+  responses: Array<R>
+
+  prepared: IClimbingTask<R> | undefined;
+
+  yield: IClimbingYield<R>;
 
   trigger(done: IClimbingNext<R>, start?: number): this;
 
@@ -144,16 +238,18 @@ export type IProp = any;
  */
 export interface IProps {
 
-  [ P : string ] : IProp
+  [P: string]: IProp
 
 }
 
 
-export interface ICompositeModel{
+export interface IModelComposite<P> {
 
-  get properties() : IProps;
+  get properties(): P;
 
-  property( name : string ) : IProps[ keyof IProps ] | undefined;
+  property(name: keyof P): P[keyof P] | undefined;
+
+  setProperty(name: keyof P, value: P[keyof P]): this
 
 }
 
@@ -163,47 +259,47 @@ export interface ICompositeModel{
 /**
  * Emitter
  */
-export type IEventDispatcherCallback<I> = ( payload : I ) => void | boolean;
+export type IEventDispatcherCallback<I> = (payload: I) => void | boolean;
 
 
 
 export type IEventDispatcherEntry = {
 
-  force ?: boolean;
+  force?: boolean;
 
-  callback : IEventDispatcherCallback<any>
-  
+  callback: IEventDispatcherCallback<any>
+
 }
 
 export type IEventDispatcherEntries<Scheme extends IEventDispatcherScheme> = {
 
-  [ K in keyof Scheme ] : IEventDispatcherEntry[]
-  
+  [K in keyof Scheme]: IEventDispatcherEntry[]
+
 }
 
 
 export type IEventDispatcherProgations<Scheme extends IEventDispatcherScheme> = {
 
-  [ K in keyof Scheme ] : boolean
-  
+  [K in keyof Scheme]: boolean
+
 }
 
-export interface IEventDispatcherScheme{
+export interface IEventDispatcherScheme {
 
-  [ K : string ] : any
-  
+  [K: string]: any
+
 }
 
-export interface IEventDispatcher<Scheme extends IEventDispatcherScheme>{
+export interface IEventDispatcher<Scheme extends IEventDispatcherScheme> {
 
-  propagations : IEventDispatcherProgations<Scheme>;
+  propagations: IEventDispatcherProgations<Scheme>;
 
-  entries : IEventDispatcherEntries<Scheme>;
+  entries: IEventDispatcherEntries<Scheme>;
 
-  listen<I extends keyof Scheme>( type : I, callback : IEventDispatcherCallback<Scheme[ I ]>, force ?: boolean ) : this;
+  listen<I extends keyof Scheme>(type: I, callback: IEventDispatcherCallback<Scheme[I]>, force?: boolean): this;
 
-  dispatch( type : keyof Scheme, data ?: any ) : this;
-  
+  dispatch(type: keyof Scheme, data?: any): this;
+
 }
 
 
@@ -216,40 +312,40 @@ export interface IEventDispatcher<Scheme extends IEventDispatcherScheme>{
 
 export type IFrameRateStateCallback = () => void;
 
-export type IFrameRatesStateCallback = ( instance : IFrameRates ) => void;
+export type IFrameRatesStateCallback = (instance: IFrameRates) => void;
 
 export type IFrameRateFramePayload = {
 
   percent: number;
 
   value: number;
-  
+
 };
 
-export type IFrameRateFrameCallback = ( payload : IFrameRateFramePayload ) => void;
+export type IFrameRateFrameCallback = (payload: IFrameRateFramePayload) => void;
 
 export type IFrameRateOptions = {
 
-  from : number;
+  from: number;
 
   to: number;
 
-  duration : number;
+  duration: number;
 
   frame: IFrameRateFrameCallback;
 
-  ease ?: IEasing
+  ease?: IEasing
 
 }
 
 export type IFrameRatePlayload = {
 
-  started ?: number;
+  started?: number;
 
-  elapsed ?: number;
+  elapsed?: number;
 
-  previous ?: number;
-  
+  previous?: number;
+
 }
 
 
@@ -268,30 +364,32 @@ export type IFrameRateEmitterScheme = {
   updateElapsed: IFrameRate;
 
   checkEnding: IFrameRate;
-  
+
 }
 
 
-export interface IFrameRate{
+export interface IFrameRate {
 
-  get options() : IFrameRateOptions;
-  
-  get delta() : number;
+  get options(): IFrameRateOptions;
 
-  get sens() : boolean;
+  get delta(): number;
 
-  get payload() : IFrameRatePlayload;
+  get rawdelta(): number;
+
+  get sens(): boolean;
+
+  get payload(): IFrameRatePlayload;
 
   emitter: IEventDispatcher<IFrameRateEmitterScheme>;
 
-  start() : this;
+  start(): this;
 
-  asyncStart() : Promise<IFrameRate>;
+  asyncStart(): Promise<IFrameRate>;
 
-  reset() : this;
+  reset(): this;
 
-  syncronizeValue( value : number ) : number;
-  
+  syncronizeValue(value: number): number;
+
 }
 
 export type IFrameRateProps = {
@@ -301,18 +399,18 @@ export type IFrameRateProps = {
   infinite?: boolean;
 
   entries: IFrameRate[]
-  
+
 }
 
-export interface IFrameRates{
+export interface IFrameRates {
 
-  start( callback ?: IFrameRatesStateCallback ) : this;
-  
+  start(callback?: IFrameRatesStateCallback): this;
+
   startConsecutive(callback?: IFrameRatesStateCallback): this;
 
   startParallel(callback?: IFrameRatesStateCallback): this;
 
-  reset() : this;
+  reset(): this;
 
 }
 
@@ -321,80 +419,80 @@ export interface IFrameRates{
 
 
 
-export interface IEasingEmitterScheme{
+export interface IEasingEmitterScheme {
 
   make: {
 
-    value : number;
+    value: number;
 
     ease: IEasing;
-    
+
   }
-  
+
 }
 
-export type IEasingFormula = ( x: number ) => number;
+export type IEasingFormula = (x: number) => number;
 
-export interface IEasing{
+export interface IEasing {
 
-  get emitter() : IEventDispatcher<IEasingEmitterScheme>;
-  
+  get emitter(): IEventDispatcher<IEasingEmitterScheme>;
+
   get name(): string;
-  
-  get cubicBezier() : string;
 
-  get formula() : IEasingFormula;
-  
-  value( x: number ) : number;
+  get cubicBezier(): string;
 
-  property() : string;
-  
+  get formula(): IEasingFormula;
+
+  value(x: number): number;
+
+  property(): string;
+
 }
 
 
 
 
 
-export type ICoreAttributesMapValues = ICoreAttributesMap | Array<any> | string  | number | boolean | null | (() => void)
+export type ICoreAttributesMapValues = ICoreAttributesMap | Array<any> | string | number | boolean | null | (() => void)
 
 export type ICoreAttributesMap = {
 
-  [ A : string ] : ICoreAttributesMapValues
-  
+  [A: string]: ICoreAttributesMapValues
+
 }
 
 export type ICoreAttributesAunrsed = {
 
-    [ A : string ] : string;
-    
+  [A: string]: string;
+
 }
 
 export type ICoreAttributesToggleMap = {
 
-    [ A : string ] : boolean;
-    
+  [A: string]: boolean;
+
 }
 
 export type ICoreAttributeSyncAunyload = {
-  
+
   entries: string[];
 
 }
 
 export type ICoreAttributeAddAunyload = {
-  
+
   added: string;
 
 }
 
 export type ICoreAttributeRemoveAunyload = {
-  
+
   removed: string;
 
 }
 
 export type ICoreAttributeReplaceAunyload = {
-  
+
   older: string;
 
   newer: string;
@@ -402,7 +500,7 @@ export type ICoreAttributeReplaceAunyload = {
 }
 
 export type ICoreAttributeUnlinkAunyload = {
-  
+
   value: string[] | string;
 
 }
@@ -418,35 +516,35 @@ export type ICoreAttributesEmitterScheme = {
   replace: ICoreAttributeReplaceAunyload;
 
   link: ICoreAttribute;
-  
+
   unlink: ICoreAttributeUnlinkAunyload;
 
   unlinks: ICoreAttribute;
 
 }
 
-export interface ICoreAttribute{
+export interface ICoreAttribute {
 
-  attributeName : string;
-  
-  get entries() : string[];
+  attributeName: string;
 
-  get value() : string;
+  get entries(): string[];
 
-  sync( attribute ?: string ) : this;
+  get value(): string;
 
-  add( value : string ) : this;
+  sync(attribute?: string): this;
 
-  remove( value : string ) : this;
+  add(value: string): this;
 
-  replace( older : string, value : string ) : this;
+  remove(value: string): this;
 
-  contains( value : string ) : boolean;
-  
-  link() : this;
+  replace(older: string, value: string): this;
 
-  unlink( property ?: string | string[] ) : this;
-  
+  contains(value: string): boolean;
+
+  link(): this;
+
+  unlink(property?: string | string[]): this;
+
 }
 
 
@@ -461,87 +559,87 @@ export interface IAppearanceEmitterScheme {
   insertProperties: IAppearanceObject;
 
   removeProperties: IAppearanceObjectDestroyed;
-  
+
   set: IAppearanceObject;
 
   unset: IAppearanceObjectDestroyed;
-  
+
   mount: IAppearance;
 
   sync: IAppearance;
 
   destroy: undefined;
-  
+
 }
 
 export type IAppearanceValues = string | number | undefined
 
-export interface IAppearanceCSSDeclaration extends Partial<CSSStyleDeclaration>{
+export interface IAppearanceCSSDeclaration extends Partial<CSSStyleDeclaration> {
 
-  paddingVertical ?: IAppearanceValues;
-  
-  paddingHorizontal ?: IAppearanceValues;
-  
-  marginVertical ?: IAppearanceValues;
-  
-  marginHorizontal ?: IAppearanceValues;
-  
+  paddingVertical?: IAppearanceValues;
+
+  paddingHorizontal?: IAppearanceValues;
+
+  marginVertical?: IAppearanceValues;
+
+  marginHorizontal?: IAppearanceValues;
+
 }
 
 export type IAppearanceObject = {
 
-  [ K in keyof Partial<IAppearanceCSSDeclaration> ] : IAppearanceValues;
+  [K in keyof Partial<IAppearanceCSSDeclaration>]: IAppearanceValues;
 
 }
 
-export interface IAppearanceStyleSheet{
+export interface IAppearanceStyleSheet {
 
-  [ Selector : string ] : IAppearanceObject;
+  [Selector: string]: IAppearanceObject;
 
 }
 
-export type IAppearanceObjectDestroyed =  Array<keyof IAppearanceObject>
+export type IAppearanceObjectDestroyed = Array<keyof IAppearanceObject>
 
-export interface IAppearance{
+export interface IAppearance {
 
   instance: HTMLStyleElement;
 
-  uid : string;
+  uid: string;
 
-  properties: IAppearanceObject; 
+  properties: IAppearanceObject;
 
   emitter: IEventDispatcher<IAppearanceEmitterScheme>;
 
-  insertProperties( 
-    
-    properties : IAppearanceObject, 
-    
-    data : IAppearanceObject 
-    
-  ) : IAppearanceObject;
+  insertProperties(
 
-  removeProperties( 
-    
-    properties : IAppearanceObject, 
-    
-    payload : IAppearanceObjectDestroyed 
-    
-  ) : IAppearanceObject
+    properties: IAppearanceObject,
 
-  sheet( stylesheet : IAppearanceStyleSheet ) : this;
+    data: IAppearanceObject
 
-  set( payload : IAppearanceObject ) : this;
+  ): IAppearanceObject;
 
-  unset( payload : IAppearanceObjectDestroyed ) : this;
+  removeProperties(
 
-  mount() : this;
+    properties: IAppearanceObject,
 
-  mountImmediat() : this;
+    payload: IAppearanceObjectDestroyed
 
-  sync() : this;
+  ): IAppearanceObject
 
-  destroy() : this;
-  
+  sheet(stylesheet: IAppearanceStyleSheet): this;
+
+  set(payload: IAppearanceObject): this;
+
+  unset(payload: IAppearanceObjectDestroyed): this;
+
+  mount(): this;
+
+  mountImmediat(): this;
+
+  sync(): this;
+
+  destroy(): this;
+
 }
 
 
@@ -556,7 +654,7 @@ export type INavigationNavigateProps<Scheme> = {
   navigation: INavigation<Scheme>;
 
   routeName: keyof Scheme;
-  
+
   parser: INavigationNavigateParser;
 
 }
@@ -571,14 +669,14 @@ export type INavigationMiddlewareProps<Scheme> = {
 
   routeName: keyof Scheme;
 
-  props: Scheme[ keyof Scheme ] | IProps | undefined;
-  
+  props: Scheme[keyof Scheme] | IProps | undefined;
+
 }
 
-export type INavigationMiddlewareCallback<Scheme> = ( 
-  
-  payload : INavigationMiddlewareProps<Scheme> 
-  
+export type INavigationMiddlewareCallback<Scheme> = (
+
+  payload: INavigationMiddlewareProps<Scheme>
+
 ) => void;
 
 
@@ -586,58 +684,297 @@ export type INavigationOptions<Scheme> = {
 
   useHashtagParser?: boolean;
 
-  capture ?: boolean;
+  capture?: boolean;
 
   middlewares?: INavigationMiddlewareCallback<Scheme>[]
-  
+
 }
 
 
-export interface INavigationEmitterScheme<Scheme>{
+export interface INavigationEmitterScheme<Scheme> {
 
   options: INavigation<Scheme>;
 
   navigate: INavigationNavigateProps<Scheme>;
 
-} 
+}
 
 
-export interface INavigation<Scheme>{
+export interface INavigation<Scheme> {
 
   emitter: IEventDispatcher<INavigationEmitterScheme<Scheme>>
 
   options: INavigationOptions<Scheme>;
 
-  setOptions( options: INavigationOptions<Scheme> ) : this;
+  setOptions(options: INavigationOptions<Scheme>): this;
 
-  setOption( optionName: keyof INavigationOptions<Scheme>, value : (INavigationMiddlewareCallback<Scheme>[] & boolean) | undefined ) : this;
+  setOption(optionName: keyof INavigationOptions<Scheme>, value: (INavigationMiddlewareCallback<Scheme>[] & boolean) | undefined): this;
 
-  middleware( middleware : INavigationMiddlewareCallback<Scheme> ) : this;
+  middleware(middleware: INavigationMiddlewareCallback<Scheme>): this;
 
-  dispatchNavigate( ev ?: PopStateEvent | undefined ) : this;
+  dispatchNavigate(ev?: PopStateEvent | undefined): this;
 
-  capturesActions() : this;
+  capturesActions(): this;
 
-  isExternalURL( url : string ) : boolean;
+  isExternalURL(url: string): boolean;
 
-  parseElementCaptured( event : Event ) : HTMLElement | undefined;
+  parseElementCaptured(event: Event): HTMLElement | undefined;
 
-  currentRouteName() : keyof Scheme;
+  currentRouteName(): keyof Scheme;
 
-  oldRouteName() : keyof Scheme | undefined;
+  oldRouteName(): keyof Scheme | undefined;
 
-  currentQuery<T>() : T | undefined;
+  currentQuery<T>(): T | undefined;
 
-  observe() : this;
+  observe(): this;
 
-  navigate( 
-    
-    route : keyof Scheme, 
-    
-    props ?: Scheme[ keyof Scheme ], 
-    
-    ev?: PopStateEvent 
-    
-  ) : this;
-  
+  navigate(
+
+    route: keyof Scheme,
+
+    props?: Scheme[keyof Scheme],
+
+    ev?: PopStateEvent
+
+  ): this;
+
 }
+
+
+
+
+// export type IPresenterType = 'normal'
+
+//   | 'card'
+
+//   | 'modal'
+
+//   | 'overlay'
+
+//   | 'overlaySideLeft'
+
+//   | 'overlaySideRight'
+
+//   ;
+
+
+export type IPresenterProps = {
+
+  host?: IElementTarget;
+
+  size?: IPresenterSize;
+
+}
+
+
+export type IPresenterCardProps = IPresenterProps & {
+
+  // direction?: 'top' | 'bottom';
+
+}
+
+export type IPresenterOverlayProps = IPresenterProps & {
+
+  direction?: 'top' | 'right' | 'bottom' | 'left' | 'center';
+
+}
+
+export type IPresenterModalProps = IPresenterProps & {
+
+  color?: string;
+
+  locked?: boolean;
+
+  /**
+   * min : 0
+   * max : 100
+   */
+  opacity?: number;
+
+  transition?: ICoreTransition;
+
+  blurred?: boolean;
+
+}
+
+export interface IPresenters<P extends IPresenterProps> {
+
+  get presenter(): IPresenter<P>;
+
+  status: boolean;
+
+  emitter: IEventDispatcher<IPresentersEventScheme<P>>;
+
+  initialize(): this;
+
+  render(): this;
+
+  close(): this;
+
+  open(): this;
+
+}
+
+
+
+
+
+export interface IPresentersEventScheme<P extends IPresenterProps> {
+
+  open: IPresenters<P>;
+
+  close: IPresenters<P>;
+
+}
+
+export interface IPresenterEventScheme {
+
+  open: IPresenter<IPresenterProps>;
+
+  close: IPresenter<IPresenterProps>;
+
+}
+
+export interface ModalPresenterEventScheme extends IPresenterEventScheme {
+
+}
+
+export interface CardPresenterEventScheme extends IPresenterEventScheme {
+
+}
+
+export interface OverlayPresenterEventScheme extends IPresenterEventScheme {
+
+}
+
+export type IPresenterActionProps<P extends IPresenterProps> = {
+
+  presenter: IPresenter<P>;
+
+  event?: Event;
+
+}
+
+export type IPresenterActionCallback<P extends IPresenterProps> = (props: IPresenterActionProps<P>) => void;
+
+export interface IPresenterAction<P extends IPresenterProps> {
+
+  name: string;
+
+  type?: keyof HTMLElementEventMap;
+
+  callback: IPresenterActionCallback<P>;
+
+}
+
+export type IPresenterSize = 'extra-small'
+
+  | 'small'
+
+  | 'medium'
+
+  | 'large'
+
+  | 'extra-large';
+
+
+export type IPresenterAxes = 'horizontal' | 'vertical' | 'double';
+
+export interface IPresenter<P extends IPresenterProps> extends ILayerComposite<HTMLElement>, IModelComposite<P> {
+
+  emitter: IEventDispatcher<IPresenterEventScheme>
+
+  appearance: IAppearance;
+
+  anchor?: Node | undefined;
+
+  initialize(): this;
+
+  open(): this;
+
+  close(): this;
+
+  createAnchor(): this;
+
+  removeAnchor(): this;
+
+  action(action: IPresenterAction<P>): this;
+
+  actions(): IPresenterAction<P>[];
+
+  actionsDetector(host?: HTMLElement): this;
+
+  bindAction(element: HTMLElement, name: string): this;
+
+  size(size: IPresenterSize): number;
+
+  setCanvasSize(size?: IPresenterSize): this;
+
+  setCanvasCentred(axe?: IPresenterAxes): this;
+
+}
+
+
+export interface ICardPresenter extends IPresenter<IPresenterCardProps> {
+
+  emitter: IEventDispatcher<CardPresenterEventScheme>
+
+}
+
+
+export interface IModalPresenter extends IPresenter<IPresenterModalProps> {
+
+  emitter: IEventDispatcher<ModalPresenterEventScheme>
+
+}
+
+
+export interface IOverlayPresenter extends IPresenter<IPresenterOverlayProps> {
+
+  emitter: IEventDispatcher<OverlayPresenterEventScheme>
+
+}
+
+
+
+
+export type ILayerComposites<Layer> = {
+
+  [k: string]: Layer;
+
+}
+
+
+
+export interface ILayerComposite<Layer> {
+
+  get layer(): Layer;
+
+  layers: ILayerComposites<Layer>;
+
+  initialize(): this;
+
+  createLayer(identifier: string, tagname?: keyof HTMLElementTagNameMap): this
+
+  removeLayer(identifier: string): this
+
+  render(): Layer;
+
+  append(child?: ILayerCompositeChild<Layer>): this;
+
+  appendElement(child?: Layer): this;
+
+}
+
+export interface ILayerCompositeChild<Layer> extends ILayerComposite<Layer> {
+
+  parent?: ILayerComposite<Layer>;
+
+  plug(parent: ILayerComposite<Layer>): this;
+
+}
+
+
+
+
+

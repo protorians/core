@@ -1,9 +1,11 @@
 declare module '@protorians/core/animation' {
-  import type { ICoreAnimation, ICoreAnimationFeatures, ICoreAnimationOptions, IElementTarget, IAnimationStateCallback } from '@protorians/core/types';
+  import type { ICoreAnimation, ICoreAnimationFeatures, ICoreAnimationOptions, IElementTarget, IAnimationStateCallback, IAnimationCalibrate } from '@protorians/core/types';
   export class CoreAnimation implements ICoreAnimation {
       #private;
       get features(): ICoreAnimationFeatures;
       constructor(features: ICoreAnimationFeatures, options?: ICoreAnimationOptions);
+      calibrate(feature: keyof ICoreAnimationFeatures, property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
+      calibrates(property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
       reset(target: IElementTarget): this;
       start(target: IElementTarget, callback?: IAnimationStateCallback): this;
   }
@@ -258,12 +260,39 @@ declare module '@protorians/core/climbing' {
 
 }
 declare module '@protorians/core/composite' {
-  import type { ICompositeModel, IProps } from "@protorians/core/types";
-  export class CompositeModel<P extends IProps> implements ICompositeModel {
+  import type { ILayerComposite, ILayerCompositeChild, ILayerComposites, IModelComposite, IProps } from "@protorians/core/types";
+  export class ModelComposite<P> implements IModelComposite<P> {
       #private;
       get properties(): P;
       property(name: keyof P): P[keyof P] | undefined;
+      setProperty(name: keyof P, value: P[keyof P]): this;
       constructor(props: P);
+  }
+  export class LayerComposite<Layer, P> extends ModelComposite<P> implements ILayerComposite<Layer> {
+      #private;
+      get layer(): Layer;
+      layers: ILayerComposites<Layer>;
+      constructor(element: Layer, props: P);
+      initialize(): this;
+      createLayer(identifier: string): this;
+      removeLayer(identifier: string): this;
+      render(): Layer;
+      append(childElement?: ILayerCompositeChild<Layer> | undefined): this;
+      appendElement(child?: Layer | undefined): this;
+  }
+  export class LayerCompositeChild<Layer, P extends IProps> extends LayerComposite<Layer, P> implements ILayerCompositeChild<Layer> {
+      parent?: ILayerComposite<Layer> | undefined;
+      plug(parent: ILayerComposite<Layer>): this;
+  }
+  export class HTMLComposite<P> extends LayerComposite<HTMLElement, P> {
+      initialize(): this;
+      createLayer(identifier: string, tagname?: keyof HTMLElementTagNameMap | undefined): this;
+      removeLayer(identifier: string): this;
+      render(): HTMLElement;
+      append(childElement?: ILayerCompositeChild<HTMLElement> | undefined): this;
+      appendElement(child?: HTMLElement | undefined): this;
+  }
+  export class HTMLChildComposite<P extends IProps> extends HTMLComposite<P> {
   }
 
 }
@@ -461,7 +490,7 @@ declare module '@protorians/core/framerate-easings' {
 }
 declare module '@protorians/core/framerate-engine' {
   import type { IFrameRate, IFrameRateEmitterScheme, IFrameRateOptions, IFrameRatePlayload, IFrameRateProps, IFrameRatesStateCallback, IFrameRates } from "@protorians/core/types";
-  import { CompositeModel } from "@protorians/core/composite";
+  import { ModelComposite } from "@protorians/core/composite";
   import Climbing from "@protorians/core/climbing";
   import EventDispatcher from "@protorians/core/event-dispatcher";
   export class FrameRate implements IFrameRate {
@@ -469,6 +498,7 @@ declare module '@protorians/core/framerate-engine' {
       emitter: EventDispatcher<IFrameRateEmitterScheme>;
       get handler(): number | undefined;
       get options(): IFrameRateOptions;
+      get rawdelta(): number;
       get delta(): number;
       get sens(): boolean;
       get paused(): boolean;
@@ -481,7 +511,7 @@ declare module '@protorians/core/framerate-engine' {
       start(): this;
       asyncStart(): Promise<IFrameRate>;
   }
-  export default class FrameRates extends CompositeModel<IFrameRateProps> implements IFrameRates {
+  export default class FrameRates extends ModelComposite<IFrameRateProps> implements IFrameRates {
       #private;
       /**
        * Jeu d'escalade pour l'excetion consécutive
@@ -510,9 +540,7 @@ declare module '@protorians/core/index' {
   import * as CoreAttribute from '@protorians/core/attribute';
   import * as CoreAppearance from '@protorians/core/appearance';
   import * as Utilities from '@protorians/core/utilities';
-  import * as Typing from '@protorians/core/types';
   const _default: {
-      Typing: typeof Typing;
       FrameRates: {
           Engine: typeof FrameRatesEngine;
           Easing: typeof FrameRateEasing;
@@ -581,12 +609,103 @@ declare module '@protorians/core/navigation' {
   }
 
 }
+declare module '@protorians/core/presenters' {
+  import { HTMLComposite } from "@protorians/core/composite";
+  import EventDispatcher from "@protorians/core/event-dispatcher";
+  import type { IAppearance, IPresenters, IPresenterProps, IPresenter, IPresenterCardProps, IPresenterModalProps, IPresenterEventScheme, ModalPresenterEventScheme, IPresentersEventScheme, CardPresenterEventScheme, IEventDispatcher, OverlayPresenterEventScheme, IModalPresenter, ICardPresenter, IOverlayPresenter, IPresenterOverlayProps, IPresenterAction, IPresenterSize, IPresenterAxes } from "@protorians/core/types";
+  export class Presenter<T extends IPresenterProps> extends HTMLComposite<T> implements IPresenter<T> {
+      #private;
+      anchor?: Node;
+      appearance: IAppearance;
+      transitionTimes: number;
+      emitter: IEventDispatcher<IPresenterEventScheme>;
+      constructor(overlay: HTMLElement, props: T);
+      initialize(): this;
+      open(): this;
+      close(): this;
+      createAnchor(): this;
+      removeAnchor(): this;
+      action(action: IPresenterAction<T>): this;
+      bindAction(element: HTMLElement, name: string): this;
+      actionsDetector(host?: HTMLElement): this;
+      actions(): IPresenterAction<T>[];
+      size(size?: IPresenterSize): number;
+      setCanvasSize(size?: IPresenterSize): this;
+      setCanvasCentred(axe?: IPresenterAxes): this;
+  }
+  /**
+   * CardPresenter
+   * @description Presentation en carte
+   * @example
+   * const card = new CardPresenter({
+   *    host: document.querySelector<HTMLElement>('.sheet'),
+   *    color: '#cacaca',
+   *    opacity: 75,
+   *    locked: false,
+   *    transition: CoreTransitions.SlideFadedVertical,
+   * })
+   */
+  export class CardPresenter extends Presenter<IPresenterCardProps> implements ICardPresenter {
+      emitter: EventDispatcher<CardPresenterEventScheme>;
+      initialize(): this;
+      open(): this;
+      close(): this;
+  }
+  /**
+   * ModalPresenter
+   * @description Presentation en modal
+   * @example
+   * const modal = new CardPresenter({
+   *    host: document.querySelector<HTMLElement>('.sheet'),
+   * })
+   */
+  export class ModalPresenter extends Presenter<IPresenterModalProps> implements IModalPresenter {
+      #private;
+      emitter: EventDispatcher<ModalPresenterEventScheme>;
+      initialize(): this;
+      open(): this;
+      close(): this;
+  }
+  /**
+   * OverlayPresenter
+   * @description Presentation en surcouche
+   */
+  export class OverlayPresenter extends Presenter<IPresenterOverlayProps> implements IOverlayPresenter {
+      emitter: IEventDispatcher<OverlayPresenterEventScheme>;
+      initialize(): this;
+      setPosition(): this;
+      open(): this;
+      close(): this;
+  }
+  /**
+   * Presenters
+   * @description Controlleur de présentation dans un context
+   * @example
+   * const presenter = Presenters.context( ... )
+   */
+  export default class Presenters<P extends IPresenterProps> implements IPresenters<P> {
+      #private;
+      emitter: EventDispatcher<IPresentersEventScheme<P>>;
+      status: boolean;
+      get presenter(): IPresenter<P>;
+      constructor(presenter: IPresenter<P>);
+      initialize(): this;
+      open(): this;
+      close(): this;
+      render(): this;
+      static context<P extends IPresenterProps>(presenter: IPresenter<P>): Presenters<P>;
+  }
+
+}
 declare module '@protorians/core/transitions' {
-  import type { IElementTarget, ICoreTransition, IAnimationStateCallback, ICoreTransitionProps } from '@protorians/core/types';
-  import { CompositeModel } from '@protorians/core/composite';
-  export class CoreTransition extends CompositeModel<ICoreTransitionProps> implements ICoreTransition {
+  import type { IElementTarget, ICoreTransition, IAnimationStateCallback, ICoreTransitionProps, IAnimationCalibrate } from '@protorians/core/types';
+  import { ModelComposite } from '@protorians/core/composite';
+  export class CoreTransition extends ModelComposite<ICoreTransitionProps> implements ICoreTransition {
       currentMoment?: boolean;
       constructor(props: ICoreTransitionProps);
+      calibrate(moment: 'in' | 'out', property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
+      calibrateIn(property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
+      calibrateOut(property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
       startIn(target: IElementTarget, callback?: IAnimationStateCallback): this;
       startOut(target: IElementTarget, callback?: IAnimationStateCallback): this;
       toggle(target: IElementTarget, callback?: IAnimationStateCallback): this;
@@ -636,6 +755,21 @@ declare module '@protorians/core/transitions' {
 }
 declare module '@protorians/core/types' {
   export type IElementTarget = HTMLElement | null;
+  export type ISchemaValidator = {
+      value: IDataValue;
+      expert: IDataValue;
+      valid: boolean;
+  };
+  export type ISchemaValidators = {
+      score: number;
+      hit: number;
+      total: number;
+      responses: ISchemaValidator[];
+  };
+  export type IObjectData = {
+      [K: string]: IDataValue;
+  };
+  export type IDataValue = string | number | boolean | object;
   export type IObjectToString = {
       eq?: string | undefined;
       start?: string | undefined;
@@ -644,15 +778,24 @@ declare module '@protorians/core/types' {
   };
   export interface ICoreTransition {
       currentMoment?: boolean;
-      startIn(target: IElementTarget, callback: IAnimationStateCallback): this;
-      startOut(target: IElementTarget, callback: IAnimationStateCallback): this;
-      toggle(target: IElementTarget, callback: IAnimationStateCallback): this;
+      startIn(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      startOut(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      toggle(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      calibrate(moment: 'in' | 'out', property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
+      calibrateIn(property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
+      calibrateOut(property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
   }
   export type ICoreTransitionProps = {
       in: ICoreAnimation;
       out: ICoreAnimation;
   };
   export type IAnimationStateCallback = (payload: IAnimationStatePayload) => void;
+  export type IAnimationCalibrate = {
+      from: number;
+      to: number;
+      duration: number;
+      ease: IEasing;
+  };
   export type ICoreAnimationFeatureCallback = (payload: ICoreAnimationFeaturePayload) => string;
   export type IAnimationStatePayload = {
       animate: ICoreAnimation;
@@ -679,6 +822,9 @@ declare module '@protorians/core/types' {
   export interface ICoreAnimation {
       get features(): ICoreAnimationFeatures;
       start(target: IElementTarget, callback?: IAnimationStateCallback): this;
+      calibrate(feature: keyof ICoreAnimationFeatures, property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
+      calibrates(property: keyof IAnimationCalibrate, value: IAnimationCalibrate[keyof IAnimationCalibrate]): this;
+      reset(target: IElementTarget): this;
   }
   export type IClimbingTask<R> = Generator<Promise<R>, void, IClimbingNext<R>>;
   export type IClimbingYield<R> = (index: number) => IClimbingTask<R>;
@@ -700,9 +846,10 @@ declare module '@protorians/core/types' {
   export interface IProps {
       [P: string]: IProp;
   }
-  export interface ICompositeModel {
-      get properties(): IProps;
-      property(name: string): IProps[keyof IProps] | undefined;
+  export interface IModelComposite<P> {
+      get properties(): P;
+      property(name: keyof P): P[keyof P] | undefined;
+      setProperty(name: keyof P, value: P[keyof P]): this;
   }
   /**
    * Emitter
@@ -761,6 +908,7 @@ declare module '@protorians/core/types' {
   export interface IFrameRate {
       get options(): IFrameRateOptions;
       get delta(): number;
+      get rawdelta(): number;
       get sens(): boolean;
       get payload(): IFrameRatePlayload;
       emitter: IEventDispatcher<IFrameRateEmitterScheme>;
@@ -919,6 +1067,103 @@ declare module '@protorians/core/types' {
       currentQuery<T>(): T | undefined;
       observe(): this;
       navigate(route: keyof Scheme, props?: Scheme[keyof Scheme], ev?: PopStateEvent): this;
+  }
+  export type IPresenterProps = {
+      host?: IElementTarget;
+      size?: IPresenterSize;
+  };
+  export type IPresenterCardProps = IPresenterProps & {};
+  export type IPresenterOverlayProps = IPresenterProps & {
+      direction?: 'top' | 'right' | 'bottom' | 'left' | 'center';
+  };
+  export type IPresenterModalProps = IPresenterProps & {
+      color?: string;
+      locked?: boolean;
+      /**
+       * min : 0
+       * max : 100
+       */
+      opacity?: number;
+      transition?: ICoreTransition;
+      blurred?: boolean;
+  };
+  export interface IPresenters<P extends IPresenterProps> {
+      get presenter(): IPresenter<P>;
+      status: boolean;
+      emitter: IEventDispatcher<IPresentersEventScheme<P>>;
+      initialize(): this;
+      render(): this;
+      close(): this;
+      open(): this;
+  }
+  export interface IPresentersEventScheme<P extends IPresenterProps> {
+      open: IPresenters<P>;
+      close: IPresenters<P>;
+  }
+  export interface IPresenterEventScheme {
+      open: IPresenter<IPresenterProps>;
+      close: IPresenter<IPresenterProps>;
+  }
+  export interface ModalPresenterEventScheme extends IPresenterEventScheme {
+  }
+  export interface CardPresenterEventScheme extends IPresenterEventScheme {
+  }
+  export interface OverlayPresenterEventScheme extends IPresenterEventScheme {
+  }
+  export type IPresenterActionProps<P extends IPresenterProps> = {
+      presenter: IPresenter<P>;
+      event?: Event;
+  };
+  export type IPresenterActionCallback<P extends IPresenterProps> = (props: IPresenterActionProps<P>) => void;
+  export interface IPresenterAction<P extends IPresenterProps> {
+      name: string;
+      type?: keyof HTMLElementEventMap;
+      callback: IPresenterActionCallback<P>;
+  }
+  export type IPresenterSize = 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
+  export type IPresenterAxes = 'horizontal' | 'vertical' | 'double';
+  export interface IPresenter<P extends IPresenterProps> extends ILayerComposite<HTMLElement>, IModelComposite<P> {
+      emitter: IEventDispatcher<IPresenterEventScheme>;
+      appearance: IAppearance;
+      anchor?: Node | undefined;
+      initialize(): this;
+      open(): this;
+      close(): this;
+      createAnchor(): this;
+      removeAnchor(): this;
+      action(action: IPresenterAction<P>): this;
+      actions(): IPresenterAction<P>[];
+      actionsDetector(host?: HTMLElement): this;
+      bindAction(element: HTMLElement, name: string): this;
+      size(size: IPresenterSize): number;
+      setCanvasSize(size?: IPresenterSize): this;
+      setCanvasCentred(axe?: IPresenterAxes): this;
+  }
+  export interface ICardPresenter extends IPresenter<IPresenterCardProps> {
+      emitter: IEventDispatcher<CardPresenterEventScheme>;
+  }
+  export interface IModalPresenter extends IPresenter<IPresenterModalProps> {
+      emitter: IEventDispatcher<ModalPresenterEventScheme>;
+  }
+  export interface IOverlayPresenter extends IPresenter<IPresenterOverlayProps> {
+      emitter: IEventDispatcher<OverlayPresenterEventScheme>;
+  }
+  export type ILayerComposites<Layer> = {
+      [k: string]: Layer;
+  };
+  export interface ILayerComposite<Layer> {
+      get layer(): Layer;
+      layers: ILayerComposites<Layer>;
+      initialize(): this;
+      createLayer(identifier: string, tagname?: keyof HTMLElementTagNameMap): this;
+      removeLayer(identifier: string): this;
+      render(): Layer;
+      append(child?: ILayerCompositeChild<Layer>): this;
+      appendElement(child?: Layer): this;
+  }
+  export interface ILayerCompositeChild<Layer> extends ILayerComposite<Layer> {
+      parent?: ILayerComposite<Layer>;
+      plug(parent: ILayerComposite<Layer>): this;
   }
 
 }

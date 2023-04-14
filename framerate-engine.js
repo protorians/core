@@ -1,19 +1,26 @@
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
 var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
     if (kind === "m") throw new TypeError("Private method is not writable");
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
 var _FrameRate_instances, _FrameRate_options, _FrameRate_current, _FrameRate_status, _FrameRate_paused, _FrameRate_stopped, _FrameRate_handler, _FrameRate_initialize, _FrameRate_prepare, _FrameRate_elapsed, _FrameRate_calculate, _FrameRate_frame, _FrameRate_playing, _FrameRates_executed;
-import { CompositeModel } from "./composite";
+import { ModelComposite } from "./composite";
 import Climbing from "./climbing";
 import EventDispatcher from "./event-dispatcher";
 export class FrameRate {
+    get handler() { return __classPrivateFieldGet(this, _FrameRate_handler, "f"); }
+    get options() { return __classPrivateFieldGet(this, _FrameRate_options, "f"); }
+    get rawdelta() { return (__classPrivateFieldGet(this, _FrameRate_options, "f").to - __classPrivateFieldGet(this, _FrameRate_options, "f").from); }
+    get delta() { return Math.abs(__classPrivateFieldGet(this, _FrameRate_options, "f").to - __classPrivateFieldGet(this, _FrameRate_options, "f").from); }
+    get sens() { return (__classPrivateFieldGet(this, _FrameRate_options, "f").to - __classPrivateFieldGet(this, _FrameRate_options, "f").from) > 0 ? true : false; }
+    get paused() { return __classPrivateFieldGet(this, _FrameRate_paused, "f"); }
+    get stopped() { return __classPrivateFieldGet(this, _FrameRate_stopped, "f"); }
     constructor(options) {
         _FrameRate_instances.add(this);
         this.emitter = new EventDispatcher();
@@ -25,17 +32,14 @@ export class FrameRate {
         _FrameRate_handler.set(this, undefined);
         __classPrivateFieldSet(this, _FrameRate_options, options, "f");
     }
-    get handler() { return __classPrivateFieldGet(this, _FrameRate_handler, "f"); }
-    get options() { return __classPrivateFieldGet(this, _FrameRate_options, "f"); }
-    get delta() { return Math.abs(__classPrivateFieldGet(this, _FrameRate_options, "f").to - __classPrivateFieldGet(this, _FrameRate_options, "f").from); }
-    get sens() { return (__classPrivateFieldGet(this, _FrameRate_options, "f").to - __classPrivateFieldGet(this, _FrameRate_options, "f").from) > 0 ? true : false; }
-    get paused() { return __classPrivateFieldGet(this, _FrameRate_paused, "f"); }
-    get stopped() { return __classPrivateFieldGet(this, _FrameRate_stopped, "f"); }
     get payload() {
         return __classPrivateFieldGet(this, _FrameRate_current, "f");
     }
     syncronizeValue(x) {
-        return this.sens ? x : this.delta - x;
+        return (__classPrivateFieldGet(this, _FrameRate_options, "f").from > __classPrivateFieldGet(this, _FrameRate_options, "f").to
+            ? __classPrivateFieldGet(this, _FrameRate_options, "f").from - x
+            : x - __classPrivateFieldGet(this, _FrameRate_options, "f").from);
+        // return this.sens ? x : this.delta - x;
     }
     reset() {
         __classPrivateFieldGet(this, _FrameRate_current, "f").started = undefined;
@@ -103,7 +107,8 @@ _FrameRate_options = new WeakMap(), _FrameRate_current = new WeakMap(), _FrameRa
             }
             if (!__classPrivateFieldGet(this, _FrameRate_options, "f").ease) {
                 const percent = quotient * 100;
-                const value = (percent * this.delta) / 100;
+                const value = (((percent) * (this.delta)) / 100);
+                // const master = 
                 __classPrivateFieldGet(this, _FrameRate_options, "f").frame({
                     percent,
                     value: this.syncronizeValue(value)
@@ -111,7 +116,7 @@ _FrameRate_options = new WeakMap(), _FrameRate_current = new WeakMap(), _FrameRa
             }
             if (complete) {
                 __classPrivateFieldSet(this, _FrameRate_status, true, "f");
-                __classPrivateFieldGet(this, _FrameRate_options, "f").frame({ percent: 100, value: this.options.to });
+                // this.#options.frame({ percent: 100, value: this.options.to })
                 this.emitter.dispatch('done', this);
                 return this;
             }
@@ -151,7 +156,7 @@ _FrameRate_options = new WeakMap(), _FrameRate_current = new WeakMap(), _FrameRa
     // }
     return this;
 };
-export default class FrameRates extends CompositeModel {
+export default class FrameRates extends ModelComposite {
     constructor(props) {
         super(props);
         /**

@@ -105,6 +105,7 @@ export class Navigation {
             routeName,
             parser: parser,
         });
+        __classPrivateFieldSet(this, _Navigation_oldRoute, routeName, "f");
         return this;
     }
     navigate(route, props, ev) {
@@ -115,7 +116,6 @@ export class Navigation {
         const routeName = route;
         const hasProps = Object.keys(props || {}).length;
         const query = hasProps ? `?${ObjectURLParams(props || {})}` : '';
-        __classPrivateFieldSet(this, _Navigation_oldRoute, routeName, "f");
         if (currentRoute != routeName) {
             if (this.options.useHashtagParser) {
                 location.hash = `${routeName}${query}`;

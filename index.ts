@@ -9,49 +9,47 @@ import * as ElementAnimate from './animation';
 import * as CoreAttribute from './attribute';
 import * as CoreAppearance from './appearance';
 import * as Utilities from './utilities';
-import * as Typing from './types';
+
 
 
 
 export default {
 
-  Typing,
-  
-  FrameRates : {
+  FrameRates: {
 
     Engine: FrameRatesEngine,
 
     Easing: FrameRateEasing,
-    
+
   },
 
   Utilities,
-  
-  Compound : {
 
-    Climbing : CoumpoundClimbing,
+  Compound: {
 
-    Composite : CoumpoundComposite,
+    Climbing: CoumpoundClimbing,
 
-    MetricRandom : CompoundMetricRandom,
+    Composite: CoumpoundComposite,
 
-    Navigation : CompoundNavigation,
+    MetricRandom: CompoundMetricRandom,
+
+    Navigation: CompoundNavigation,
 
   },
 
-  Element:{
+  Element: {
 
-    Animate : ElementAnimate,
+    Animate: ElementAnimate,
 
-    Attribute : CoreAttribute,
+    Attribute: CoreAttribute,
 
-    Appearance : CoreAppearance,
-    
+    Appearance: CoreAppearance,
+
   },
 
-  Events : {
-    
-    Dispatcher : EventDispatchers
+  Events: {
+
+    Dispatcher: EventDispatchers
 
   },
 
