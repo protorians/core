@@ -662,7 +662,6 @@ export class OverlayPresenter
 
       },
 
-
       // '&.presenter\\:overlay': {
 
       //   boxShadow: '0 0 2rem rgba(0,0,0,.3)',
