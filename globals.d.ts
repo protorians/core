@@ -1007,7 +1007,10 @@ declare module '@protorians/core/types' {
       marginVertical?: IAppearanceValues;
       marginHorizontal?: IAppearanceValues;
   }
-  export type IAppearanceObject = {
+  export type IAppearanceObjectExtended = {
+      backdropFilter?: string;
+  };
+  export type IAppearanceObject = IAppearanceObjectExtended & {
       [K in keyof Partial<IAppearanceCSSDeclaration>]: IAppearanceValues;
   };
   export interface IAppearanceStyleSheet {

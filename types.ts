@@ -586,7 +586,13 @@ export interface IAppearanceCSSDeclaration extends Partial<CSSStyleDeclaration> 
 
 }
 
-export type IAppearanceObject = {
+export type IAppearanceObjectExtended = {
+
+  backdropFilter?: string;
+
+}
+
+export type IAppearanceObject = IAppearanceObjectExtended & {
 
   [K in keyof Partial<IAppearanceCSSDeclaration>]: IAppearanceValues;
 

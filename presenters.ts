@@ -469,7 +469,7 @@ export class ModalPresenter
 
         display: 'none',
 
-        backdropFilter: !this.properties.blurred ? '' : 'blur(.5rem)',
+        backdropFilter: !this.properties.blurred ? 'none' : 'blur(.5rem)',
 
         alignItems: 'center',
 
