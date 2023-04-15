@@ -304,6 +304,9 @@ export class CardPresenter
 
       this.properties.host?.classList.add('presenter:card');
 
+      this.properties.host?.appendChild(this.layer);
+
+
       (new FrameRates({
 
         entries: [
@@ -760,6 +763,8 @@ export class OverlayPresenter
 
       this.setPosition();
 
+      this.setCanvasSize(this.properties.size);
+
       this.emitter.dispatch('open', this)
 
     }
@@ -832,8 +837,6 @@ export default class Presenters<P extends IPresenterProps> implements IPresenter
   }
 
   open() {
-
-    this.#current.setCanvasSize(this.#current.properties.size);
 
     this.#current.layer?.classList.add('presenter:child');
 

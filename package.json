@@ -1,6 +1,6 @@
 {
   "name": "@protorians/core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Protorians Core",
   "main": "index.ts",
   "type": "module",
@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "types-build": "npm-dts generate -o ./globals.d.ts -c"
+    "build:types": "npm-dts generate -o ./globals.d.ts -c"
   },
   "keywords": [
     "protorians",

@@ -142,6 +142,7 @@ export class CardPresenter extends Presenter {
         if (this.layer) {
             this.properties.host?.classList.add(`${this.appearance.uid}`);
             this.properties.host?.classList.add('presenter:card');
+            this.properties.host?.appendChild(this.layer);
             (new FrameRates({
                 entries: [
                     (new FrameRate({
@@ -368,6 +369,7 @@ export class OverlayPresenter extends Presenter {
             this.properties.host?.appendChild(this.layers.canvas);
             this.layers.canvas.appendChild(this.layer);
             this.setPosition();
+            this.setCanvasSize(this.properties.size);
             this.emitter.dispatch('open', this);
         }
         return this;
@@ -385,15 +387,15 @@ export class OverlayPresenter extends Presenter {
  * const presenter = Presenters.context( ... )
  */
 export default class Presenters {
-    get presenter() {
-        return __classPrivateFieldGet(this, _Presenters_current, "f");
-    }
     constructor(presenter) {
         _Presenters_current.set(this, void 0);
         this.emitter = new EventDispatcher();
         this.status = false;
         __classPrivateFieldSet(this, _Presenters_current, presenter, "f");
         this.initialize();
+    }
+    get presenter() {
+        return __classPrivateFieldGet(this, _Presenters_current, "f");
     }
     initialize() {
         __classPrivateFieldGet(this, _Presenters_current, "f").emitter.listen('open', () => {
@@ -406,7 +408,6 @@ export default class Presenters {
         return this;
     }
     open() {
-        __classPrivateFieldGet(this, _Presenters_current, "f").setCanvasSize(__classPrivateFieldGet(this, _Presenters_current, "f").properties.size);
         __classPrivateFieldGet(this, _Presenters_current, "f").layer?.classList.add('presenter:child');
         __classPrivateFieldGet(this, _Presenters_current, "f").open();
         this.emitter.dispatch('open', this);
