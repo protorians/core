@@ -132,7 +132,7 @@ export class CardPresenter extends Presenter {
                 left: '-1.5rem',
                 width: 'calc(100vw + 2vw )',
                 height: 'calc(100vh - 1rem)',
-                zIndex: '99',
+                zIndex: '999',
             },
         }).mount();
         this.properties.host = this.properties.host || document.body;
@@ -228,6 +228,8 @@ export class ModalPresenter extends Presenter {
                 zIndex: '999',
                 maxWidth: '100vw',
                 maxHeight: '100vh',
+                width: '100%',
+                height: '100%',
                 display: 'none',
                 backdropFilter: !this.properties.blurred ? 'none' : 'blur(.5rem)',
                 alignItems: 'center',
@@ -321,6 +323,8 @@ export class OverlayPresenter extends Presenter {
             '.overlay\\:canvas': {
                 position: 'fixed',
                 zIndex: '999',
+                width: '100%',
+                height: '100%',
             },
             // '&.presenter\\:overlay': {
             //   boxShadow: '0 0 2rem rgba(0,0,0,.3)',
@@ -381,15 +385,15 @@ export class OverlayPresenter extends Presenter {
  * const presenter = Presenters.context( ... )
  */
 export default class Presenters {
+    get presenter() {
+        return __classPrivateFieldGet(this, _Presenters_current, "f");
+    }
     constructor(presenter) {
         _Presenters_current.set(this, void 0);
         this.emitter = new EventDispatcher();
         this.status = false;
         __classPrivateFieldSet(this, _Presenters_current, presenter, "f");
         this.initialize();
-    }
-    get presenter() {
-        return __classPrivateFieldGet(this, _Presenters_current, "f");
     }
     initialize() {
         __classPrivateFieldGet(this, _Presenters_current, "f").emitter.listen('open', () => {

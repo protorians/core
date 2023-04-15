@@ -283,7 +283,7 @@ export class CardPresenter
 
         height: 'calc(100vh - 1rem)',
 
-        zIndex: '99',
+        zIndex: '999',
 
       },
 
@@ -466,6 +466,10 @@ export class ModalPresenter
         maxWidth: '100vw',
 
         maxHeight: '100vh',
+
+        width: '100%',
+
+        height: '100%',
 
         display: 'none',
 
@@ -659,6 +663,10 @@ export class OverlayPresenter
         position: 'fixed',
 
         zIndex: '999',
+
+        width: '100%',
+
+        height: '100%',
 
       },
 

@@ -1,29 +1,17 @@
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
 var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
     if (kind === "m") throw new TypeError("Private method is not writable");
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
 var _FrameRateEasing_name, _FrameRateEasing_cubicBezier, _FrameRateEasing_formula;
 import EventDispatcher from "./event-dispatcher";
 export class FrameRateEasing {
-    constructor(name, cubicBezier, formula) {
-        /**
-         * Emetteur
-         */
-        this.emitter = new EventDispatcher();
-        _FrameRateEasing_name.set(this, void 0);
-        _FrameRateEasing_cubicBezier.set(this, void 0);
-        _FrameRateEasing_formula.set(this, void 0);
-        __classPrivateFieldSet(this, _FrameRateEasing_name, name, "f");
-        __classPrivateFieldSet(this, _FrameRateEasing_cubicBezier, cubicBezier, "f");
-        __classPrivateFieldSet(this, _FrameRateEasing_formula, formula, "f");
-    }
     /**
      * Name of easing
      */
@@ -37,6 +25,18 @@ export class FrameRateEasing {
      * Formule mathématique
      */
     get formula() { return __classPrivateFieldGet(this, _FrameRateEasing_formula, "f"); }
+    constructor(name, cubicBezier, formula) {
+        /**
+         * Emetteur
+         */
+        this.emitter = new EventDispatcher();
+        _FrameRateEasing_name.set(this, void 0);
+        _FrameRateEasing_cubicBezier.set(this, void 0);
+        _FrameRateEasing_formula.set(this, void 0);
+        __classPrivateFieldSet(this, _FrameRateEasing_name, name, "f");
+        __classPrivateFieldSet(this, _FrameRateEasing_cubicBezier, cubicBezier, "f");
+        __classPrivateFieldSet(this, _FrameRateEasing_formula, formula, "f");
+    }
     /**
      * Calculate from formula function
      * @param x Hit's Value
