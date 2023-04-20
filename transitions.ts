@@ -113,7 +113,7 @@ export class CoreTransitions {
   /**
    * Fade Transition
    */
-  static get Fade() {
+  static get Fade(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -142,6 +142,82 @@ export class CoreTransitions {
   }
 
 
+  /**
+   * Zoom Transition
+   */
+  static get Zoom(): ICoreTransition {
+
+    return new CoreTransition({
+
+      in: new CoreAnimation({
+        transform: {
+          from: 0,
+          to: 1000,
+          duration: this.#duration,
+          set: ({ value }) => `scale(${value / 1000})`
+        }
+
+      }),
+
+      out: new CoreAnimation({
+        transform: {
+          from: 1000,
+          to: 0,
+          duration: this.#duration,
+          set: ({ value }) => `scale(${value / 1000})`
+        }
+
+      }),
+
+    })
+
+  }
+
+
+  /**
+   * Zoom Faded Transition
+   */
+  static get ZoomFaded(): ICoreTransition {
+
+    return new CoreTransition({
+
+      in: new CoreAnimation({
+        transform: {
+          from: 0,
+          to: 1000,
+          duration: this.#duration,
+          set: ({ value }) => `scale(${value / 1000})`
+        },
+
+        opacity: {
+          from: 0,
+          to: 1000,
+          duration: this.#duration,
+          set: ({ value }) => `${value / 1000}`
+        },
+      }),
+
+      out: new CoreAnimation({
+        transform: {
+          from: 1000,
+          to: 0,
+          duration: this.#duration,
+          set: ({ value }) => `scale(${value / 1000})`
+        },
+
+        opacity: {
+          from: 1000,
+          to: 0,
+          duration: this.#duration,
+          set: ({ value }) => `${value / 1000}`
+        },
+      }),
+
+    })
+
+  }
+
+
 
 
 
@@ -149,7 +225,7 @@ export class CoreTransitions {
   /**
    * SlideHorizontal  Transition avec fondu
    */
-  static get SlideFadedHorizontal() {
+  static get SlideFadedHorizontal(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -200,7 +276,7 @@ export class CoreTransitions {
   /**
    * SlideHorizontal  Transition
    */
-  static get SlideHorizontal() {
+  static get SlideHorizontal(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -238,7 +314,7 @@ export class CoreTransitions {
   /**
    * SlideVertical  Transition avec fondu
    */
-  static get SlideFadedVertical() {
+  static get SlideFadedVertical(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -289,7 +365,7 @@ export class CoreTransitions {
   /**
    * SlideVertical  Transition
    */
-  static get SlideVertical() {
+  static get SlideVertical(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -330,7 +406,7 @@ export class CoreTransitions {
   /**
    * SlideHorizontalReverse  Transition avec fondu
    */
-  static get SlideFadedHorizontalReverse() {
+  static get SlideFadedHorizontalReverse(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -379,7 +455,7 @@ export class CoreTransitions {
   /**
    * SlideHorizontal  Transition
    */
-  static get SlideHorizontalReverse() {
+  static get SlideHorizontalReverse(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -415,7 +491,7 @@ export class CoreTransitions {
   /**
    * SlideVertical  Transition avec fondu
    */
-  static get SlideFadedVerticalReverse() {
+  static get SlideFadedVerticalReverse(): ICoreTransition {
 
     return new CoreTransition({
 
@@ -464,7 +540,7 @@ export class CoreTransitions {
   /**
    * SlideVerticalReverse  Transition
    */
-  static get SlideVerticalReverse() {
+  static get SlideVerticalReverse(): ICoreTransition {
 
     return new CoreTransition({
 

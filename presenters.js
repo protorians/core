@@ -387,15 +387,15 @@ export class OverlayPresenter extends Presenter {
  * const presenter = Presenters.context( ... )
  */
 export default class Presenters {
+    get presenter() {
+        return __classPrivateFieldGet(this, _Presenters_current, "f");
+    }
     constructor(presenter) {
         _Presenters_current.set(this, void 0);
         this.emitter = new EventDispatcher();
         this.status = false;
         __classPrivateFieldSet(this, _Presenters_current, presenter, "f");
         this.initialize();
-    }
-    get presenter() {
-        return __classPrivateFieldGet(this, _Presenters_current, "f");
     }
     initialize() {
         __classPrivateFieldGet(this, _Presenters_current, "f").emitter.listen('open', () => {

@@ -69,6 +69,64 @@ export class CoreTransitions {
         });
     }
     /**
+     * Zoom Transition
+     */
+    static get Zoom() {
+        return new CoreTransition({
+            in: new CoreAnimation({
+                transform: {
+                    from: 0,
+                    to: 1000,
+                    duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
+                    set: ({ value }) => `scale(${value / 1000})`
+                }
+            }),
+            out: new CoreAnimation({
+                transform: {
+                    from: 1000,
+                    to: 0,
+                    duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
+                    set: ({ value }) => `scale(${value / 1000})`
+                }
+            }),
+        });
+    }
+    /**
+     * Zoom Faded Transition
+     */
+    static get ZoomFaded() {
+        return new CoreTransition({
+            in: new CoreAnimation({
+                transform: {
+                    from: 0,
+                    to: 1000,
+                    duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
+                    set: ({ value }) => `scale(${value / 1000})`
+                },
+                opacity: {
+                    from: 0,
+                    to: 1000,
+                    duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
+                    set: ({ value }) => `${value / 1000}`
+                },
+            }),
+            out: new CoreAnimation({
+                transform: {
+                    from: 1000,
+                    to: 0,
+                    duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
+                    set: ({ value }) => `scale(${value / 1000})`
+                },
+                opacity: {
+                    from: 1000,
+                    to: 0,
+                    duration: __classPrivateFieldGet(this, _a, "f", _CoreTransitions_duration),
+                    set: ({ value }) => `${value / 1000}`
+                },
+            }),
+        });
+    }
+    /**
      * SlideHorizontal  Transition avec fondu
      */
     static get SlideFadedHorizontal() {

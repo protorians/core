@@ -717,39 +717,47 @@ declare module '@protorians/core/transitions' {
       /**
        * Fade Transition
        */
-      static get Fade(): CoreTransition;
+      static get Fade(): ICoreTransition;
+      /**
+       * Zoom Transition
+       */
+      static get Zoom(): ICoreTransition;
+      /**
+       * Zoom Faded Transition
+       */
+      static get ZoomFaded(): ICoreTransition;
       /**
        * SlideHorizontal  Transition avec fondu
        */
-      static get SlideFadedHorizontal(): CoreTransition;
+      static get SlideFadedHorizontal(): ICoreTransition;
       /**
        * SlideHorizontal  Transition
        */
-      static get SlideHorizontal(): CoreTransition;
+      static get SlideHorizontal(): ICoreTransition;
       /**
        * SlideVertical  Transition avec fondu
        */
-      static get SlideFadedVertical(): CoreTransition;
+      static get SlideFadedVertical(): ICoreTransition;
       /**
        * SlideVertical  Transition
        */
-      static get SlideVertical(): CoreTransition;
+      static get SlideVertical(): ICoreTransition;
       /**
        * SlideHorizontalReverse  Transition avec fondu
        */
-      static get SlideFadedHorizontalReverse(): CoreTransition;
+      static get SlideFadedHorizontalReverse(): ICoreTransition;
       /**
        * SlideHorizontal  Transition
        */
-      static get SlideHorizontalReverse(): CoreTransition;
+      static get SlideHorizontalReverse(): ICoreTransition;
       /**
        * SlideVertical  Transition avec fondu
        */
-      static get SlideFadedVerticalReverse(): CoreTransition;
+      static get SlideFadedVerticalReverse(): ICoreTransition;
       /**
        * SlideVerticalReverse  Transition
        */
-      static get SlideVerticalReverse(): CoreTransition;
+      static get SlideVerticalReverse(): ICoreTransition;
   }
 
 }
