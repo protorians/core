@@ -202,6 +202,7 @@ export class ModalPresenter extends Presenter {
         this.emitter = new EventDispatcher();
     }
     initialize() {
+        this.properties.host = this.properties.host || document.body;
         this
             .createLayer('shadow', 'div')
             .createLayer('canvas', 'div')
@@ -261,6 +262,7 @@ export class ModalPresenter extends Presenter {
         return this;
     }
     open() {
+        console.log('Modal Host', this.properties.host);
         if (this.layer) {
             this.createAnchor();
             this.properties.host?.classList.add(`${this.appearance.uid}`);
@@ -398,6 +400,7 @@ export default class Presenters {
         this.initialize();
     }
     initialize() {
+        console.log('Presenters initialize', __classPrivateFieldGet(this, _Presenters_current, "f"));
         __classPrivateFieldGet(this, _Presenters_current, "f").emitter.listen('open', () => {
             document.body.style.overflow = 'hidden';
             document.body.scrollTo({ top: 0 });
@@ -422,7 +425,7 @@ export default class Presenters {
         return this;
     }
     render() {
-        return this.open();
+        return this;
     }
     static context(presenter) {
         return (new this(presenter)).render();

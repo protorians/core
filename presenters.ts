@@ -414,6 +414,8 @@ export class ModalPresenter
 
   initialize(): this {
 
+    this.properties.host = this.properties.host || document.body;
+
     this
 
       .createLayer('shadow', 'div')
@@ -534,6 +536,8 @@ export class ModalPresenter
 
 
   open(): this {
+
+    console.log('Modal Host', this.properties.host)
 
     if (this.layer) {
 
@@ -818,6 +822,8 @@ export default class Presenters<P extends IPresenterProps> implements IPresenter
 
   initialize() {
 
+    console.log('Presenters initialize', this.#current)
+
     this.#current.emitter.listen('open', () => {
 
       document.body.style.overflow = 'hidden';
@@ -867,7 +873,7 @@ export default class Presenters<P extends IPresenterProps> implements IPresenter
 
   render() {
 
-    return this.open();
+    return this;
 
   }
 
