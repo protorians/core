@@ -101,6 +101,20 @@ export default class CoreAppearance {
         return this;
     }
     /**
+     * inject
+     * @description Inject du code CSS dans l'instance de l'apparence courante par substitution
+     * @param code
+     * @example
+     *  appearance.inject("body{ color: red; }")
+     */
+    inject(code) {
+        this.instance.innerHTML = Array.isArray(code)
+            ? code.join(' ')
+            : code;
+        this.mountImmediat();
+        return this;
+    }
+    /**
      * insertProperties
      * @description Insert des propriétés d'apparence dans un objet support. Analyse les propriétés et les valeurs avant de les insérer
      * @param properties Propriétés d'apparence support

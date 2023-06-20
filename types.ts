@@ -616,6 +616,8 @@ export interface IAppearance {
 
   emitter: IEventDispatcher<IAppearanceEmitterScheme>;
 
+  inject(code: string | string[]): this;
+
   insertProperties(
 
     properties: IAppearanceObject,

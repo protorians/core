@@ -67,6 +67,14 @@ declare module '@protorians/core/appearance' {
        */
       sheet(stylesheet: IAppearanceStyleSheet): this;
       /**
+       * inject
+       * @description Inject du code CSS dans l'instance de l'apparence courante par substitution
+       * @param code
+       * @example
+       *  appearance.inject("body{ color: red; }")
+       */
+      inject(code: string | string[]): this;
+      /**
        * insertProperties
        * @description Insert des propriétés d'apparence dans un objet support. Analyse les propriétés et les valeurs avant de les insérer
        * @param properties Propriétés d'apparence support
@@ -1030,6 +1038,7 @@ declare module '@protorians/core/types' {
       uid: string;
       properties: IAppearanceObject;
       emitter: IEventDispatcher<IAppearanceEmitterScheme>;
+      inject(code: string | string[]): this;
       insertProperties(properties: IAppearanceObject, data: IAppearanceObject): IAppearanceObject;
       removeProperties(properties: IAppearanceObject, payload: IAppearanceObjectDestroyed): IAppearanceObject;
       sheet(stylesheet: IAppearanceStyleSheet): this;
