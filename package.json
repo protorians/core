@@ -1,6 +1,6 @@
 {
   "name": "@protorians/core",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Protorians Core",
   "main": "index.ts",
   "type": "module",

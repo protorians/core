@@ -108,7 +108,7 @@ export default class CoreAppearance {
      *  appearance.inject("body{ color: red; }")
      */
     inject(code) {
-        this.instance.innerHTML = Array.isArray(code)
+        this.instance.innerHTML = typeof code != 'string'
             ? code.join(' ')
             : code;
         this.mountImmediat();

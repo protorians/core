@@ -194,7 +194,7 @@ export default class CoreAppearance implements IAppearance {
    */
   inject(code: string | string[]) {
 
-    this.instance.innerHTML = Array.isArray(code)
+    this.instance.innerHTML = typeof code != 'string'
 
       ? code.join(' ')
 
