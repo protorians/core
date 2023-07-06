@@ -142,6 +142,42 @@ export class CoreTransitions {
   }
 
 
+
+  /**
+   * Cards
+   */
+  static get Card(): ICoreTransition {
+
+    return new CoreTransition({
+
+      in: new CoreAnimation({
+        transform: {
+          from: 1000,
+          to: 900,
+          duration: CoreTransitions.duration,
+          set: ({ value }) => `scale(${value / 1000})`
+        },
+      }, {
+        parallel: true,
+      }),
+
+      out: new CoreAnimation({
+        transform: {
+          from: 900,
+          to: 1000,
+          duration: CoreTransitions.duration,
+          set: ({ value }) => `scale(${value / 1000})`
+        },
+      }, {
+        parallel: true,
+      }),
+
+    })
+
+  }
+
+
+
   /**
    * Zoom Transition
    */

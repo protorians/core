@@ -727,6 +727,10 @@ declare module '@protorians/core/transitions' {
        */
       static get Fade(): ICoreTransition;
       /**
+       * Cards
+       */
+      static get Card(): ICoreTransition;
+      /**
        * Zoom Transition
        */
       static get Zoom(): ICoreTransition;
