@@ -155,7 +155,7 @@ export class CoreTransitions {
           from: 1000,
           to: 900,
           duration: CoreTransitions.duration,
-          set: ({ value }) => `scale(${value / 1000})`
+          set: ({ value }) => `scale(${Math.abs(value / 1000)})`
         },
       }, {
         parallel: true,
@@ -166,7 +166,7 @@ export class CoreTransitions {
           from: 900,
           to: 1000,
           duration: CoreTransitions.duration,
-          set: ({ value }) => `scale(${value / 1000})`
+          set: ({ value }) => `scale(${Math.abs(value / 1000)})`
         },
       }, {
         parallel: true,
