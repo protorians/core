@@ -351,9 +351,17 @@ export function fixExponent(x: number) {
 
 
 
-export function DateTimeIsOver(from: string, to: string) {
+export function CompareDateTime(from: string, to: string) {
 
-  return Date.parse(from) < Date.parse(to)
+  const _from = Date.parse(from)
+
+  const _to = Date.parse(to)
+
+  return _from < _to ? true : (
+
+    _from == _to ? null : false
+
+  )
 
 }
 

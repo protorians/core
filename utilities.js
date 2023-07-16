@@ -169,6 +169,8 @@ export function fixExponent(x) {
     }
     return value;
 }
-export function DateTimeIsOver(from, to) {
-    return Date.parse(from) < Date.parse(to);
+export function CompareDateTime(from, to) {
+    const _from = Date.parse(from);
+    const _to = Date.parse(to);
+    return _from < _to ? true : (_from == _to ? null : false);
 }
