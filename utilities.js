@@ -169,3 +169,6 @@ export function fixExponent(x) {
     }
     return value;
 }
+export function DateTimeIsOver(from, to) {
+    return Date.parse(from) < Date.parse(to);
+}

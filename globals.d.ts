@@ -1259,6 +1259,7 @@ declare module '@protorians/core/utilities' {
    */
   export function Camelize(value: string): string;
   export function fixExponent(x: number): string;
+  export function DateTimeIsOver(from: string, to: string): boolean;
 
 }
 declare module '@protorians/core' {

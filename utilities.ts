@@ -351,6 +351,14 @@ export function fixExponent(x: number) {
 
 
 
+export function DateTimeIsOver(from: string, to: string) {
+
+  return Date.parse(from) < Date.parse(to)
+
+}
+
+
+
 
 // export function ObjectSchemaValidator(
 
