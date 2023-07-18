@@ -285,7 +285,7 @@ export function StripSlashes(text: string) {
  */
 export function UnCamelize(value: string) {
 
-  return value.replace(/([A-Z])/g, `-$&`).toLowerCase();
+  return (`${value[0].toLowerCase()}${value.substring(1)}`).replace(/([A-Z])/g, `-$&`).toLowerCase();
 
 }
 

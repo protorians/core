@@ -142,7 +142,7 @@ export function StripSlashes(text) {
  * uncamelize
  */
 export function UnCamelize(value) {
-    return value.replace(/([A-Z])/g, `-$&`).toLowerCase();
+    return (`${value[0].toLowerCase()}${value.substring(1)}`).replace(/([A-Z])/g, `-$&`).toLowerCase();
 }
 /**
  * camelize
