@@ -1,12 +1,17 @@
-import EventDispatcher from "./event-dispatcher";
+import {EventDispatcher} from "./event-dispatcher";
 import type { 
   IEventDispatcher, 
   INavigation, 
   INavigationEmitterScheme, 
   INavigationMiddlewareCallback, 
   INavigationOptions 
-} from "./types";
-import { AscendingDOMPath, ObjectURLParams, URLParamsObject, UpdateObject } from "./utilities";
+} from "../types";
+import {
+  AscendingDOMPath,
+  ObjectURLParams,
+  URLParamsObject,
+  UpdateObject
+} from "../utilities";
 
 /**
  * Système de navigation
@@ -139,7 +144,7 @@ export class Navigation<Scheme> implements INavigation<Scheme>{
   
   isExternalURL( url : string ){
 
-    return ( url.match( /^http/gi ) || url.match( /^\/\//gi )) ? true : false;
+    return !!(url.match(/^http/gi) || url.match(/^\/\//gi));
     
   }
   
@@ -157,7 +162,7 @@ export class Navigation<Scheme> implements INavigation<Scheme>{
 
         return AscendingDOMPath<HTMLElement>( ev.target as HTMLElement, parent => 
 
-          parent.tagName == 'A' || parent.hasAttribute('navigate:view') ? true : false
+          parent.tagName == 'A' || parent.hasAttribute('navigate:view')
           
         )
 

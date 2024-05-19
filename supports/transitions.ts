@@ -4,14 +4,14 @@ import type {
   IAnimationStateCallback,
   ICoreTransitionProps,
   IAnimationCalibrate,
-} from './types';
-import { ModelComposite } from './composite'
+} from '../types';
+import { PropertiesBag } from './properties'
 import { CoreAnimation } from './animation';
 
 
 
 
-export class CoreTransition extends ModelComposite<ICoreTransitionProps> implements ICoreTransition {
+export class CoreTransition extends PropertiesBag<ICoreTransitionProps> implements ICoreTransition {
 
   currentMoment?: boolean = undefined;
 

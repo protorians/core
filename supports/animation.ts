@@ -1,31 +1,28 @@
-
-
 import type {
   ICoreAnimation,
   ICoreAnimationFeatures,
   ICoreAnimationOptions,
   IElementTarget,
   IAnimationStateCallback,
-  IFrameRate,
-  IFrameRates,
+  IFramerate,
+  IFramerateCollection,
   IAnimationCalibrate,
   ICoreAnimationFeature,
-} from './types';
-import FrameRates, { FrameRate } from './framerate-engine';
-
-
+} from '../types';
+import {FramerateCollection, Framerate} from '../foundation';
 
 
 export class CoreAnimation implements ICoreAnimation {
 
-  get features() { return this.#features }
+  get features() {
+    return this.#features
+  }
 
   #features: ICoreAnimationFeatures;
 
-  #frameRates?: IFrameRates;
+  #frameRates?: IFramerateCollection;
 
   #options?: ICoreAnimationOptions;
-
 
 
   constructor(features: ICoreAnimationFeatures, options?: ICoreAnimationOptions) {
@@ -38,18 +35,14 @@ export class CoreAnimation implements ICoreAnimation {
 
 
   calibrate(
-
     feature: keyof ICoreAnimationFeatures,
-
     property: keyof IAnimationCalibrate,
-
     value: IAnimationCalibrate[keyof IAnimationCalibrate]
-
   ) {
 
     if (this.features[feature] != undefined) {
 
-      const calibrate: ICoreAnimationFeature = { ...this.#features[feature as any] }
+      const calibrate: ICoreAnimationFeature = {...this.#features[feature as any]}
 
       // @ts-ignore
       calibrate[property] = value;
@@ -64,23 +57,18 @@ export class CoreAnimation implements ICoreAnimation {
 
 
   calibrates(
-
     property: keyof IAnimationCalibrate,
-
     value: IAnimationCalibrate[keyof IAnimationCalibrate]
-
   ): this {
 
-    Object.entries(this.#features).forEach(({ 0: name }) => {
+    Object.entries(this.#features).forEach(({0: name}) => {
 
       this.calibrate(
-
         name as keyof ICoreAnimationFeatures,
 
         property,
 
         value
-
       )
 
     })
@@ -92,7 +80,7 @@ export class CoreAnimation implements ICoreAnimation {
 
   reset(target: IElementTarget) {
 
-    this.#frameRates = new FrameRates({
+    this.#frameRates = new FramerateCollection({
 
       parallel: this.#options?.parallel,
 
@@ -109,11 +97,11 @@ export class CoreAnimation implements ICoreAnimation {
 
   #createFrameRatesEntries(target: IElementTarget) {
 
-    const entries: IFrameRate[] = [];
+    const entries: IFramerate[] = [];
 
-    (Object.entries(this.#features).forEach(({ 0: property, 1: animation }) => {
+    (Object.entries(this.#features).forEach(({0: property, 1: animation}) => {
 
-      entries.push(new FrameRate({
+      entries.push(new Framerate({
 
         from: animation.from,
 
@@ -153,7 +141,7 @@ export class CoreAnimation implements ICoreAnimation {
 
       this.#frameRates.start(() => {
 
-        if (typeof callback == 'function') callback({ animate: this, target, })
+        if (typeof callback == 'function') callback({animate: this, target,})
 
       });
 

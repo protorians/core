@@ -4,11 +4,11 @@ import type {
   IClimbingNext, 
   IClimbingTask, 
   IClimbingYield 
-} from "./types";
+} from "../types";
 
 
 
-export default class Climbing<R> implements IClimbing<R> {
+export class Climbing<R> implements IClimbing<R> {
 
   /**
    * Tableau de réponse

@@ -29,11 +29,7 @@ export class MetricRandom {
 
 		let based, out: Array<string> = [];
 
-		if (typeof base == "string") {
-	
-			based = base.split(" ");
-	
-		}
+		based = base.split(" ");
 
 		if (Array.isArray(based)) {
 	
@@ -51,7 +47,7 @@ export class MetricRandom {
 
 	}
 
-	static CreateAplpha(length: number) : string[] {
+	static CreateAlpha(length: number) : string[] {
 
 		return this.CreateBlock(`${this.ALPHA_LOWER} ${this.ALPHA_UPPER}`, length);
 	

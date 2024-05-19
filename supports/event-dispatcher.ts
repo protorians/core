@@ -4,14 +4,14 @@ import type {
   IEventDispatcherEntries, 
   IEventDispatcherProgations, 
   IEventDispatcherScheme 
-} from "./types";
+} from "../types";
 
 /**
  * Protorian EventDispatcher — Emetteur d'émission
  * @description Gestionnaire d'évènements
  * @example new EventDispatcher<EmitScheme>()
  */
-export default class EventDispatcher<Scheme extends IEventDispatcherScheme> implements IEventDispatcher<Scheme> {
+export class EventDispatcher<Scheme extends IEventDispatcherScheme> implements IEventDispatcher<Scheme> {
 
   /**
    * Gestion de la propagation

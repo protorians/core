@@ -3,12 +3,12 @@ import type {
   ILayerComposite,
   ILayerCompositeChild,
   ILayerComposites,
-  IModelComposite,
+  IPropertiesBag,
   IProps
-} from "./types";
+} from "../types";
 
 
-export class ModelComposite<P> implements IModelComposite<P> {
+export class PropertiesBag<P> implements IPropertiesBag<P> {
 
   #props: P;
 
@@ -44,7 +44,7 @@ export class ModelComposite<P> implements IModelComposite<P> {
 
 export class LayerComposite<Layer, P>
 
-  extends ModelComposite<P>
+  extends PropertiesBag<P>
 
   implements ILayerComposite<Layer> {
 

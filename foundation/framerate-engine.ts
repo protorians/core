@@ -1,25 +1,23 @@
 import type {
-  IFrameRate,
-  IFrameRateEmitterScheme,
-  IFrameRateOptions,
-  IFrameRatePlayload,
-  IFrameRateProps,
-  IFrameRatesStateCallback,
-  IFrameRates
-} from "./types";
-import { ModelComposite } from "./composite";
-import Climbing from "./climbing";
-import EventDispatcher from "./event-dispatcher";
+  IFramerate,
+  IFramerateEmitterScheme,
+  IFramerateOptions,
+  IFrameratePayload,
+  IFramerateProps,
+  IFramerateCollectionStateCallback,
+  IFramerateCollection, IClimbing
+} from "../types";
+import {PropertiesBag, Climbing, EventDispatcher} from "../supports";
 
 
-export class FrameRate implements IFrameRate {
+export class Framerate implements IFramerate {
 
 
-  emitter = new EventDispatcher<IFrameRateEmitterScheme>()
+  emitter = new EventDispatcher<IFramerateEmitterScheme>()
 
-  #options: IFrameRateOptions;
+  #options: IFramerateOptions;
 
-  #current: IFrameRatePlayload = {} as IFrameRatePlayload
+  #current: IFrameratePayload = {} as IFrameratePayload
 
   #status: boolean = false;
 
@@ -30,23 +28,36 @@ export class FrameRate implements IFrameRate {
   #handler?: number = undefined;
 
 
-  get handler(): number | undefined { return this.#handler }
+  get handler(): number | undefined {
+    return this.#handler
+  }
 
-  get options(): IFrameRateOptions { return this.#options; }
+  get options(): IFramerateOptions {
+    return this.#options;
+  }
 
-  get rawdelta() { return (this.#options.to - this.#options.from); }
+  get rawdelta() {
+    return (this.#options.to - this.#options.from);
+  }
 
-  get delta() { return Math.abs(this.#options.to - this.#options.from); }
+  get delta() {
+    return Math.abs(this.#options.to - this.#options.from);
+  }
 
-  get sens() { return (this.#options.to - this.#options.from) > 0 ? true : false; }
+  get sens() {
+    return (this.#options.to - this.#options.from) > 0;
+  }
 
-  get paused() { return this.#paused }
+  get paused() {
+    return this.#paused
+  }
 
-  get stopped() { return this.#stopped }
+  get stopped() {
+    return this.#stopped
+  }
 
 
-
-  constructor(options: IFrameRateOptions) {
+  constructor(options: IFramerateOptions) {
 
     this.#options = options;
 
@@ -59,7 +70,7 @@ export class FrameRate implements IFrameRate {
 
   }
 
-  get payload(): IFrameRatePlayload {
+  get payload(): IFrameratePayload {
 
     return this.#current;
 
@@ -173,7 +184,7 @@ export class FrameRate implements IFrameRate {
 
         this.#current.previous = time;
 
-        if (this.#status === false) {
+        if (!this.#status) {
 
           this.emitter.dispatch('frame', this);
 
@@ -228,7 +239,7 @@ export class FrameRate implements IFrameRate {
 
         .#frame(time)
 
-        ;
+      ;
 
       // }
 
@@ -245,9 +256,9 @@ export class FrameRate implements IFrameRate {
 
     return (this.#options.from > this.#options.to
 
-      ? this.#options.from - x
+        ? this.#options.from - x
 
-      : x - this.#options.from
+        : x - this.#options.from
 
     );
 
@@ -311,7 +322,7 @@ export class FrameRate implements IFrameRate {
 
   asyncStart() {
 
-    return new Promise<IFrameRate>((done) => {
+    return new Promise<IFramerate>((done) => {
 
       this.emitter.listen('done', engine => done(engine))
 
@@ -325,22 +336,24 @@ export class FrameRate implements IFrameRate {
 }
 
 
-
-
-export default class FrameRates extends ModelComposite<IFrameRateProps> implements IFrameRates {
+export class FramerateCollection extends PropertiesBag<IFramerateProps> implements IFramerateCollection {
 
   /**
    * Jeu d'escalade pour l'excetion consécutive
    */
-  climbing: Climbing<IFrameRate> | undefined = undefined;
+  climbing: IClimbing<IFramerate> | undefined = undefined;
 
   /**
    * Liste des FrameRate executés
    */
-  #executed: IFrameRate[] = [];
+  protected executed: IFramerate[] = [];
+
+  get history() {
+    return this.executed
+  }
 
 
-  constructor(props: IFrameRateProps) {
+  constructor(props: IFramerateProps) {
 
     super(props);
 
@@ -349,14 +362,14 @@ export default class FrameRates extends ModelComposite<IFrameRateProps> implemen
 
   reset() {
 
-    this.#executed = [];
+    this.executed = [];
 
     return this;
 
   }
 
 
-  startParallel(callback?: IFrameRatesStateCallback) {
+  startParallel(callback?: IFramerateCollectionStateCallback) {
 
     Object.values(this.reset().properties.entries)
 
@@ -364,7 +377,7 @@ export default class FrameRates extends ModelComposite<IFrameRateProps> implemen
 
       .forEach((entry, key) => {
 
-        this.#executed.push(entry);
+        this.executed.push(entry);
 
         if (key == 0) return entry.asyncStart().then(() => {
 
@@ -384,12 +397,11 @@ export default class FrameRates extends ModelComposite<IFrameRateProps> implemen
   }
 
 
+  startConsecutive(callback?: IFramerateCollectionStateCallback) {
 
-  startConsecutive(callback?: IFrameRatesStateCallback) {
+    this.climbing = (new Climbing<IFramerate>(this.properties.entries, (key) => {
 
-    this.climbing = (new Climbing<IFrameRate>(this.properties.entries, (key) => {
-
-      if (this.properties.entries[key]) this.#executed.push(this.properties.entries[key])
+      if (this.properties.entries[key]) this.executed.push(this.properties.entries[key])
 
       return this.properties.entries[key]?.asyncStart()
 
@@ -406,11 +418,10 @@ export default class FrameRates extends ModelComposite<IFrameRateProps> implemen
   }
 
 
-
   /**
    * Démarrage des FrameRates
    */
-  start(callback?: IFrameRatesStateCallback): this {
+  start(callback?: IFramerateCollectionStateCallback): this {
 
     /**
      * Execution parallèle
@@ -437,13 +448,3 @@ export default class FrameRates extends ModelComposite<IFrameRateProps> implemen
 
 
 }
-
-
-
-
-// (new FrameRate({
-//   start: 0,
-//   stop: 200,
-//   duration: 1000,
-// })).start()
-

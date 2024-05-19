@@ -1,8 +1,8 @@
-import CoreAppearance from "./appearance";
-import { HTMLComposite } from "./composite";
-import EventDispatcher from "./event-dispatcher";
-import FrameRateEasings from "./framerate-easings";
-import FrameRates, { FrameRate } from "./framerate-engine";
+import {CoreAppearance} from "./appearance";
+import { HTMLComposite } from "./properties";
+import {EventDispatcher} from "./event-dispatcher";
+import {FrameRateEasings} from "./framerate-easings";
+import {FramerateCollection,  Framerate } from "../foundation";
 import { CoreTransitions } from "./transitions";
 import type {
   IAppearance,
@@ -25,7 +25,7 @@ import type {
   IPresenterAction,
   IPresenterSize,
   IPresenterAxes
-} from "./types";
+} from "../types";
 
 
 
@@ -307,11 +307,11 @@ export class CardPresenter
       this.properties.host?.appendChild(this.layer);
 
 
-      (new FrameRates({
+      (new FramerateCollection({
 
         entries: [
 
-          (new FrameRate({
+          (new Framerate({
 
             from: screen.height * 10,
 
@@ -346,11 +346,11 @@ export class CardPresenter
 
     if (this.layer) {
 
-      (new FrameRates({
+      (new FramerateCollection({
 
         entries: [
 
-          (new FrameRate({
+          (new Framerate({
 
             from: 0,
 
@@ -798,7 +798,7 @@ export class OverlayPresenter
  * @example
  * const presenter = Presenters.context( ... )
  */
-export default class Presenters<P extends IPresenterProps> implements IPresenters<P> {
+export class Presenters<P extends IPresenterProps> implements IPresenters<P> {
 
   #current: IPresenter<P>;
 
@@ -821,8 +821,6 @@ export default class Presenters<P extends IPresenterProps> implements IPresenter
   }
 
   initialize() {
-
-    console.log('Presenters initialize', this.#current)
 
     this.#current.emitter.listen('open', () => {
 

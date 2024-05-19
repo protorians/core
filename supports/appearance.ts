@@ -1,11 +1,14 @@
-import { MetricRandom } from "./metric";
-import EventDispatcher from "./event-dispatcher";
+import {MetricRandom} from "./metric";
+import {EventDispatcher} from "./event-dispatcher";
 import type {
-  IAppearance, IAppearanceEmitterScheme, IAppearanceObject, IAppearanceObjectDestroyed, IAppearanceStyleSheet, IAppearanceValues
-} from "./types";
-import { ObjectToString, UnCamelize } from "./utilities";
-
-
+  IAppearance,
+  IAppearanceEmitterScheme,
+  IAppearanceObject,
+  IAppearanceObjectDestroyed,
+  IAppearanceStyleSheet,
+  IAppearanceValues
+} from "../types";
+import {ObjectToString, UnCamelize} from "../utilities";
 
 
 /**
@@ -13,15 +16,12 @@ import { ObjectToString, UnCamelize } from "./utilities";
  * @description Analyse la propriété de l'apparence et la réecrit
  * @param name Nom de la propriété
  * @param value Valeur de la propriété
- * @example 
+ * @example
  * CoreAppearanceProps<IAppearanceObject>( { color : '#777' } )
  */
 export function CoreAppearanceProps<T extends IAppearanceObject | IAppearanceObjectDestroyed>(
-
   name: keyof IAppearanceObject,
-
   value: IAppearanceValues
-
 ): T {
 
   const keys: string[] = [];
@@ -91,7 +91,7 @@ export function CoreAppearanceProps<T extends IAppearanceObject | IAppearanceObj
  * CoreAppearanceValues
  * @description Analyse la valeur d'une propriété de l'apparence
  * @param value Valeur de la propriété
- * @example 
+ * @example
  * CoreAppearanceValues( ... )
  */
 export function CoreAppearanceValues(value: IAppearanceValues) {
@@ -111,7 +111,7 @@ export function CoreAppearanceValues(value: IAppearanceValues) {
  * AUN Appearance
  * @description Gestionnaire d'apparence des éléments AUN
  */
-export default class CoreAppearance implements IAppearance {
+export class CoreAppearance implements IAppearance {
 
   /**
    * Instance du DOM
@@ -138,7 +138,7 @@ export default class CoreAppearance implements IAppearance {
 
     this.instance = document.createElement('style')
 
-    this.uid = `${MetricRandom.CreateAplpha(4).join('')}-${MetricRandom.Create(12).join('')}`
+    this.uid = `${MetricRandom.CreateAlpha(4).join('')}-${MetricRandom.Create(12).join('')}`
 
   }
 
@@ -158,7 +158,7 @@ export default class CoreAppearance implements IAppearance {
 
     const styleSheet: string[] = []
 
-    Object.entries(stylesheet).forEach(({ 0: name, 1: props }) => {
+    Object.entries(stylesheet).forEach(({0: name, 1: props}) => {
 
       const properties: IAppearanceObject = {} as IAppearanceObject
 
@@ -171,7 +171,7 @@ export default class CoreAppearance implements IAppearance {
 
       const data = this.insertProperties(properties, props)
 
-      styleSheet[styleSheet.length] = `${selector}{ ${ObjectToString(data, { joiner: '; ' })} }`
+      styleSheet[styleSheet.length] = `${selector}{ ${ObjectToString(data, {joiner: '; '})} }`
 
     });
 
@@ -188,8 +188,8 @@ export default class CoreAppearance implements IAppearance {
   /**
    * inject
    * @description Inject du code CSS dans l'instance de l'apparence courante par substitution
-   * @param code 
-   * @example 
+   * @param code
+   * @example
    *  appearance.inject("body{ color: red; }")
    */
   inject(code: string | string[]) {
@@ -212,18 +212,16 @@ export default class CoreAppearance implements IAppearance {
    * @description Insert des propriétés d'apparence dans un objet support. Analyse les propriétés et les valeurs avant de les insérer
    * @param properties Propriétés d'apparence support
    * @param data Données des propriétés à insérer
-   * @example 
+   * @example
    * appearance.insertProperties( objectPropertiesSupport, objectDataToInsert )
    */
   insertProperties(properties: IAppearanceObject, data: IAppearanceObject) {
 
-    Object.entries(data).forEach(({ 0: name, 1: value }) => {
+    Object.entries(data).forEach(({0: name, 1: value}) => {
 
       Object.entries(
-
         CoreAppearanceProps<IAppearanceObject>(name as keyof IAppearanceObject, value)
-
-      ).forEach(({ 0: key, 1: data }) => properties[key as any] = data)
+      ).forEach(({0: key, 1: data}) => properties[key as any] = data)
 
     })
 
@@ -246,10 +244,8 @@ export default class CoreAppearance implements IAppearance {
     Object.values(payload).forEach(name => {
 
       Object.entries(
-
         CoreAppearanceProps<IAppearanceObjectDestroyed>(name as keyof IAppearanceObject, undefined)
-
-      ).forEach(({ 0: key }) => properties[key as any] = undefined)
+      ).forEach(({0: key}) => properties[key as any] = undefined)
 
     })
 
@@ -371,7 +367,7 @@ export default class CoreAppearance implements IAppearance {
 
     const rendering: string[] = []
 
-    Object.entries(this.properties).forEach(({ 0: name, 1: value }) => {
+    Object.entries(this.properties).forEach(({0: name, 1: value}) => {
 
       if (typeof value == 'string' || typeof value == 'number') {
 
