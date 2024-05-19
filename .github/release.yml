@@ -1,5 +1,8 @@
 changelog:
   categories:
+    - title: New Beta version
+      labels:
+        - '*'
     - title: Files architecture
       labels:
         - 'breaking-change'
