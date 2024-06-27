@@ -6,5 +6,3 @@ pnpm-lock.yaml
 .vscode
 yarn.lock
 ./out
-*.js
-*.js.map
