@@ -11,3 +11,4 @@ export * from './presenter';
 export * from './schema';
 export * from './transition';
 export * from './value';
+export * from './property';
