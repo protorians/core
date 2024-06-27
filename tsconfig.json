@@ -2,23 +2,25 @@
   "compilerOptions": {
     "noImplicitAny": false,
     "allowJs": true,
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
-    "target": "es2017",
-    "removeComments": false,
-    "declaration": true,
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "target": "es2020",
+    "removeComments": true,
+    "declaration": false,
     "inlineSources": true,
     "strict": true,
     "esModuleInterop": true,
     "sourceMap": true,
     "preserveConstEnums": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noImplicitReturns": true,
-    "noEmit": false,
+    "noEmit": true,
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./~commonjs",
+    "./~esm"
   ],
   "include": [
     "./"
