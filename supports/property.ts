@@ -10,10 +10,14 @@ export class Property<T extends PropertyScheme> implements IProperty<T> {
   protected _map: Map<keyof T, T[keyof T]>;
   protected originScheme: T;
 
-  constructor(scheme: T) {
+  constructor(scheme?: T) {
     this._map = new Map<keyof T, T[keyof T]>();
-    this.originScheme = scheme;
+    this.originScheme = scheme || {} as T;
     this.reset()
+  }
+
+  static context<T extends PropertyScheme>(scheme?: T): IProperty<T> {
+    return new this(scheme);
   }
 
   get map(): Map<keyof T, T[keyof T]> {
