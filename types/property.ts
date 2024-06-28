@@ -18,4 +18,5 @@ export interface IProperty<T extends PropertyScheme> {
   reset(): IProperty<T>;
   clear(): IProperty<T>;
   delete<P extends keyof T>(key: P): IProperty<T>;
+  export(): T;
 }

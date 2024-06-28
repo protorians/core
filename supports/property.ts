@@ -8,11 +8,11 @@ import type {
 export class Property<T extends PropertyScheme> implements IProperty<T> {
 
   protected _map: Map<keyof T, T[keyof T]>;
-  protected originScheme: T;
+  protected _origin: T;
 
   constructor(scheme?: T) {
     this._map = new Map<keyof T, T[keyof T]>();
-    this.originScheme = scheme || {} as T;
+    this._origin = scheme || {} as T;
     this.reset()
   }
 
@@ -62,7 +62,7 @@ export class Property<T extends PropertyScheme> implements IProperty<T> {
   }
 
   reset(): IProperty<T> {
-    return this.fill(this.originScheme);
+    return this.fill(this._origin);
   }
 
   clear(): IProperty<T> {
@@ -75,5 +75,10 @@ export class Property<T extends PropertyScheme> implements IProperty<T> {
     return this;
   }
 
+  export(): T{
+    const property = {} as T;
+    this._map.forEach((value, key) => property[key] = value);
+    return property;
+  }
 
 }
