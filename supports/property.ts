@@ -1,11 +1,11 @@
 import type {
   IProperty,
-  PropertyEachCallback,
-  PropertyScheme
+  IPropertyEachCallback,
+  IPropertyScheme
 } from "../types";
 
 
-export class Property<T extends PropertyScheme> implements IProperty<T> {
+export class Property<T extends IPropertyScheme> implements IProperty<T> {
 
   protected _map: Map<keyof T, T[keyof T]>;
   protected _origin: T;
@@ -16,7 +16,7 @@ export class Property<T extends PropertyScheme> implements IProperty<T> {
     this.reset()
   }
 
-  static context<T extends PropertyScheme>(scheme?: T): IProperty<T> {
+  static context<T extends IPropertyScheme>(scheme?: T): IProperty<T> {
     return new this(scheme);
   }
 
@@ -36,7 +36,7 @@ export class Property<T extends PropertyScheme> implements IProperty<T> {
     return this._map.keys();
   }
 
-  each(callback: PropertyEachCallback<T>): IProperty<T> {
+  each(callback: IPropertyEachCallback<T>): IProperty<T> {
     this._map.forEach(callback)
     return this;
   }
