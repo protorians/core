@@ -16,7 +16,7 @@ export type IPropertySetter<T extends IPropertyScheme, P extends keyof T> = (pro
 export type IPropertyGetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyGetterProps<T, P>) => T[P];
 
 export type IPropertyScheme = {
-  [P: string]: string | null | undefined;
+  [P: string]: object | string | number | null | undefined;
 }
 
 export type IPropertyEachCallback<T extends IPropertyScheme> = (value: T[keyof T], key: keyof T, map: Map<keyof T, T[keyof T]>) => void
