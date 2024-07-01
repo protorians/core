@@ -1,4 +1,20 @@
 
+export type IPropertySetterProps<T extends IPropertyScheme, P extends keyof T> = {
+  target: T,
+  prop: P,
+  value?: T[P]
+};
+
+export type IPropertyGetterProps<T extends IPropertyScheme, P extends keyof T> = {
+  target: T,
+  prop: P,
+  value?: T[P]
+};
+
+export type IPropertySetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertySetterProps<T, P>) => T[P];
+
+export type IPropertyGetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyGetterProps<T, P>) => T[P];
+
 export type IPropertyScheme = {
   [P: string]: string | null | undefined;
 }

@@ -1,7 +1,9 @@
 import type {
   IProperty,
   IPropertyEachCallback,
-  IPropertyScheme
+  IPropertyGetter,
+  IPropertyScheme,
+  IPropertySetter
 } from "../types";
 
 
@@ -9,15 +11,37 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
 
   protected _map: Map<keyof T, T[keyof T]>;
   protected _origin: T;
+  protected _setter: (IPropertySetter<T, keyof T>)[] = [];
+  protected _getter: (IPropertyGetter<T, keyof T>)[] = [];
+
+  state: T;
 
   constructor(scheme?: T) {
+    scheme = structuredClone<T>(scheme||{} as T)
     this._map = new Map<keyof T, T[keyof T]>();
-    this._origin = scheme || {} as T;
+    this._origin = scheme;
+    this.state = new Proxy<T>(scheme, this.stateHandler())
     this.reset()
   }
 
   static context<T extends IPropertyScheme>(scheme?: T): IProperty<T> {
     return new this(scheme);
+  }
+
+  protected stateHandler(): ProxyHandler<T>{
+    const current = this;
+    return {
+      set(target, prop, value, receiver){
+        current._setter.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
+        current.map.set(prop as keyof T, value);
+        return Reflect.set(target, prop, value, receiver)
+      },
+      get(target, prop){
+        let value = current.get(prop as keyof T)
+        current._getter.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
+        return value;
+      },
+    }
   }
 
   get map(): Map<keyof T, T[keyof T]> {
@@ -34,6 +58,16 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
 
   get keys(): IterableIterator<keyof T> {
     return this._map.keys();
+  }
+
+  setter(setter: IPropertySetter<T, keyof T>): this {
+    this._setter.push(setter);
+    return this;
+  }
+
+  getter(getter: IPropertyGetter<T, keyof T>): this {
+    this._getter.push(getter);
+    return this;
   }
 
   each(callback: IPropertyEachCallback<T>): IProperty<T> {
@@ -75,9 +109,9 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     return this;
   }
 
-  export(): T{
+  export(): T {
     const property = {} as T;
-    this._map.forEach((value, key) => property[key] = value);
+    this._map.forEach((value, key) => property[key] = this.state[key] || value);
     return property;
   }
 
