@@ -8,7 +8,7 @@ export * from './event';
 export * from './framerate';
 export * from './navigation';
 export * from './presenter';
-export * from './schema';
+export * from './scheme';
 export * from './transition';
 export * from './value';
 export * from './property';
