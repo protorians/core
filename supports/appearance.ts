@@ -8,7 +8,7 @@ import type {
   IAppearanceStyleSheet,
   IAppearanceValues
 } from "../types";
-import {ObjectToString, UnCamelize} from "../utilities";
+import {ObjectToString, unCamelCase} from "../utilities";
 
 
 /**
@@ -79,7 +79,7 @@ export function CoreAppearanceProps<T extends IAppearanceObject | IAppearanceObj
    */
   keys.forEach(key => {
 
-    parsed[UnCamelize(key) as any] = CoreAppearanceValues(value)
+    parsed[unCamelCase(key) as any] = CoreAppearanceValues(value)
 
   })
 
@@ -371,7 +371,7 @@ export class CoreAppearance implements IAppearance {
 
       if (typeof value == 'string' || typeof value == 'number') {
 
-        rendering[rendering.length] = `${UnCamelize(name)} : ${value}`
+        rendering[rendering.length] = `${unCamelCase(name)} : ${value}`
 
       }
 
