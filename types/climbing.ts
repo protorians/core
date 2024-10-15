@@ -14,11 +14,11 @@ export interface IClimbing<R> {
 
   prepared: IClimbingTask<R> | undefined;
 
-  yield: IClimbingYield<R>;
+  yield: IClimbingYield<R | undefined>;
 
   trigger(done: IClimbingNext<R>, start?: number): this;
 
-  create(entries: Array<R>, callback: IClimbingAsyncTask<R>): IClimbingYield<R>;
+  create(entries: Array<R>, callback: IClimbingAsyncTask<R>): IClimbingYield<R | undefined>;
 
   next(prepared: IClimbingTask<R>, next: IClimbingNext<R>): boolean;
 
