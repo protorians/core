@@ -17,7 +17,7 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
   state: T;
 
   constructor(scheme?: T) {
-    scheme = structuredClone<T>(scheme||{} as T)
+    scheme = structuredClone<T>(scheme || {} as T)
     this._map = new Map<keyof T, T[keyof T]>();
     this._origin = scheme;
     this.state = new Proxy<T>(scheme, this.stateHandler())
@@ -28,15 +28,15 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     return new this(scheme);
   }
 
-  protected stateHandler(): ProxyHandler<T>{
+  protected stateHandler(): ProxyHandler<T> {
     const current = this;
     return {
-      set(target, prop, value, receiver){
+      set(target, prop, value, receiver) {
         current._setter.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
         current.map.set(prop as keyof T, value);
         return Reflect.set(target, prop, value, receiver)
       },
-      get(target, prop){
+      get(target, prop) {
         let value = current.get(prop as keyof T)
         current._getter.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
         return value;

@@ -1,13 +1,13 @@
 export type IPropertySetterProps<T extends IPropertyScheme, P extends keyof T> = {
   target: T,
   prop: P,
-  value?: T[P]
+  value: T[P]
 };
 
 export type IPropertyGetterProps<T extends IPropertyScheme, P extends keyof T> = {
   target: T,
   prop: P,
-  value?: T[P]
+  value: T[P]
 };
 
 export type IPropertySetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertySetterProps<T, P>) => T[P];
@@ -28,6 +28,8 @@ export interface IProperty<T extends IPropertyScheme> {
   get values(): IterableIterator<T[keyof T]>;
 
   get keys(): IterableIterator<keyof T>;
+
+  state: T
 
   setter(setter: IPropertySetter<T, keyof T>): this;
 
