@@ -1,18 +1,22 @@
-export type IPropertySetterProps<T extends IPropertyScheme, P extends keyof T> = {
+export type IPropertyCallbackResponse<T extends IPropertyScheme, P extends keyof T> = {
   target: T,
   prop: P,
   value: T[P]
 };
 
-export type IPropertyGetterProps<T extends IPropertyScheme, P extends keyof T> = {
-  target: T,
-  prop: P,
-  value: T[P]
+// export type IPropertyGetterProps<T extends IPropertyScheme, P extends keyof T> = {
+//   target: T,
+//   prop: P,
+//   value: T[P]
+// };
+
+export type IPropertyCallback<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyCallbackResponse<T, P>) => T[P];
+
+export type IPropertySpecificCallback<T extends IPropertyScheme, P extends keyof T> = {
+  [K in P]: IPropertyCallback<T, K>[];
 };
 
-export type IPropertySetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertySetterProps<T, P>) => T[P];
-
-export type IPropertyGetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyGetterProps<T, P>) => T[P];
+// export type IPropertyGetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyGetterProps<T, P>) => T[P];
 
 export type IPropertyScheme = {
   [P: string]: string | number | boolean | null | undefined | Symbol | BigInt
@@ -31,25 +35,29 @@ export interface IProperty<T extends IPropertyScheme> {
 
   state: T
 
-  setter(setter: IPropertySetter<T, keyof T>): this;
+  effect<P extends keyof T>(key: P, callback: IPropertyCallback<T, P>): this;
 
-  getter(getter: IPropertyGetter<T, keyof T>): this;
+  effects(callback: IPropertyCallback<T, keyof T>): this;
 
-  each(callback: IPropertyEachCallback<T>): IProperty<T>;
+  transform<P extends keyof T>(key: P, callback: IPropertyCallback<T, P>): this;
 
-  set<P extends keyof T>(name: P, value: T[P]): IProperty<T>;
+  transforms(getter: IPropertyCallback<T, keyof T>): this;
+
+  each(callback: IPropertyEachCallback<T>): this;
+
+  set<P extends keyof T>(name: P, value: T[P]): this;
 
   get<P extends keyof T>(name: P): T[P];
 
   exist<P extends keyof T>(key: P): boolean;
 
-  fill(scheme: T): IProperty<T>;
+  fill(scheme: T): this;
 
-  reset(): IProperty<T>;
+  reset(): this;
 
-  clear(): IProperty<T>;
+  clear(): this;
 
-  delete<P extends keyof T>(key: P): IProperty<T>;
+  delete<P extends keyof T>(key: P): this;
 
   export(): T;
 }

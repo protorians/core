@@ -1,9 +1,8 @@
 import type {
   IProperty,
   IPropertyEachCallback,
-  IPropertyGetter,
   IPropertyScheme,
-  IPropertySetter
+  IPropertyCallback, IPropertySpecificCallback
 } from "../types";
 
 
@@ -11,8 +10,10 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
 
   protected _map: Map<keyof T, T[keyof T]>;
   protected _origin: T;
-  protected _setter: (IPropertySetter<T, keyof T>)[] = [];
-  protected _getter: (IPropertyGetter<T, keyof T>)[] = [];
+  protected _effects: (IPropertyCallback<T, keyof T>)[] = [];
+  protected _transforms: (IPropertyCallback<T, keyof T>)[] = [];
+  protected _spec_effect: IPropertySpecificCallback<T, keyof T> = {} as IPropertySpecificCallback<T, keyof T>;
+  protected _spec_transform: IPropertySpecificCallback<T, keyof T> = {} as IPropertySpecificCallback<T, keyof T>;
 
   state: T;
 
@@ -32,13 +33,15 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     const current = this;
     return {
       set(target, prop, value, receiver) {
-        current._setter.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
+        current._effects.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
+        current._spec_effect[prop as keyof T]?.forEach(callback => callback({target, prop: prop as keyof T, value}));
         current.map.set(prop as keyof T, value);
         return Reflect.set(target, prop, value, receiver)
       },
-      get(target, prop) {
-        let value = current.get(prop as keyof T)
-        current._getter.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
+      get(target, prop): T[keyof T] {
+        let index = prop as keyof T, value = current.get(index)
+        current._transforms.forEach(callback => value = callback({target, prop: index, value}));
+        current._spec_effect[index]?.forEach(callback => value = callback({target, prop: index, value}));
         return value;
       },
     }
@@ -60,22 +63,34 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     return this._map.keys();
   }
 
-  setter(setter: IPropertySetter<T, keyof T>): this {
-    this._setter.push(setter);
+  effect<K extends keyof T>(key: K, callback: IPropertyCallback<T, K>): this {
+    this._spec_effect[key] = this._spec_effect[key] || []
+    this._spec_effect[key].push(callback)
     return this;
   }
 
-  getter(getter: IPropertyGetter<T, keyof T>): this {
-    this._getter.push(getter);
+  effects(setter: IPropertyCallback<T, keyof T>): this {
+    this._effects.push(setter);
     return this;
   }
 
-  each(callback: IPropertyEachCallback<T>): IProperty<T> {
+  transform<P extends keyof T>(key: P, callback: IPropertyCallback<T, P>): this {
+    this._spec_transform[key] = this._spec_transform[key] || []
+    this._spec_transform[key].push(callback)
+    return this;
+  }
+
+  transforms(getter: IPropertyCallback<T, keyof T>): this {
+    this._transforms.push(getter);
+    return this;
+  }
+
+  each(callback: IPropertyEachCallback<T>): this {
     this._map.forEach(callback)
     return this;
   }
 
-  set<P extends keyof T>(key: P, value: T[P]): IProperty<T> {
+  set<P extends keyof T>(key: P, value: T[P]): this {
     this._map.set(key, value as T[P]);
     return this;
   }
@@ -88,23 +103,23 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     return this._map.has(key);
   }
 
-  fill(scheme: T): IProperty<T> {
+  fill(scheme: T): this {
     Object.entries(scheme).forEach(([key, value]) => {
       this._map.set(key, value as T[keyof T]);
     })
     return this;
   }
 
-  reset(): IProperty<T> {
+  reset(): this {
     return this.fill(this._origin);
   }
 
-  clear(): IProperty<T> {
+  clear(): this {
     this._map.clear()
     return this;
   }
 
-  delete<P extends keyof T>(key: P): IProperty<T> {
+  delete<P extends keyof T>(key: P): this {
     this._map.delete(key)
     return this;
   }
