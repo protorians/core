@@ -1,5 +1,6 @@
 {
   "name": "@protorians/core",
+  "displayName": "Protorians Core",
   "version": "0.1.2-beta.8",
   "description": "Protorians Core",
   "main": "./index.js",
