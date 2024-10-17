@@ -10,8 +10,8 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
 
   protected _map: Map<keyof T, T[keyof T]>;
   protected _origin: T;
-  protected _effects: (IPropertyCallback<T, keyof T>)[] = [];
-  protected _transforms: (IPropertyCallback<T, keyof T>)[] = [];
+  protected _effect: (IPropertyCallback<T, keyof T>)[] = [];
+  protected _transform: (IPropertyCallback<T, keyof T>)[] = [];
   protected _spec_effect: IPropertySpecificCallback<T, keyof T> = {} as IPropertySpecificCallback<T, keyof T>;
   protected _spec_transform: IPropertySpecificCallback<T, keyof T> = {} as IPropertySpecificCallback<T, keyof T>;
 
@@ -33,15 +33,15 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     const current = this;
     return {
       set(target, prop, value, receiver) {
-        current._effects.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
+        current._effect.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
         current._spec_effect[prop as keyof T]?.forEach(callback => callback({target, prop: prop as keyof T, value}));
         current.map.set(prop as keyof T, value);
         return Reflect.set(target, prop, value, receiver)
       },
       get(target, prop): T[keyof T] {
         let index = prop as keyof T, value = current.get(index)
-        current._transforms.forEach(callback => value = callback({target, prop: index, value}));
-        current._spec_effect[index]?.forEach(callback => value = callback({target, prop: index, value}));
+        current._transform.forEach(callback => value = callback({target, prop: index, value}));
+        current._spec_transform[index]?.forEach(callback => value = callback({target, prop: index, value}));
         return value;
       },
     }
@@ -70,7 +70,7 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
   }
 
   effects(setter: IPropertyCallback<T, keyof T>): this {
-    this._effects.push(setter);
+    this._effect.push(setter);
     return this;
   }
 
@@ -81,7 +81,7 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
   }
 
   transforms(getter: IPropertyCallback<T, keyof T>): this {
-    this._transforms.push(getter);
+    this._transform.push(getter);
     return this;
   }
 
