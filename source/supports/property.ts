@@ -33,13 +33,15 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     const current = this;
     return {
       set(target, prop, value, receiver) {
+        const index = prop as keyof T;
         current._effect.forEach(callback => value = callback({target, prop: prop as keyof T, value}));
-        current._spec_effect[prop as keyof T]?.forEach(callback => callback({target, prop: prop as keyof T, value}));
+        current._spec_effect[index]?.forEach(callback => callback({target, prop: prop as keyof T, value}));
         current.map.set(prop as keyof T, value);
         return Reflect.set(target, prop, value, receiver)
       },
       get(target, prop): T[keyof T] {
-        let index = prop as keyof T, value = current.get(index)
+        const index = prop as keyof T;
+        let value = current.get(index)
         current._transform.forEach(callback => value = callback({target, prop: index, value}));
         current._spec_transform[index]?.forEach(callback => value = callback({target, prop: index, value}));
         return value;
