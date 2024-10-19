@@ -1,7 +1,7 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.12",
+  "version": "0.1.2-beta.14",
   "description": "Protorians Core",
   "main": "./~esm/index.js",
   "scripts": {
