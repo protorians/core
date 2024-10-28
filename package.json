@@ -1,9 +1,10 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.14",
+  "version": "0.1.2-beta.15",
   "description": "Protorians Core",
   "main": "./~esm/index.js",
+  "type": "module",
   "scripts": {
     "dev": "tsc --watch",
     "build": "pnpm run build:esm && pnpm run build:commonjs",
