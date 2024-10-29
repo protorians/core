@@ -1,10 +1,9 @@
-import type { 
-  IEventDispatcher, 
-  IEventDispatcherCallback, 
-  IEventDispatcherEntries, 
-  IEventDispatcherProgations, 
-  IEventDispatcherScheme 
-} from "../types";
+import type {
+  IEventDispatcher, IEventDispatcherCallback,
+  IEventDispatcherEntries,
+  IEventDispatcherProgations,
+  IEventDispatcherScheme
+} from "../types/event";
 
 /**
  * Protorian EventDispatcher — Emetteur d'émission

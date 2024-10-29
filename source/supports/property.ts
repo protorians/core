@@ -1,9 +1,10 @@
 import type {
   IProperty,
+  IPropertyCallback,
   IPropertyEachCallback,
   IPropertyScheme,
-  IPropertyCallback, IPropertySpecificCallback
-} from "../types";
+  IPropertySpecificCallback
+} from "../types/property";
 
 
 export class Property<T extends IPropertyScheme> implements IProperty<T> {

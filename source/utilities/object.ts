@@ -1,8 +1,6 @@
-import type {
-  ICoreAttributesMap,
-  ICoreAttributesMapValues,
-  IObjectToString
-} from "../types";
+import type {ICoreAttributesMap, ICoreAttributesMapValues} from "../types/attribute";
+import type {IObjectToString} from "../types/value";
+
 
 export function UpdateObject<T>(
   originalObject: T,

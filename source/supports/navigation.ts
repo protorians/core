@@ -1,17 +1,18 @@
 import {EventDispatcher} from "./event-dispatcher";
-import type { 
-  IEventDispatcher, 
-  INavigation, 
-  INavigationEmitterScheme, 
-  INavigationMiddlewareCallback, 
-  INavigationOptions 
-} from "../types";
+
 import {
   AscendingDOMPath,
   ObjectURLParams,
   URLParamsObject,
   UpdateObject
 } from "../utilities";
+import type {
+  INavigation,
+  INavigationEmitterScheme,
+  INavigationMiddlewareCallback,
+  INavigationOptions
+} from "../types/navigation";
+import type {IEventDispatcher} from "../types/event";
 
 /**
  * Système de navigation
