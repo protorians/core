@@ -27,13 +27,16 @@ export class EventDispatcher<Scheme extends IEventDispatcherScheme> implements I
    * @description Ecouteur d'évèvements par rapport à un "SLUG". Utiliser un retour "TRUE" pour stopper la propagation de l'instance déclenchée
    * @param type Type d'émission déclaré dans le `Scheme` de l'instanciation
    * @param callback Fonction de rappel content en `argument[0]` les données définit par le dispatcher
+   * @param force Forcer
    * @example emitter.listen<ReturnType>( 'emitterNameInKeyOfScheme', ( data : ReturnType ) => ... )
    */
   listen<I extends keyof Scheme>( 
     
     type : I, 
     
-    callback : IEventDispatcherCallback<Scheme[I]>, force ?: boolean | undefined 
+    callback : IEventDispatcherCallback<Scheme[I]>,
+
+    force ?: boolean | undefined
     
   ) : this{
 

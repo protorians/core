@@ -31,7 +31,7 @@ export function CoreAppearanceProps<T extends IAppearanceObject | IAppearanceObj
   /**
    * Réecriture
    */
-  switch (name) {
+  switch (name as string) {
 
     case 'paddingVertical':
 
