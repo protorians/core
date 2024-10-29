@@ -1,9 +1,8 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.17",
+  "version": "0.1.2-beta.18",
   "description": "Protorians Core",
-  "main": "./source/index.ts",
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
@@ -12,9 +11,10 @@
     "build:commonjs": "tsc -p commonjs.tsconfig.json && ts-add-js-extension --dir=~commonjs"
   },
   "exports": {
-    "require": "./~commonjs/index.js",
-    "import": "./~esm/index.js",
-    "default": "./source/index.ts"
+    "./utils/*": "./~esm/utilities/*",
+    "./facades/*": "./~esm/facades/*",
+    "./supports/*": "./~esm/supports/*",
+    "./types/*": "./~esm/types/*"
   },
   "keywords": [
     "protorians",
@@ -23,8 +23,9 @@
   "author": "Y. Yannick GOBOU<protorian.dev@gmail.com>",
   "license": "MIT",
   "repository": "https://github.com/protorians/core.git",
-  "devDependencies": {},
-  "dependencies": {
+  "devDependencies": {
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
   }
 }
