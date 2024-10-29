@@ -1,7 +1,7 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.18",
+  "version": "0.1.2-beta.19",
   "description": "Protorians Core",
   "type": "module",
   "scripts": {
