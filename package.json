@@ -1,20 +1,20 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.19",
+  "version": "0.1.2-beta.20",
   "description": "Protorians Core",
+  "main": "./source/index.ts",
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "pnpm run build:esm && pnpm run build:commonjs",
-    "build:esm": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=~esm",
+    "build": "pnpm run build:esm",
+    "build:esm": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=build",
     "build:commonjs": "tsc -p commonjs.tsconfig.json && ts-add-js-extension --dir=~commonjs"
   },
   "exports": {
-    "./utils/*": "./~esm/utilities/*",
-    "./facades/*": "./~esm/facades/*",
-    "./supports/*": "./~esm/supports/*",
-    "./types/*": "./~esm/types/*"
+    "require": "./build/index.js",
+    "import": "./build/index.js",
+    "default": "./source/index.ts"
   },
   "keywords": [
     "protorians",
