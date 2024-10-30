@@ -1,5 +1,5 @@
-import type {IAppearanceStyleSheet} from "../types/appearance";
-import {CoreAppearance} from "../supports/appearance";
+import type {IAppearanceStyleSheet} from "../types";
+import {CoreAppearance} from "../supports";
 
 
 export function createAppearance(stylesheet: IAppearanceStyleSheet) {

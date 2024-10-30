@@ -6,7 +6,7 @@ import type {
   ISchemeProps,
   ISchemeScore,
   ISchemeType
-} from "../types/scheme";
+} from "../types";
 
 
 export class SchemeChild implements ISchemeChild {

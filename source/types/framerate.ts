@@ -1,6 +1,6 @@
 import type {IEasing} from "./easing";
 import type {IEventDispatcher} from "./event";
-import {IClimbing} from "./climbing";
+import type {IClimbing} from "./climbing";
 
 
 export type IFramerateStateCallback = () => void;

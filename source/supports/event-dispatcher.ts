@@ -3,7 +3,7 @@ import type {
   IEventDispatcherEntries,
   IEventDispatcherProgations,
   IEventDispatcherScheme
-} from "../types/event";
+} from "../types";
 
 /**
  * Protorian EventDispatcher — Emetteur d'émission

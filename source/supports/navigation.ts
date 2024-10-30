@@ -1,170 +1,159 @@
 import {EventDispatcher} from "./event-dispatcher";
-
-import {
-  AscendingDOMPath,
-  ObjectURLParams,
-  URLParamsObject,
-  UpdateObject
-} from "../utilities";
 import type {
   INavigation,
   INavigationEmitterScheme,
   INavigationMiddlewareCallback,
-  INavigationOptions
-} from "../types/navigation";
-import type {IEventDispatcher} from "../types/event";
+  INavigationOptions,
+  IEventDispatcher
+} from "../types";
+import {ObjectURLParams, URLParamsObject, UpdateObject, AscendingDOMPath} from "../utilities";
 
 /**
  * Système de navigation
  */
-export class Navigation<Scheme> implements INavigation<Scheme>{
+export class Navigation<Scheme> implements INavigation<Scheme> {
 
-  options: INavigationOptions<Scheme> = {} as INavigationOptions<Scheme> 
+  options: INavigationOptions<Scheme> = {} as INavigationOptions<Scheme>
 
   emitter: IEventDispatcher<INavigationEmitterScheme<Scheme>> = new EventDispatcher<INavigationEmitterScheme<Scheme>>()
-  
-  #oldRoute : keyof Scheme | undefined;
-  
-  constructor(){
+
+  #oldRoute: keyof Scheme | undefined;
+
+  constructor() {
 
     this.options.middlewares = this.options.middlewares || [];
-    
-  }
-
-  currentRouteName() : keyof Scheme{
-
-    return (this.options.useHashtagParser ? (location.hash||'').split('?')[0] : location.pathname).substring(1) as keyof Scheme
 
   }
 
-  oldRouteName() : keyof Scheme | undefined {
+  currentRouteName(): keyof Scheme {
+
+    return (this.options.useHashtagParser ? (location.hash || '').split('?')[0] : location.pathname).substring(1) as keyof Scheme
+
+  }
+
+  oldRouteName(): keyof Scheme | undefined {
 
     return this.#oldRoute;
 
   }
 
-  currentQuery<T>() : T | undefined{
+  currentQuery<T>(): T | undefined {
 
-    if( this.options.useHashtagParser){
+    if (this.options.useHashtagParser) {
 
-      return URLParamsObject<T>( (location.hash || location.search || '').split('?')[1] || '' );
+      return URLParamsObject<T>((location.hash || location.search || '').split('?')[1] || '');
+
+    } else {
+
+      return URLParamsObject<T>(location.search);
 
     }
 
-    else{
 
-      return URLParamsObject<T>( location.search );
-      
-    }
-
-    
   }
 
-  setOption(optionName: keyof INavigationOptions<Scheme>, value: (INavigationMiddlewareCallback<Scheme>[] & boolean) | undefined ): this {
-      
-    this.options[ optionName ] = value;
-    
+  setOption(optionName: keyof INavigationOptions<Scheme>, value: (INavigationMiddlewareCallback<Scheme>[] & boolean) | undefined): this {
+
+    this.options[optionName] = value;
+
     return this;
-    
-  }
-  
-  setOptions( options: INavigationOptions<Scheme> ): this {
 
-    this.options = UpdateObject<INavigationOptions<Scheme>>( this.options, options )
-      
-    this.emitter.dispatch('options', this )
-    
+  }
+
+  setOptions(options: INavigationOptions<Scheme>): this {
+
+    this.options = UpdateObject<INavigationOptions<Scheme>>(this.options, options)
+
+    this.emitter.dispatch('options', this)
+
     return this;
-    
+
   }
 
-  middleware( middleware : INavigationMiddlewareCallback<Scheme> ): this {
+  middleware(middleware: INavigationMiddlewareCallback<Scheme>): this {
 
-    this.options.middlewares?.push( middleware )
-      
+    this.options.middlewares?.push(middleware)
+
     return this;
-    
+
   }
-  
+
   observe(): this {
 
-    window.addEventListener( 'popstate' ,ev => this.dispatchNavigate( ev ) )
+    window.addEventListener('popstate', ev => this.dispatchNavigate(ev))
 
     this.capturesActions()
-    
+
     return this;
-    
+
   }
 
-  capturesActions( ) : this {
+  capturesActions(): this {
 
-    if( this.options.capture ){
+    if (this.options.capture) {
 
       document.body.addEventListener('click', (ev) => {
 
-        const target = this.parseElementCaptured( ev )
-        
+        const target = this.parseElementCaptured(ev)
 
-        if( target && !target.hasAttribute('navigate:no-detection') ){
-          
+
+        if (target && !target.hasAttribute('navigate:no-detection')) {
+
           const url = target.getAttribute('href') || target.getAttribute('navigate:view') || target.getAttribute('navigate-view');
-          
+
           const blank = (target.getAttribute('target') || '').toLowerCase() == '_blank';
 
-          const external = url ? this.isExternalURL( url ) : false;
-          
+          const external = url ? this.isExternalURL(url) : false;
 
-          if( url && !blank && !external ){
+
+          if (url && !blank && !external) {
 
             ev.preventDefault();
 
-            this.navigate( this.parseRouteName( url ) as keyof Scheme, {} as Scheme[keyof Scheme], ev )
+            this.navigate(this.parseRouteName(url) as keyof Scheme, {} as Scheme[keyof Scheme], ev)
 
           }
-          
-          
+
+
         }
-        
-      }, false )
+
+      }, false)
 
     }
 
     return this;
-    
+
   }
 
-  parseRouteName( routeName : string ){
+  parseRouteName(routeName: string) {
 
     const route = routeName.trim();
 
     const firstChar = route.substring(0, 1);
 
-    return ( firstChar == '/' || firstChar == '#' ) ? route.substring(1) : route;
-    
+    return (firstChar == '/' || firstChar == '#') ? route.substring(1) : route;
+
   }
-  
-  isExternalURL( url : string ){
+
+  isExternalURL(url: string) {
 
     return !!(url.match(/^http/gi) || url.match(/^\/\//gi));
-    
+
   }
-  
-  parseElementCaptured( ev : Event ){
 
-    if( ev.target instanceof HTMLElement ){
+  parseElementCaptured(ev: Event) {
 
-      if( ev.target.hasAttribute('navigate:view') || ev.target.tagName == "A" ){
+    if (ev.target instanceof HTMLElement) {
+
+      if (ev.target.hasAttribute('navigate:view') || ev.target.tagName == "A") {
 
         return ev.target;
-        
-      }
 
-      else{
+      } else {
 
-        return AscendingDOMPath<HTMLElement>( ev.target as HTMLElement, parent => 
+        return AscendingDOMPath<HTMLElement>(ev.target as HTMLElement, parent =>
 
           parent.tagName == 'A' || parent.hasAttribute('navigate:view')
-          
         )
 
       }
@@ -172,17 +161,17 @@ export class Navigation<Scheme> implements INavigation<Scheme>{
     }
 
     return undefined
-    
+
   }
-  
-  dispatchNavigate( ev ?: Event | undefined ) : this {
+
+  dispatchNavigate(ev ?: Event | undefined): this {
 
     const routeName = this.currentRouteName();
 
     const parser = this.options.useHashtagParser ? 'hashtag' : 'directory';
 
-    
-    this.options.middlewares?.forEach( middleware => middleware( {
+
+    this.options.middlewares?.forEach(middleware => middleware({
 
       navigation: this,
 
@@ -193,60 +182,60 @@ export class Navigation<Scheme> implements INavigation<Scheme>{
       props: this.currentQuery() || undefined,
 
       parser: this.options.useHashtagParser ? 'hashtag' : 'directory',
-      
-    } ) )
-  
-    this.emitter.dispatch('navigate', { 
-      
-      navigation : this, 
-      
-      routeName, 
+
+    }))
+
+    this.emitter.dispatch('navigate', {
+
+      navigation: this,
+
+      routeName,
 
       parser: parser,
-    
+
     })
 
     this.#oldRoute = routeName as keyof Scheme;
-    
+
     return this;
-    
+
   }
-  
-  navigate( route : keyof Scheme, props ?: (Scheme[ keyof Scheme ]), ev?: Event ): this {
 
-    if( !route ){ return this; }
-    
-    const currentRoute = this.currentRouteName();
-    
-    const routeName = route as string;
+  navigate(route: keyof Scheme, props ?: (Scheme[ keyof Scheme ]), ev?: Event): this {
 
-    const hasProps = Object.keys( props || {} ).length;
-
-    const query = hasProps ? `?${ ObjectURLParams( props||{} ) }` : '';
-
-    
-    if( currentRoute != routeName ){
-
-      if( this.options.useHashtagParser ){
-
-        location.hash = `${ routeName }${ query }`;
-        
-      }
-
-      else{
-
-        history.pushState( props || {}, document.title, `${ routeName }${ query }`);
-
-        this.dispatchNavigate( ev || undefined );
-        
-      }
-
+    if (!route) {
+      return this;
     }
 
-    else{ this.dispatchNavigate( ev || undefined ); }
+    const currentRoute = this.currentRouteName();
+
+    const routeName = route as string;
+
+    const hasProps = Object.keys(props || {}).length;
+
+    const query = hasProps ? `?${ObjectURLParams(props || {})}` : '';
+
+
+    if (currentRoute != routeName) {
+
+      if (this.options.useHashtagParser) {
+
+        location.hash = `${routeName}${query}`;
+
+      } else {
+
+        history.pushState(props || {}, document.title, `${routeName}${query}`);
+
+        this.dispatchNavigate(ev || undefined);
+
+      }
+
+    } else {
+      this.dispatchNavigate(ev || undefined);
+    }
 
     return this;
-    
+
   }
-  
+
 }

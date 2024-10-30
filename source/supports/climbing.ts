@@ -4,7 +4,7 @@ import type {
   IClimbingNext,
   IClimbingTask,
   IClimbingYield
-} from "../types/climbing";
+} from "../types";
 
 
 export class Climbing<R> implements IClimbing<R> {

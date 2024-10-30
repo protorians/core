@@ -4,7 +4,7 @@ import type {
   IPropertyEachCallback,
   IPropertyScheme,
   IPropertySpecificCallback
-} from "../types/property";
+} from "../types";
 
 
 export class Property<T extends IPropertyScheme> implements IProperty<T> {

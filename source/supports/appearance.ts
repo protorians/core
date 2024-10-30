@@ -1,6 +1,5 @@
 import {MetricRandom} from "./metric";
 import {EventDispatcher} from "./event-dispatcher";
-import {ObjectToString, unCamelCase} from "../utilities";
 import type {
   IAppearance,
   IAppearanceEmitterScheme,
@@ -8,7 +7,8 @@ import type {
   IAppearanceObjectDestroyed,
   IAppearanceStyleSheet,
   IAppearanceValues
-} from "../types/appearance";
+} from "../types";
+import {unCamelCase, ObjectToString} from "../utilities";
 
 
 /**
