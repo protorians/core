@@ -7,10 +7,9 @@
     "target": "es2020",
     "removeComments": false,
     "declaration": true,
-    "inlineSources": false,
     "strict": true,
     "esModuleInterop": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "preserveConstEnums": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -20,6 +19,7 @@
   },
   "exclude": [
     "node_modules",
+    "./build",
     "./~commonjs",
     "./~esm"
   ],
