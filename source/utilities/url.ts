@@ -1,4 +1,4 @@
-import {ObjectToString} from "./object";
+import {objectToString} from "./object";
 
 export function URLParamsObject<T>(searchParams: string) {
 
@@ -34,6 +34,6 @@ export function URLParamsObject<T>(searchParams: string) {
 
 export function ObjectURLParams<T extends object>(params: T): string {
 
-  return ObjectToString(params, {eq: '=', joiner: '&'})
+  return objectToString(params, {eq: '=', joiner: '&'})
 
 }
