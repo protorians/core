@@ -1,19 +1,19 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.20",
+  "version": "0.1.2-beta.21",
   "description": "Protorians Core",
   "main": "./source/index.ts",
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "pnpm run build:esm",
-    "build:esm": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=build",
+    "build": "pnpm run build:esm && pnpm run build:commonjs",
+    "build:esm": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=~esm",
     "build:commonjs": "tsc -p commonjs.tsconfig.json && ts-add-js-extension --dir=~commonjs"
   },
   "exports": {
-    "require": "./build/index.js",
-    "import": "./build/index.js",
+    "require": "./~commonjs/index.js",
+    "import": "./~esm/index.js",
     "default": "./source/index.ts"
   },
   "keywords": [
@@ -22,10 +22,18 @@
   ],
   "author": "Y. Yannick GOBOU<protorian.dev@gmail.com>",
   "license": "MIT",
-  "repository": "https://github.com/protorians/core.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/protorians/core.git"
+  },
   "devDependencies": {
-    "typescript": "^5.4.5"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "@types/node": "^22.10.2"
   }
 }

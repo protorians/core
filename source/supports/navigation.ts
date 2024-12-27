@@ -6,7 +6,7 @@ import type {
   INavigationOptions,
   IEventDispatcher
 } from "../types";
-import {ObjectURLParams, URLParamsObject, UpdateObject, AscendingDOMPath} from "../utilities";
+import {ObjectURLParams, URLParamsObject, updateObject, AscendingDOMPath} from "../utilities";
 
 /**
  * Système de navigation
@@ -62,7 +62,7 @@ export class Navigation<Scheme> implements INavigation<Scheme> {
 
   setOptions(options: INavigationOptions<Scheme>): this {
 
-    this.options = UpdateObject<INavigationOptions<Scheme>>(this.options, options)
+    this.options = updateObject<INavigationOptions<Scheme>>(this.options, options)
 
     this.emitter.dispatch('options', this)
 

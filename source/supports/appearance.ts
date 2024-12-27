@@ -8,7 +8,7 @@ import type {
   IAppearanceStyleSheet,
   IAppearanceValues
 } from "../types";
-import {unCamelCase, ObjectToString} from "../utilities";
+import {unCamelCase, objectToString} from "../utilities";
 
 
 /**
@@ -171,7 +171,7 @@ export class CoreAppearance implements IAppearance {
 
       const data = this.insertProperties(properties, props)
 
-      styleSheet[styleSheet.length] = `${selector}{ ${ObjectToString(data, {joiner: '; '})} }`
+      styleSheet[styleSheet.length] = `${selector}{ ${objectToString(data, {joiner: '; '})} }`
 
     });
 

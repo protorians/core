@@ -4,19 +4,11 @@ export type IPropertyCallbackResponse<T extends IPropertyScheme, P extends keyof
   value: T[P]
 };
 
-// export type IPropertyGetterProps<T extends IPropertyScheme, P extends keyof T> = {
-//   target: T,
-//   prop: P,
-//   value: T[P]
-// };
-
 export type IPropertyCallback<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyCallbackResponse<T, P>) => T[P];
 
 export type IPropertySpecificCallback<T extends IPropertyScheme, P extends keyof T> = {
   [K in P]: IPropertyCallback<T, K>[];
 };
-
-// export type IPropertyGetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyGetterProps<T, P>) => T[P];
 
 export type IPropertyScheme = {
   [P: string]: string | number | boolean | null | undefined | Symbol | BigInt
