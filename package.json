@@ -1,7 +1,7 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.21",
+  "version": "0.1.2-beta.22",
   "description": "Protorians Core",
   "main": "./source/index.ts",
   "type": "module",
@@ -12,9 +12,30 @@
     "build:commonjs": "tsc -p commonjs.tsconfig.json && ts-add-js-extension --dir=~commonjs"
   },
   "exports": {
-    "require": "./~commonjs/index.js",
-    "import": "./~esm/index.js",
-    "default": "./source/index.ts"
+    ".": {
+      "require": "./~commonjs/index.js",
+      "import": "./~esm/index.js"
+    },
+    "./facades/*": {
+      "require": "./~commonjs/facades/*",
+      "import": "./~esm/facades/*"
+    },
+    "./foundation/*": {
+      "require": "./~commonjs/foundation/*",
+      "import": "./~esm/foundation/*"
+    },
+    "./supports/*": {
+      "require": "./~commonjs/supports/*",
+      "import": "./~esm/supports/*"
+    },
+    "./types/*": {
+      "require": "./~commonjs/types/*",
+      "import": "./~esm/types/*"
+    },
+    "./utilities/*": {
+      "require": "./~commonjs/utilities/*",
+      "import": "./~esm/utilities/*"
+    }
   },
   "keywords": [
     "protorians",
