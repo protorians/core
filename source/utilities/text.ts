@@ -25,15 +25,11 @@ export function stripSlashes(text: string) {
 }
 
 export function unCamelCase(value: string, separator = '-'): string {
-  return (`${value[0].toLowerCase()}${value.substring(1)}`)
-    .replace(/([A-Z])/g, `${separator}$&`)
-    .toLowerCase();
+  return value.replace(/[A-Z]/g, letter => `${separator}${letter.toLowerCase()}`);
 }
 
-export function camelCase(value: string) {
-  return value.replace(/(?:^\w|[A-Z]|\b\w)/g, (text, index) =>
-    index === 0 ? text.toLowerCase() : text.toUpperCase(),
-  ).replace(/\s+/g, '');
+export function camelCase(value: string): string {
+  return value.trim().replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
 
 export function fixExponent(x: number) {
