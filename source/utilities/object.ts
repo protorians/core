@@ -1,9 +1,11 @@
 import type {ICoreAttributesMap, ICoreAttributesMapValues, IObjectToString} from "../types";
 import {isNumber} from "./number";
+import {unCamelCase} from "./text";
 
 export function purgeObject<T extends Object>(obj: T): T {
   const output = {} as T;
-  for (const key in obj) {
+  for (let key in obj) {
+    key = unCamelCase(key) as Extract<keyof T, string>;
     if (!obj.hasOwnProperty(key)) {
       output[key] = obj[key];
     }
