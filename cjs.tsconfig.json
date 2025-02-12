@@ -4,6 +4,6 @@
     "moduleResolution": "node",
     "module": "CommonJS",
     "noEmit": false,
-    "outDir": "./~commonjs"
+    "outDir": "./~cjs"
   }
 }

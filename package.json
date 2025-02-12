@@ -1,15 +1,15 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.22",
+  "version": "0.1.3",
   "description": "Protorians Core",
   "main": "./source/index.ts",
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "pnpm run build:esm && pnpm run build:commonjs",
+    "build": "rm -rf ~esm ~cjs && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=~esm",
-    "build:commonjs": "tsc -p commonjs.tsconfig.json && ts-add-js-extension --dir=~commonjs"
+    "build:cjs": "tsc -p cjs.tsconfig.json && ts-add-js-extension --dir=~cjs"
   },
   "exports": {
     ".": {
