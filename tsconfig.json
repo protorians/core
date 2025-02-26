@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "sourceMap": false,
-    "rootDir": "./source",
     "module": "ESNext",
-    "target": "es2020",
+    "target": "es6",
     "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+
     "noImplicitAny": false,
-    "allowJs": true,
-    "removeComments": false,
+    "allowJs": false,
+    "removeComments": true,
     "declaration": true,
     "preserveConstEnums": true,
     "noUnusedLocals": true,
@@ -17,11 +16,14 @@
     "noEmit": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
+    "strict": true,
+    "rootDir": "./source"
   },
   "exclude": [
     "node_modules",
-    "./~commonjs",
-    "./~esm"
+    "~cjs",
+    "~esm",
+    "./tests",
   ],
   "include": [
     "./source"

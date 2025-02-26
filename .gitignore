@@ -1,10 +1,8 @@
 node_modules
-pnpm-lock.yaml
-.DS_Store
-.git
-.idea
 .vscode
-yarn.lock
-~commonjs
+.idea/*
+~cjs
 ~esm
-build
+*-lock.*
+*.lock
+pnpm-lock.yaml

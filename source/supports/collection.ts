@@ -1,20 +1,20 @@
 import type {
-  IProperty,
-  IPropertyCallback,
-  IPropertyEachCallback,
-  IPropertyScheme,
-  IPropertySpecificCallback
+  ICollection,
+  ICollectionCallback,
+  ICollectionEachCallback,
+  ICollectionScheme,
+  ICollectionSpecificCallback
 } from "../types";
 
 
-export class Property<T extends IPropertyScheme> implements IProperty<T> {
+export class Collection<T extends ICollectionScheme> implements ICollection<T> {
 
   protected _map: Map<keyof T, T[keyof T]>;
   protected _origin: T;
-  protected _effect: (IPropertyCallback<T, keyof T>)[] = [];
-  protected _transform: (IPropertyCallback<T, keyof T>)[] = [];
-  protected _spec_effect: IPropertySpecificCallback<T, keyof T> = {} as IPropertySpecificCallback<T, keyof T>;
-  protected _spec_transform: IPropertySpecificCallback<T, keyof T> = {} as IPropertySpecificCallback<T, keyof T>;
+  protected _effect: (ICollectionCallback<T, keyof T>)[] = [];
+  protected _transform: (ICollectionCallback<T, keyof T>)[] = [];
+  protected _spec_effect: ICollectionSpecificCallback<T, keyof T> = {} as ICollectionSpecificCallback<T, keyof T>;
+  protected _spec_transform: ICollectionSpecificCallback<T, keyof T> = {} as ICollectionSpecificCallback<T, keyof T>;
 
   state: T;
 
@@ -26,7 +26,7 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     this.reset()
   }
 
-  static context<T extends IPropertyScheme>(scheme?: T): IProperty<T> {
+  static context<T extends ICollectionScheme>(scheme?: T): ICollection<T> {
     return new this(scheme);
   }
 
@@ -66,29 +66,29 @@ export class Property<T extends IPropertyScheme> implements IProperty<T> {
     return this._map.keys();
   }
 
-  effect<K extends keyof T>(key: K, callback: IPropertyCallback<T, K>): this {
+  effect<K extends keyof T>(key: K, callback: ICollectionCallback<T, K>): this {
     this._spec_effect[key] = this._spec_effect[key] || []
     this._spec_effect[key].push(callback)
     return this;
   }
 
-  effects(setter: IPropertyCallback<T, keyof T>): this {
+  effects(setter: ICollectionCallback<T, keyof T>): this {
     this._effect.push(setter);
     return this;
   }
 
-  transform<P extends keyof T>(key: P, callback: IPropertyCallback<T, P>): this {
+  transform<P extends keyof T>(key: P, callback: ICollectionCallback<T, P>): this {
     this._spec_transform[key] = this._spec_transform[key] || []
     this._spec_transform[key].push(callback)
     return this;
   }
 
-  transforms(getter: IPropertyCallback<T, keyof T>): this {
-    this._transform.push(getter);
+  transforms(transformers: ICollectionCallback<T, keyof T>): this {
+    this._transform.push(transformers);
     return this;
   }
 
-  each(callback: IPropertyEachCallback<T>): this {
+  each(callback: ICollectionEachCallback<T>): this {
     this._map.forEach(callback)
     return this;
   }

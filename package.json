@@ -1,20 +1,41 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.2-beta.21",
+  "version": "0.1.6",
   "description": "Protorians Core",
-  "main": "./source/index.ts",
-  "type": "module",
+  "main": "./~cjs/index.js",
+  "type": "commonjs",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "pnpm run build:esm && pnpm run build:commonjs",
+    "build": "rm -rf ~esm ~cjs && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=~esm",
-    "build:commonjs": "tsc -p commonjs.tsconfig.json && ts-add-js-extension --dir=~commonjs"
+    "build:cjs": "tsc -p cjs.tsconfig.json && ts-add-js-extension --dir=~cjs"
   },
   "exports": {
-    "require": "./~commonjs/index.js",
-    "import": "./~esm/index.js",
-    "default": "./source/index.ts"
+    ".": {
+      "require": "./~cjs/index.js",
+      "import": "./~esm/index.js"
+    },
+    "./facades/*": {
+      "require": "./~cjs/facades/*",
+      "import": "./~esm/facades/*"
+    },
+    "./foundation/*": {
+      "require": "./~cjs/foundation/*",
+      "import": "./~esm/foundation/*"
+    },
+    "./supports/*": {
+      "require": "./~cjs/supports/*",
+      "import": "./~esm/supports/*"
+    },
+    "./types/*": {
+      "require": "./~cjs/types/*",
+      "import": "./~esm/types/*"
+    },
+    "./utilities/*": {
+      "require": "./~cjs/utilities/*",
+      "import": "./~esm/utilities/*"
+    }
   },
   "keywords": [
     "protorians",
