@@ -1,4 +1,4 @@
-import {TokenList} from "../source/supports/token-list"
+import {TokenList} from "../source"
 
 describe('Token List Manager', () => {
 
