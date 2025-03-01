@@ -1,6 +1,7 @@
 export type * from "./climbing"
 export type * from "./value"
 export type * from "./appearance"
+export type * from "./signals"
 export type * from "./attribute"
 export type * from "./scheme"
 export type * from "./composite"
