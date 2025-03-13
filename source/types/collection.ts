@@ -19,7 +19,7 @@ export type ICollectionSpecificCallback<T extends ICollectionScheme, P extends k
 // export type IPropertyGetter<T extends IPropertyScheme, P extends keyof T> = (props: IPropertyGetterProps<T, P>) => T[P];
 
 export type ICollectionScheme = {
-  [P: string]: object | string | number | boolean | Symbol | BigInt | null | undefined
+  [P: string]: object | string | number | boolean | Symbol | null | undefined
 }
 
 export type ICollectionEachCallback<T extends ICollectionScheme> = (value: T[keyof T], key: keyof T, map: Map<keyof T, T[keyof T]>) => void
