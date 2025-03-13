@@ -1,3 +1,4 @@
+export * from "./function"
 export * from "./date"
 export * from "./html"
 export * from "./object"
