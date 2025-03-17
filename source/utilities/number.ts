@@ -17,3 +17,9 @@ export function pad(numeric: string, length: number = 2): string {
 export function clamp(value: number, min: number, max: number): number {
     return Math.min(Math.max(value, min), max);
 }
+
+
+export function extractNumbers(value: string | number) {
+    if (typeof value === "number") return [value];
+    return [...value.matchAll(/\d+(\.\d+)?/g)].map(x => parseFloat(x[0]));
+}
