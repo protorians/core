@@ -136,3 +136,28 @@ export function quadrilateral<T>(provider: QuadrilateralArray<T>[]): IQuadrilate
 
     return value
 }
+
+
+export function toNested<T>(obj: T, nestedPath: string): any {
+    return nestedPath.split('.')
+        .reduce((acc, key) => acc && acc[key], obj);
+}
+
+
+export function deepMerge<T>(
+    input: any,
+): T[] {
+    const result: T[] = [];
+    function deep(value: T) {
+        if (Array.isArray(value)) {
+            value.forEach(deep);
+        } else if (typeof value === "object" && value !== null) {
+            Object.values(value).forEach(deep);
+        } else {
+            result.push(value);
+        }
+    }
+    deep(input);
+    return result;
+}
+
