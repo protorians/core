@@ -1,7 +1,7 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "Protorians Core",
   "main": "./~esm/index.js",
   "type": "module",

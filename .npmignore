@@ -7,3 +7,4 @@ source
 pnpm-lock.yaml
 .github
 .source
+tests
