@@ -119,3 +119,13 @@ export function logDateTime(date?: Date) {
     hour12: true
   });
 }
+
+export function snapSequence(rex: RegExp, input: string): string {
+    let x = 0;
+    return input.replace(rex, () => `$${++x}`);
+}
+
+export function parseSequence(sequence: string, dictionary: (string | number)[]): string {
+    let x = 0;
+    return sequence.replace(/\$\d+/g, () => `${dictionary[x++] || ""}`);
+}
