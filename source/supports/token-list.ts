@@ -1,5 +1,5 @@
 import {syncObjectArray} from "../utilities";
-import {ITokenList} from "../types/token-list";
+import {ITokenList} from "../types";
 
 export function TokenList<T>(): ITokenList<T> {
 
