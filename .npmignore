@@ -8,3 +8,4 @@ pnpm-lock.yaml
 .github
 .source
 tests
+./jest.config.js
