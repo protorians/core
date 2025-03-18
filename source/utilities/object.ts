@@ -148,6 +148,7 @@ export function deepMerge<T>(
     input: any,
 ): T[] {
     const result: T[] = [];
+
     function deep(value: T) {
         if (Array.isArray(value)) {
             value.forEach(deep);
@@ -157,7 +158,14 @@ export function deepMerge<T>(
             result.push(value);
         }
     }
+
     deep(input);
     return result;
 }
 
+
+export function destroyInstance<T>(instance: T | null | undefined): undefined {
+    instance = null;
+    instance = undefined;
+    return instance;
+}
