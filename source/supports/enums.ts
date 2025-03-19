@@ -1,6 +1,7 @@
-
 export enum TreatmentQueueStatus {
-  Continue = 'continue',
-  Cancel = 'cancel',
-  Exit = 'exit',
+    SnapIn = 'snap-in',
+    SnapOut = 'snap-out',
+    Continue = 'continue',
+    Cancel = 'cancel',
+    Exit = 'exit',
 }
