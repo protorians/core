@@ -21,5 +21,5 @@ export function clamp(value: number, min: number, max: number): number {
 
 export function extractNumbers(value: string | number) {
     if (typeof value === "number") return [value];
-    return [...value.matchAll(/-?\d+(\.\d+)?/g)].map(x => parseFloat(x[0]));
+    return [...value.toString().matchAll(/-?\d+(\.\d+)?/g)].map(x => (x[0] as any) * 1);
 }
