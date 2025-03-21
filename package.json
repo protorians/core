@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "rm -rf ~esm ~cjs && tsc -p esm.tsconfig.json && ts-add-js-extension --dir=~esm && tsc -p cjs.tsconfig.json && ts-add-js-extension --dir=~cjs"
+    "build": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=~esm && tsc -p cjs.tsconfig.json && ts-add-js-extension --dir=~cjs"
   },
   "exports": {
     ".": {
