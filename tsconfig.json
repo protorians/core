@@ -4,9 +4,9 @@
       "esnext",
       "dom"
     ],
-    "module": "ESNext",
-    "target": "es6",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
+    "module": "NodeNext",
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "allowJs": false,
@@ -26,6 +26,7 @@
     "node_modules",
     "~cjs",
     "~esm",
+    "build",
     "./tests"
   ],
   "include": [

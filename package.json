@@ -1,53 +1,37 @@
 {
-  "name": "@protorians/core",
-  "displayName": "Protorians Core",
-  "version": "0.2.1",
-  "description": "Protorians Core",
-  "main": "./~esm/index.js",
-  "type": "module",
+  "name": "@protorians/kuamka",
+  "version": "0.0.0",
+  "description": "Frontend global project",
+  "main": "index.js",
   "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc -p esm.tsconfig.json && ts-add-js-extension --dir=~esm && tsc -p cjs.tsconfig.json && ts-add-js-extension --dir=~cjs"
+    "add:changesets": "pnpm add -D @changesets/cli@latest && pnpx changesets init",
+    "up:ts": "pnpm up -r typescript",
+    "version:add": "pnpx changeset add",
+    "version:push": "pnpx changeset version",
+    "version:pub": "pnpx changeset publish",
+    "demo:all": "pnpm -r --filter labs/* run dev",
+    "demo:animetric": "pnpm --filter demo-animetric run start"
   },
-  "exports": {
-    ".": {
-      "require": "./~cjs/index.js",
-      "import": "./~esm/index.js"
-    },
-    "./facades/*": {
-      "require": "./~cjs/facades/*",
-      "import": "./~esm/facades/*"
-    },
-    "./foundation/*": {
-      "require": "./~cjs/foundation/*",
-      "import": "./~esm/foundation/*"
-    },
-    "./supports/*": {
-      "require": "./~cjs/supports/*",
-      "import": "./~esm/supports/*"
-    },
-    "./types/*": {
-      "require": "./~cjs/types/*",
-      "import": "./~esm/types/*"
-    },
-    "./utilities/*": {
-      "require": "./~cjs/utilities/*",
-      "import": "./~esm/utilities/*"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^18.19.81",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@10.6.5",
+  "pnpm": {
+    "overrides": {
+      "@types/jest": "^29.5.14",
+      "@types/node": "^18.19.81",
+      "jest": "^29.7.0",
+      "ts-jest": "^29.2.6",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.8.2"
     }
-  },
-  "keywords": [
-    "protorians",
-    "core"
-  ],
-  "author": "Y. Yannick GOBOU<protorian.dev@gmail.com>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/protorians/core.git"
-  },
-  "peerDependencies": {
-    "ts-node": "^10.9.1",
-    "typescript": "^5.8.2",
-    "@types/node": "^18.7.13"
   }
 }
