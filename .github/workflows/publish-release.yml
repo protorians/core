@@ -23,8 +23,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Debug - Vérifier les fichiers et dossiers
-        run: ls -la packages/
+#      - name: Debug - Vérifier les fichiers et dossiers
+#        run: ls -la packages/
 
       - name: Install pnpm globally
         run: npm install -g pnpm
