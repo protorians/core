@@ -1,5 +1,11 @@
 # @protorians/core
 
+## 0.6.8
+
+### Patch Changes
+
+- Add console colors constantes and utilities console
+
 ## 0.6.7
 
 ### Patch Changes
