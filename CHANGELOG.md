@@ -1,5 +1,11 @@
 # @protorians/core
 
+## 0.6.10
+
+### Patch Changes
+
+- Fix bugs
+
 ## 0.6.8
 
 ### Patch Changes
