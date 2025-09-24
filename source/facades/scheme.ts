@@ -1,5 +1,5 @@
-import {SchemeChild} from "../supports";
-import {ISchemeChild} from "../types";
+import {SchemeChild} from "@/supports";
+import type {ISchemeChild} from "@/types";
 
 export function stringScheme(initial?: string): ISchemeChild {
     return (new SchemeChild())
