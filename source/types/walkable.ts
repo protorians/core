@@ -1,4 +1,4 @@
-import {WalkableAction} from "../enums";
+import {WalkableAction} from "../enums/walkable.enum";
 
 export type IWalkableListActionCallback<T> = (payload: IWalkableListActionPayload<T>) => void;
 
