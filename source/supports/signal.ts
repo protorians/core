@@ -1,12 +1,12 @@
-import {
+import type {
     ISignalController,
     ISignalControllerCallable,
     ISignalStack,
     ISignalStackCallable,
     ISignalStackEntries, ISignalStackEntry,
     ISignalStackOptions
-} from "../types";
-import {TreatmentQueueStatus} from "./enums";
+} from "@/types";
+import {TreatmentQueueStatus} from "@/supports/enums";
 
 export namespace Signal {
 

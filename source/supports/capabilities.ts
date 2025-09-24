@@ -1,5 +1,5 @@
-import {Signal} from "./signal";
-import {ICapability, ICapabilityCallable, ICapabilityInstance, ICapabilityContext, ICapabilityOptions} from "../types";
+import {Signal} from "@/supports/signal";
+import type {ICapability, ICapabilityCallable, ICapabilityInstance, ICapabilityContext, ICapabilityOptions} from "@/types";
 
 
 export class Capability<T extends Record<string, any>> implements ICapability<T> {

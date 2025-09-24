@@ -1,4 +1,4 @@
-import {
+import type {
     ISchemeCharLength,
     ISchemeChild,
     ISchemeChildren,
@@ -6,9 +6,9 @@ import {
     ISchemeProps,
     ISchemeScore,
     ISchemeType, ISchematic
-} from "../types";
-import {TextUtility} from "../utilities";
-import {revealType} from "../facades";
+} from "@/types";
+import {TextUtility} from "@/utilities";
+import {revealType} from "@/facades";
 
 export class SchemeChild implements ISchemeChild {
     protected _structure: ISchemeProps;

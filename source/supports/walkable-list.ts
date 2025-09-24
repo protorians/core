@@ -4,7 +4,7 @@ import type {
     IWalkableListActionCallback,
     IWalkableListOptions
 } from "../types/walkable";
-import {WalkableAction} from "../enums";
+import {WalkableAction} from "../enums/walkable.enum";
 import {NumberUtility} from "../utilities";
 import adjustNumber = NumberUtility.adjust;
 

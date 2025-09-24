@@ -1,4 +1,4 @@
-import {IDictionary, IDictionaryCallbackParser} from "../types";
+import type {IDictionary, IDictionaryCallbackParser} from "@/types";
 
 export class Dictionary<T> implements IDictionary<T> {
     protected _map: T = {} as T
