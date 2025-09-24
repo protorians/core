@@ -4,29 +4,34 @@
       "esnext",
       "dom"
     ],
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
     "module": "ESNext",
-    "target": "es6",
-    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
     "noImplicitAny": false,
     "allowJs": false,
     "removeComments": true,
-    "declaration": true,
+    "declaration": false,
     "preserveConstEnums": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noEmit": true,
     "experimentalDecorators": true,
-    "esModuleInterop": true,
     "strict": true,
-    "rootDir": "./source"
+    "verbatimModuleSyntax": true,
+    "rootDir": "./source",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["source/*"]
+    }
   },
   "exclude": [
     "node_modules",
-    "~cjs",
-    "~esm",
-    "./tests"
+    "build"
   ],
   "include": [
     "./source"
