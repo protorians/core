@@ -1,5 +1,11 @@
 # @protorians/core
 
+## 0.6.4
+
+### Patch Changes
+
+- Fix Bug and add enums(level, lifetime and timestamp)
+
 ## 0.6.2
 
 ### Patch Changes

@@ -1,14 +1,15 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Protorians Core",
   "main": "./build/index.cjs",
   "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup"
+    "build": "tsup",
+    "push:version": "pnpm changeset add && pnpm changeset version"
   },
   "exports": {
     "./*": {
@@ -28,6 +29,7 @@
     "url": "git+https://github.com/protorians/core.git"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.7",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.14.0",
     "jest": "^29.7.0",
