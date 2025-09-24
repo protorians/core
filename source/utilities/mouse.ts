@@ -1,4 +1,4 @@
-import {IMouseCoordinate, IMouseEvent} from "../types";
+import {type IMouseCoordinate, type IMouseEvent} from "@/types";
 
 export namespace MouseUtility {
     export function coordinate(e: IMouseEvent): IMouseCoordinate {
