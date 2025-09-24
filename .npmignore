@@ -2,3 +2,6 @@
 /.github
 /.idea
 /source/tests
+tsup.config.ts
+jest.config.js
+tsconfig.json
