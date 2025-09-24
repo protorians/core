@@ -1,5 +1,7 @@
-import {LevelEnum} from "@/enums";
+import {LevelEnum, TimestampEnum} from "@/enums";
 import {CONSOLE_COLORS} from "@/constantes/colors.constante";
+import {NumberUtility} from "@/utilities/number";
+import pad = NumberUtility.pad;
 
 export function consoleColorize(text: string, level: LevelEnum, enabled: boolean | undefined): string {
     if (!enabled || level === LevelEnum.SILENT) return text;
@@ -64,7 +66,30 @@ export function consoleForLevel(level: LevelEnum) {
     return console.log.bind(console);
 }
 
-export function toUpperLevel(level: LevelEnum | undefined): string {
+export function consoleToUpperLevel(level: LevelEnum | undefined): string {
     if (!level) return "INFO";
     return String(level).toUpperCase();
+}
+
+export function consoleFormatTimestamp(date: Date, fmt: TimestampEnum): string {
+    const DD = pad(date.getDate());
+    const MM = pad(date.getMonth() + 1);
+    const YYYY = String(date.getFullYear());
+    const HH = pad(date.getHours());
+    const mm = pad(date.getMinutes());
+    const ss = pad(date.getSeconds());
+    const SSS = pad(date.getMilliseconds(), 3);
+
+    switch (fmt) {
+        case "HH:mm:ss":
+            return `${HH}:${mm}:${ss}`;
+        case "HH:mm:ss.SSS":
+            return `${HH}:${mm}:${ss}.${SSS}`;
+        case "DD/MM/YYYY HH:mm:ss":
+            return `${DD}/${MM}/${YYYY} ${HH}:${mm}:${ss}`;
+        case "DD/MM/YYYY HH:mm:ss.SSS":
+            return `${DD}/${MM}/${YYYY} ${HH}:${mm}:${ss}.${SSS}`;
+        default:
+            return `${HH}:${mm}:${ss}`;
+    }
 }
