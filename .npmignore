@@ -5,3 +5,4 @@
 tsup.config.ts
 jest.config.js
 tsconfig.json
+/.changeset

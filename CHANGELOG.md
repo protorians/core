@@ -1,9 +1,10 @@
 # @protorians/core
 
-## 0.6.6
+## 0.6.7
 
 ### Patch Changes
 
+- Clear final package
 - Expand `.npmignore` to include `tsup.config.ts`, `jest.config.js`, and `tsconfig.json`.
 
 ## 0.6.4
