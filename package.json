@@ -1,9 +1,9 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.6.10",
+  "version": "0.6.11",
   "description": "Protorians Core",
-  "main": "./build/index.cjs",
+  "main": "./build/index.js",
   "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
   "scripts": {
@@ -15,12 +15,12 @@
     ".": {
       "types": "./build/index.d.ts",
       "import": "./build/index.mjs",
-      "require": "./build/index.cjs"
+      "require": "./build/index.js"
     },
     "./*": {
       "types": "./build/*.d.ts",
       "import": "./build/*.mjs",
-      "require": "./build/*.cjs"
+      "require": "./build/*.js"
     }
   },
   "keywords": [

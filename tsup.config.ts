@@ -7,7 +7,7 @@ export default defineConfig(({ watch }) => ({
   clean: true,
   target: 'node22',
   outDir: 'build',
-  splitting: false,
+  splitting: true,
   shims: false,
   sourcemap: false,
   minify: false,

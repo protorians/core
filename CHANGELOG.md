@@ -1,5 +1,11 @@
 # @protorians/core
 
+## 0.6.11
+
+### Patch Changes
+
+- Enable ES module splitting, update exports field to use `.js` instead of `.cjs`.
+
 ## 0.6.10
 
 ### Patch Changes
