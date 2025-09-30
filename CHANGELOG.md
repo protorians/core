@@ -1,5 +1,11 @@
 # @protorians/core
 
+## 0.6.13
+
+### Patch Changes
+
+- Update console color codes for consistency and add default value for `enabled` flag in `consoleColorizeLevel`.
+
 ## 0.6.12
 
 ### Patch Changes

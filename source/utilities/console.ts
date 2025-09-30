@@ -10,7 +10,7 @@ export function consoleColorize(text: string, level: LevelEnum, enabled: boolean
     return `${map.open}${text}${map.close}`;
 }
 
-export function consoleColorizeLevel(text: string, level: LevelEnum, enabled: boolean | undefined): string {
+export function consoleColorizeLevel(text: string, level: LevelEnum, enabled: boolean | undefined = true): string {
     if (!enabled || level === LevelEnum.SILENT) return text;
     let bg: string | null = null;
     let fg: string | null = null;
@@ -36,11 +36,11 @@ export function consoleColorizeLevel(text: string, level: LevelEnum, enabled: bo
             fg = "\x1b[97m";
             break;
         case LevelEnum.INFO:
-            bg = "\x1b[239m";
-            fg = "\x1b[251m";
+            bg = "\x1b[40m";
+            fg = "\x1b[255m";
             break;
         case LevelEnum.DEBUG:
-            bg = "\x1b[53m";
+            bg = "\x1b[105m";
             fg = "\x1b[97m";
             break;
         case LevelEnum.TRACE:
@@ -53,11 +53,11 @@ export function consoleColorizeLevel(text: string, level: LevelEnum, enabled: bo
             break;
         case LevelEnum.NORMAL:
         default:
-            bg = "\x1b[235m";
-            fg = "\x1b[244m";
+            bg = "\x1b[100m";
+            fg = "\x1b[30m";
             break;
     }
-    return `${fg}${bg}${text}\x1b[0m`;
+    return `\x1b[1m${fg}${bg}${text}\x1b[0m`;
 }
 
 export function consoleForLevel(level: LevelEnum) {

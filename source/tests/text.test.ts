@@ -1,4 +1,8 @@
-import { slugify, camelCase, unCamelCase } from '../~esm/utilities/text.js';
+import {TextUtility} from "@/utilities";
+import slugify = TextUtility.slugify;
+import camelCase = TextUtility.camelCase;
+import unCamelCase = TextUtility.unCamelCase;
+
 
 describe('Text Utilities', () => {
   describe('slugify', () => {

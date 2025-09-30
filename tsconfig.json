@@ -22,11 +22,17 @@
     "noImplicitReturns": true,
     "experimentalDecorators": true,
     "strict": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
+    "types": [
+      "jest",
+      "node"
+    ],
     "rootDir": "./source",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["source/*"]
+      "@/*": [
+        "source/*"
+      ]
     }
   },
   "exclude": [
@@ -35,5 +41,14 @@
   ],
   "include": [
     "./source"
-  ]
+  ],
+  "jest": {
+    "configFile": "jest.config.cjs"
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

@@ -3,6 +3,6 @@
 /.idea
 /source/tests
 tsup.config.ts
-jest.config.js
+jest.config.cjs
 tsconfig.json
 /.changeset
