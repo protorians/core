@@ -1,5 +1,11 @@
 # @protorians/core
 
+## 0.6.12
+
+### Patch Changes
+
+- Refine console log level color codes for clarity and consistency in `console.ts`.
+
 ## 0.6.11
 
 ### Patch Changes

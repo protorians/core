@@ -16,45 +16,45 @@ export function consoleColorizeLevel(text: string, level: LevelEnum, enabled: bo
     let fg: string | null = null;
     switch (level) {
         case LevelEnum.FATAL:
-            bg = "\x1b[101m"; // bright red bg
-            fg = "\x1b[97m"; // white
+            bg = "\x1b[101m";
+            fg = "\x1b[97m";
             break;
         case LevelEnum.CRITICAL:
-            bg = "\x1b[105m"; // bright magenta bg
-            fg = "\x1b[97m"; // white
+            bg = "\x1b[105m";
+            fg = "\x1b[97m";
             break;
         case LevelEnum.ERROR:
-            bg = "\x1b[41m"; // red bg
-            fg = "\x1b[97m"; // white
+            bg = "\x1b[41m";
+            fg = "\x1b[97m";
             break;
         case LevelEnum.WARN:
-            bg = "\x1b[43m"; // yellow bg
-            fg = "\x1b[30m"; // black
+            bg = "\x1b[43m";
+            fg = "\x1b[30m";
             break;
         case LevelEnum.NOTICE:
-            bg = "\x1b[104m"; // bright blue bg
-            fg = "\x1b[97m"; // white
+            bg = "\x1b[104m";
+            fg = "\x1b[97m";
             break;
         case LevelEnum.INFO:
-            bg = "\x1b[100m"; // dark gray bg
-            fg = "\x1b[37m"; // light gray
+            bg = "\x1b[239m";
+            fg = "\x1b[251m";
             break;
         case LevelEnum.DEBUG:
-            bg = "\x1b[45m"; // magenta bg
-            fg = "\x1b[97m"; // white
+            bg = "\x1b[53m";
+            fg = "\x1b[97m";
             break;
         case LevelEnum.TRACE:
-            bg = "\x1b[40m"; // black bg
-            fg = "\x1b[37m"; // light gray
+            bg = "\x1b[40m";
+            fg = "\x1b[37m";
             break;
         case LevelEnum.DONE:
-            bg = "\x1b[102m"; // bright green bg
-            fg = "\x1b[30m"; // black
+            bg = "\x1b[102m";
+            fg = "\x1b[30m";
             break;
         case LevelEnum.NORMAL:
         default:
-            bg = "\x1b[47m"; // light gray bg
-            fg = "\x1b[30m"; // black
+            bg = "\x1b[235m";
+            fg = "\x1b[244m";
             break;
     }
     return `${fg}${bg}${text}\x1b[0m`;

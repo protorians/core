@@ -1,7 +1,7 @@
 {
   "name": "@protorians/core",
   "displayName": "Protorians Core",
-  "version": "0.6.11",
+  "version": "0.6.12",
   "description": "Protorians Core",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
